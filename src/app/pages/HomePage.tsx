@@ -1,5 +1,6 @@
 import { DestaquesSection } from "../components/DestaquesSection";
 import { EntrevistaSection } from "../components/EntrevistaSection";
+import { CategoriaSection } from "../components/CategoriaSection";
 import { MaisLidosSection } from "../components/MaisLidosSection";
 import { ContinueImpactadoSection } from "../components/ContinueImpactadoSection";
 import { LancamentosSection } from "../components/LancamentosSection";
@@ -16,23 +17,14 @@ export default function HomePage() {
       {/* ENTREVISTA - New section */}
       <EntrevistaSection />
 
-      {/* MAIS LIDOS - Most read carousel */}
-      <MaisLidosSection />
-
-      {/* ENTREVISTA - Video section */}
-      <ContinueImpactadoSection />
-
-      {/* LANÇAMENTOS - New releases grid */}
-      <LancamentosSection />
+      {/* CATEGORIA - Category section */}
+      <CategoriaSection />
 
       {/* EVENTOS PASSADOS - Past events */}
       <EventosPassadosSection />
 
       {/* NEWSLETTER - Subscription with magazine covers */}
       <NewsletterSection />
-
-      {/* COMMUNITY CTA */}
-      <CommunityCTA />
     </>
   );
 }
