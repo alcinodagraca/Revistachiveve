@@ -1,4 +1,5 @@
 import { DestaquesSection } from "../components/DestaquesSection";
+import { EntrevistaSection } from "../components/EntrevistaSection";
 import { MaisLidosSection } from "../components/MaisLidosSection";
 import { ContinueImpactadoSection } from "../components/ContinueImpactadoSection";
 import { LancamentosSection } from "../components/LancamentosSection";
@@ -11,6 +12,9 @@ export default function HomePage() {
     <>
       {/* DESTAQUES - Featured articles */}
       <DestaquesSection />
+
+      {/* ENTREVISTA - New section */}
+      <EntrevistaSection />
 
       {/* MAIS LIDOS - Most read carousel */}
       <MaisLidosSection />
