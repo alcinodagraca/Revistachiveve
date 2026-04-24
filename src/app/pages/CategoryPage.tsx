@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router";
+import { Link, useParams } from "@tanstack/react-router";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { Clock, ArrowLeft } from "lucide-react";
 
@@ -134,7 +134,7 @@ const regularArticles = [
 ];
 
 export default function CategoryPage() {
-  const { category } = useParams<{ category: string }>();
+  const { category } = useParams({ strict: false });
   const categoryInfo = category ? categoryData[category] : null;
 
   if (!categoryInfo) {

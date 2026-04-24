@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 import {
   Menu,
   X,
@@ -217,7 +217,8 @@ export function Header() {
                     {artigosCategories.map((category) => (
                       <Link
                         key={category.slug}
-                        to={`/artigos/${category.slug}`}
+                        to="/artigos/$category"
+                        params={{ category: category.slug }}
                         style={{
                           display: "block",
                           padding: "12px 16px",
@@ -307,7 +308,8 @@ export function Header() {
                     {artigosCategories.map((category) => (
                       <Link
                         key={category.slug}
-                        to={`/artigos/${category.slug}`}
+                        to="/artigos/$category"
+                        params={{ category: category.slug }}
                         onClick={() => setMobileOpen(false)}
                         style={{
                           display: "block",

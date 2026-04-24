@@ -1,6 +1,6 @@
 import { Header } from "./Header";
 import { Footer } from "./Footer";
-import { Outlet } from "react-router";
+import { Outlet } from "@tanstack/react-router";
 
 export function Layout() {
   return (

@@ -1,0 +1,39 @@
+/// <reference types="vite/client" />
+import type { ReactNode } from 'react'
+import {
+  HeadContent,
+  Scripts,
+  createRootRoute,
+} from '@tanstack/react-router'
+import { Layout } from '../app/components/Layout'
+import appCss from '../styles/index.css?url'
+
+export const Route = createRootRoute({
+  head: () => ({
+    meta: [
+      { charSet: 'utf-8' },
+      {
+        name: 'viewport',
+        content: 'width=device-width, initial-scale=1.0',
+      },
+      { title: 'Revista Chiveve' },
+    ],
+    links: [{ rel: 'stylesheet', href: appCss }],
+  }),
+  component: Layout,
+  shellComponent: RootDocument,
+})
+
+function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
+  return (
+    <html lang="pt-MZ">
+      <head>
+        <HeadContent />
+      </head>
+      <body>
+        {children}
+        <Scripts />
+      </body>
+    </html>
+  )
+}
