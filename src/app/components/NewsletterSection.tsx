@@ -40,7 +40,7 @@ export function NewsletterSection() {
         style={{
           maxWidth: "1400px",
           margin: "0 auto",
-          padding: "100px var(--spacing-16)",
+          padding: "160px var(--spacing-16)",
           display: "grid",
           gridTemplateColumns: "1fr",
           gap: "var(--spacing-32)",

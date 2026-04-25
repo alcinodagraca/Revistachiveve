@@ -23,7 +23,7 @@ const quickLinks = [
 
 export function Footer() {
   return (
-    <footer style={{ backgroundColor: "var(--foreground)", color: "#ffffff" }}>
+    <footer style={{ backgroundColor: "#F5F5F5", color: "var(--foreground)" }}>
       {/* Main Footer */}
       <div className="px-4 md:px-8 py-10">
         <div className="max-w-7xl mx-auto">
@@ -33,9 +33,9 @@ export function Footer() {
               {/* Logo */}
               <div className="flex items-center gap-2 mb-4">
                 <svg width="34" height="34" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M6 6 L18 2 L18 34 L6 30 Z" fill="#ffffff" />
-                  <path d="M20 2 L32 6 L32 30 L20 34 Z" fill="rgba(255,255,255,0.5)" />
-                  <path d="M18 2 L20 2 L20 34 L18 34 Z" fill="rgba(255,255,255,0.8)" />
+                  <path d="M6 6 L18 2 L18 34 L6 30 Z" fill="var(--foreground)" />
+                  <path d="M20 2 L32 6 L32 30 L20 34 Z" fill="var(--muted-foreground)" />
+                  <path d="M18 2 L20 2 L20 34 L18 34 Z" fill="var(--primary)" />
                 </svg>
                 <div className="flex flex-col leading-tight">
                   <span
@@ -43,7 +43,7 @@ export function Footer() {
                       fontFamily: "Inter, sans-serif",
                       fontSize: "var(--text-14)",
                       fontWeight: "var(--font-weight-extra-bold)",
-                      color: "#ffffff",
+                      color: "var(--foreground)",
                       letterSpacing: "0.05em",
                     }}
                   >
@@ -54,7 +54,7 @@ export function Footer() {
                       fontFamily: "Inter, sans-serif",
                       fontSize: "10px",
                       fontWeight: "var(--font-weight-medium)",
-                      color: "rgba(255,255,255,0.6)",
+                      color: "var(--muted-foreground)",
                       letterSpacing: "0.18em",
                     }}
                   >
@@ -69,7 +69,7 @@ export function Footer() {
                   fontFamily: "Inter, sans-serif",
                   fontSize: "var(--text-14)",
                   fontWeight: "var(--font-weight-regular)",
-                  color: "rgba(255,255,255,0.65)",
+                  color: "var(--muted-foreground)",
                   lineHeight: "1.7",
                 }}
               >
@@ -106,10 +106,10 @@ export function Footer() {
                   fontFamily: "Inter, sans-serif",
                   fontSize: "var(--text-14)",
                   fontWeight: "var(--font-weight-semi-bold)",
-                  color: "#ffffff",
+                  color: "var(--foreground)",
                   letterSpacing: "0.1em",
                   textTransform: "uppercase",
-                  borderBottom: "1px solid rgba(255,255,255,0.15)",
+                  borderBottom: "1px solid var(--border)",
                 }}
               >
                 Links Rápidos
@@ -119,12 +119,12 @@ export function Footer() {
                   <li key={link.label}>
                     <a
                       href={link.href}
-                      className="transition-colors hover:text-white"
+                      className="transition-colors hover:text-[var(--primary)]"
                       style={{
                         fontFamily: "Inter, sans-serif",
                         fontSize: "var(--text-14)",
                         fontWeight: "var(--font-weight-regular)",
-                        color: "rgba(255,255,255,0.65)",
+                        color: "var(--muted-foreground)",
                         display: "block",
                       }}
                     >
@@ -143,66 +143,69 @@ export function Footer() {
                   fontFamily: "Inter, sans-serif",
                   fontSize: "var(--text-14)",
                   fontWeight: "var(--font-weight-semi-bold)",
-                  color: "#ffffff",
+                  color: "var(--foreground)",
                   letterSpacing: "0.1em",
                   textTransform: "uppercase",
-                  borderBottom: "1px solid rgba(255,255,255,0.15)",
+                  borderBottom: "1px solid var(--border)",
                 }}
               >
                 Contactos
               </h4>
               <ul className="space-y-3">
                 <li className="flex items-start gap-2">
-                  <MapPin size={15} className="mt-0.5 flex-shrink-0" style={{ color: "rgba(255,255,255,0.5)" }} />
+                  <MapPin size={15} className="mt-0.5 flex-shrink-0" style={{ color: "var(--muted-foreground)" }} />
                   <span
                     style={{
                       fontFamily: "Inter, sans-serif",
                       fontSize: "var(--text-14)",
                       fontWeight: "var(--font-weight-regular)",
-                      color: "rgba(255,255,255,0.65)",
+                      color: "var(--muted-foreground)",
                     }}
                   >
                     Maputo, Moçambique
                   </span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <Phone size={15} className="flex-shrink-0" style={{ color: "rgba(255,255,255,0.5)" }} />
+                  <Phone size={15} className="flex-shrink-0" style={{ color: "var(--muted-foreground)" }} />
                   <a
                     href="tel:+25887XXXXXXX"
                     style={{
                       fontFamily: "Inter, sans-serif",
                       fontSize: "var(--text-14)",
                       fontWeight: "var(--font-weight-regular)",
-                      color: "rgba(255,255,255,0.65)",
+                      color: "var(--muted-foreground)",
                     }}
+                    className="hover:text-[var(--primary)] transition-colors"
                   >
                     +258 87 000 0000
                   </a>
                 </li>
                 <li className="flex items-center gap-2">
-                  <Phone size={15} className="flex-shrink-0" style={{ color: "rgba(255,255,255,0.5)" }} />
+                  <Phone size={15} className="flex-shrink-0" style={{ color: "var(--muted-foreground)" }} />
                   <a
                     href="tel:+25882XXXXXXX"
                     style={{
                       fontFamily: "Inter, sans-serif",
                       fontSize: "var(--text-14)",
                       fontWeight: "var(--font-weight-regular)",
-                      color: "rgba(255,255,255,0.65)",
+                      color: "var(--muted-foreground)",
                     }}
+                    className="hover:text-[var(--primary)] transition-colors"
                   >
                     +258 82 000 0000
                   </a>
                 </li>
                 <li className="flex items-center gap-2">
-                  <Mail size={15} className="flex-shrink-0" style={{ color: "rgba(255,255,255,0.5)" }} />
+                  <Mail size={15} className="flex-shrink-0" style={{ color: "var(--muted-foreground)" }} />
                   <a
                     href="mailto:info@revistachiveve.co.mz"
                     style={{
                       fontFamily: "Inter, sans-serif",
                       fontSize: "var(--text-14)",
                       fontWeight: "var(--font-weight-regular)",
-                      color: "rgba(255,255,255,0.65)",
+                      color: "var(--muted-foreground)",
                     }}
+                    className="hover:text-[var(--primary)] transition-colors"
                   >
                     info@revistachiveve.co.mz
                   </a>
@@ -214,7 +217,7 @@ export function Footer() {
           {/* Category Links Row */}
           <div
             className="mt-8 pt-6"
-            style={{ borderTop: "1px solid rgba(255,255,255,0.12)" }}
+            style={{ borderTop: "1px solid var(--border)" }}
           >
             <div className="flex flex-wrap gap-x-6 gap-y-2">
               {footerLinks.map((link) => (
@@ -225,11 +228,11 @@ export function Footer() {
                     fontFamily: "Inter, sans-serif",
                     fontSize: "12px",
                     fontWeight: "var(--font-weight-medium)",
-                    color: "rgba(255,255,255,0.55)",
+                    color: "var(--muted-foreground)",
                     letterSpacing: "0.08em",
                     textTransform: "uppercase",
                   }}
-                  className="hover:text-white transition-colors"
+                  className="hover:text-[var(--primary)] transition-colors"
                 >
                   {link}
                 </a>
@@ -242,7 +245,7 @@ export function Footer() {
       {/* Bottom Bar */}
       <div
         className="px-4 md:px-8 py-4"
-        style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}
+        style={{ borderTop: "1px solid var(--border)" }}
       >
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <span
@@ -250,7 +253,7 @@ export function Footer() {
               fontFamily: "Inter, sans-serif",
               fontSize: "12px",
               fontWeight: "var(--font-weight-regular)",
-              color: "rgba(255,255,255,0.45)",
+              color: "var(--muted-foreground)",
             }}
           >
             Revista Chiveve — Todos os direitos reservados © 2024
@@ -264,9 +267,9 @@ export function Footer() {
                   fontFamily: "Inter, sans-serif",
                   fontSize: "12px",
                   fontWeight: "var(--font-weight-regular)",
-                  color: "rgba(255,255,255,0.45)",
+                  color: "var(--muted-foreground)",
                 }}
-                className="hover:text-white transition-colors"
+                className="hover:text-[var(--primary)] transition-colors"
               >
                 {item}
               </a>
