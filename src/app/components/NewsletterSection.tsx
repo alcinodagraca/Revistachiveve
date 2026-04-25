@@ -14,10 +14,6 @@ const magazineCovers = [
     id: 3,
     image: "https://images.unsplash.com/photo-1655249481446-25d575f1c054?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMHBlcnNvbiUyMHBvcnRyYWl0fGVufDF8fHx8MTc3NTYwMjkwNXww&ixlib=rb-4.1.0&q=80&w=1080",
   },
-  {
-    id: 4,
-    image: "https://images.unsplash.com/photo-1771898343647-bd979ad8cca5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlbnRyZXByZW5ldXIlMjBoZWFkc2hvdCUyMHByb2Zlc3Npb25hbHxlbnwxfHx8fDE3NzU2NTA3OTh8MA&ixlib=rb-4.1.0&q=80&w=1080",
-  },
 ];
 
 export function NewsletterSection() {
@@ -44,7 +40,7 @@ export function NewsletterSection() {
         style={{
           maxWidth: "1400px",
           margin: "0 auto",
-          padding: "var(--spacing-48) var(--spacing-16)",
+          padding: "100px var(--spacing-16)",
           display: "grid",
           gridTemplateColumns: "1fr",
           gap: "var(--spacing-32)",
@@ -184,20 +180,19 @@ export function NewsletterSection() {
                 key={cover.id}
                 style={{
                   position: "relative",
-                  minWidth: "140px",
-                  width: "140px",
+                  minWidth: "200px",
+                  width: "200px",
                   aspectRatio: "3 / 4",
                   overflow: "hidden",
                   boxShadow: "0 8px 24px rgba(0, 0, 0, 0.3)",
-                  transform: index % 2 === 0 ? "rotate(-2deg)" : "rotate(2deg)",
+                  transform: "translateY(0)",
                   transition: "transform 0.3s ease",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "rotate(0deg) translateY(-8px)";
+                  e.currentTarget.style.transform = "translateY(-8px)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.transform =
-                    index % 2 === 0 ? "rotate(-2deg)" : "rotate(2deg)";
+                  e.currentTarget.style.transform = "translateY(0)";
                 }}
               >
                 {/* Red Ribbon */}
@@ -205,11 +200,11 @@ export function NewsletterSection() {
                   style={{
                     position: "absolute",
                     top: "var(--spacing-12)",
-                    right: "-30px",
+                    right: "-35px",
                     backgroundColor: "#EF4444",
                     color: "#FFFFFF",
                     padding: "4px 40px",
-                    fontSize: "10px",
+                    fontSize: "12px",
                     fontWeight: "var(--font-weight-semi-bold)",
                     transform: "rotate(45deg)",
                     zIndex: 2,
@@ -237,7 +232,7 @@ export function NewsletterSection() {
                   <div
                     style={{
                       fontFamily: "Playfair Display, serif",
-                      fontSize: "28px",
+                      fontSize: "36px",
                       fontWeight: "var(--font-weight-extra-bold)",
                       color: "#FFFFFF",
                       textAlign: "center",
@@ -273,7 +268,7 @@ export function NewsletterSection() {
                   <div
                     style={{
                       fontFamily: "Playfair Display, serif",
-                      fontSize: "9px",
+                      fontSize: "12px",
                       fontWeight: "var(--font-weight-semi-bold)",
                       color: "#FFFFFF",
                       textAlign: "center",
