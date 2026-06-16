@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link } from "@tanstack/react-router";
 
 const categories = [
   { name: "Economia", slug: "economia", color: "#1E4ED8" },
@@ -49,7 +49,8 @@ export default function ArtigosPage() {
         {categories.map((category) => (
           <Link
             key={category.slug}
-            to={`/artigos/${category.slug}`}
+            to="/artigos/$category"
+            params={{ category: category.slug }}
             style={{
               display: "block",
               padding: "32px 24px",

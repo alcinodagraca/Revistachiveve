@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 import {
   Menu,
   X,
@@ -107,30 +107,9 @@ export function Header() {
 
           {/* Right: Actions */}
           <div className="flex items-center gap-2 md:gap-3">
-            {/* Subscription button */}
-            <a
-              href="#newsletter"
-              className="hidden sm:inline-flex items-center px-3 py-1.5 rounded-full cursor-pointer transition-opacity hover:opacity-90"
-              style={{
-                backgroundColor: "var(--chart-1)",
-                color: "var(--primary-foreground)",
-                fontFamily: "Inter, sans-serif",
-                fontSize: "var(--text-14)",
-                fontWeight: "var(--font-weight-medium)",
-                whiteSpace: "nowrap",
-              }}
-            >
-              Assine desde 500 MT / mês
-            </a>
 
-            {/* User Icon */}
-            <button
-              className="p-1.5 rounded-full transition-colors"
-              style={{ color: "var(--foreground)" }}
-              aria-label="Conta"
-            >
-              <User size={20} />
-            </button>
+
+
 
             {/* Social Icons */}
             <div className="hidden md:flex items-center gap-1.5">
@@ -217,7 +196,8 @@ export function Header() {
                     {artigosCategories.map((category) => (
                       <Link
                         key={category.slug}
-                        to={`/artigos/${category.slug}`}
+                        to="/artigos/$category"
+                        params={{ category: category.slug }}
                         style={{
                           display: "block",
                           padding: "12px 16px",
@@ -307,7 +287,8 @@ export function Header() {
                     {artigosCategories.map((category) => (
                       <Link
                         key={category.slug}
-                        to={`/artigos/${category.slug}`}
+                        to="/artigos/$category"
+                        params={{ category: category.slug }}
                         onClick={() => setMobileOpen(false)}
                         style={{
                           display: "block",
@@ -328,19 +309,7 @@ export function Header() {
               </li>
             ))}
           </ul>
-          <a
-            href="#newsletter"
-            className="mt-3 flex items-center justify-center px-4 py-2 rounded cursor-pointer"
-            style={{
-              backgroundColor: "var(--chart-1)",
-              color: "var(--primary-foreground)",
-              fontFamily: "Inter, sans-serif",
-              fontSize: "var(--text-14)",
-              fontWeight: "var(--font-weight-medium)",
-            }}
-          >
-            Assine desde 500 MT / mês
-          </a>
+
         </nav>
       )}
     </header>
