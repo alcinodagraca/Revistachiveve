@@ -1,5 +1,7 @@
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { Target, Eye, Award } from "lucide-react";
+import { PageHeader } from "../components/PageHeader";
+import { Heading, SectionHeader } from "../components/typography";
 
 const teamMembers = [
   {
@@ -26,236 +28,67 @@ const teamMembers = [
 
 export default function SobreNosPage() {
   return (
-    <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "48px 16px" }}>
-      {/* Header */}
-      <div style={{ marginBottom: "64px", textAlign: "center" }}>
-        <h1
-          style={{
-            fontFamily: "Playfair Display, serif",
-            fontSize: "var(--text-48)",
-            fontWeight: "var(--font-weight-semi-bold)",
-            color: "var(--foreground)",
-            marginBottom: "16px",
-          }}
-        >
-          Sobre Nós
-        </h1>
-        <p
-          style={{
-            fontFamily: "Inter, sans-serif",
-            fontSize: "var(--text-20)",
-            fontWeight: "var(--font-weight-regular)",
-            color: "var(--muted-foreground)",
-            lineHeight: "1.6",
-            maxWidth: "800px",
-            margin: "0 auto",
-          }}
-        >
-          A Forbes para jovens empreendedores moçambicanos
-        </p>
-      </div>
+    <div className="max-w-[1280px] mx-auto px-4 py-12">
+      <PageHeader
+        title="Sobre Nós"
+        subtitle="A Forbes para jovens empreendedores moçambicanos"
+        breadcrumbs={[{ label: "Início", to: "/" }, { label: "Sobre Nós" }]}
+      />
 
-      {/* Mission, Vision, Values */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-          gap: "32px",
-          marginBottom: "64px",
-        }}
-      >
-        <div
-          style={{
-            padding: "32px",
-            borderRadius: "var(--radius-card)",
-            backgroundColor: "var(--secondary)",
-          }}
-        >
-          <div
-            style={{
-              width: "48px",
-              height: "48px",
-              borderRadius: "50%",
-              backgroundColor: "var(--primary)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              marginBottom: "20px",
-            }}
-          >
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-8 mb-16">
+        <div className="p-8 rounded-lg bg-secondary">
+          <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center mb-5">
             <Target size={24} color="white" />
           </div>
-          <h3
-            style={{
-              fontFamily: "Playfair Display, serif",
-              fontSize: "var(--text-24)",
-              fontWeight: "var(--font-weight-semi-bold)",
-              color: "var(--foreground)",
-              marginBottom: "12px",
-            }}
-          >
+          <Heading as="h3" variant="feature-title" className="text-foreground mb-3">
             Missão
-          </h3>
-          <p
-            style={{
-              fontFamily: "Inter, sans-serif",
-              fontSize: "var(--text-16)",
-              fontWeight: "var(--font-weight-regular)",
-              color: "var(--muted-foreground)",
-              lineHeight: "1.6",
-            }}
-          >
+          </Heading>
+          <p className="font-sans font-normal text-base text-muted-foreground leading-relaxed">
             Inspirar e capacitar a próxima geração de líderes empresariais moçambicanos através
             de conteúdo de qualidade.
           </p>
         </div>
 
-        <div
-          style={{
-            padding: "32px",
-            borderRadius: "var(--radius-card)",
-            backgroundColor: "var(--secondary)",
-          }}
-        >
-          <div
-            style={{
-              width: "48px",
-              height: "48px",
-              borderRadius: "50%",
-              backgroundColor: "var(--primary)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              marginBottom: "20px",
-            }}
-          >
+        <div className="p-8 rounded-lg bg-secondary">
+          <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center mb-5">
             <Eye size={24} color="white" />
           </div>
-          <h3
-            style={{
-              fontFamily: "Playfair Display, serif",
-              fontSize: "var(--text-24)",
-              fontWeight: "var(--font-weight-semi-bold)",
-              color: "var(--foreground)",
-              marginBottom: "12px",
-            }}
-          >
+          <Heading as="h3" variant="feature-title" className="text-foreground mb-3">
             Visão
-          </h3>
-          <p
-            style={{
-              fontFamily: "Inter, sans-serif",
-              fontSize: "var(--text-16)",
-              fontWeight: "var(--font-weight-regular)",
-              color: "var(--muted-foreground)",
-              lineHeight: "1.6",
-            }}
-          >
+          </Heading>
+          <p className="font-sans font-normal text-base text-muted-foreground leading-relaxed">
             Ser a principal plataforma de referência para empreendedorismo e negócios em
             Moçambique.
           </p>
         </div>
 
-        <div
-          style={{
-            padding: "32px",
-            borderRadius: "var(--radius-card)",
-            backgroundColor: "var(--secondary)",
-          }}
-        >
-          <div
-            style={{
-              width: "48px",
-              height: "48px",
-              borderRadius: "50%",
-              backgroundColor: "var(--primary)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              marginBottom: "20px",
-            }}
-          >
+        <div className="p-8 rounded-lg bg-secondary">
+          <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center mb-5">
             <Award size={24} color="white" />
           </div>
-          <h3
-            style={{
-              fontFamily: "Playfair Display, serif",
-              fontSize: "var(--text-24)",
-              fontWeight: "var(--font-weight-semi-bold)",
-              color: "var(--foreground)",
-              marginBottom: "12px",
-            }}
-          >
+          <Heading as="h3" variant="feature-title" className="text-foreground mb-3">
             Valores
-          </h3>
-          <p
-            style={{
-              fontFamily: "Inter, sans-serif",
-              fontSize: "var(--text-16)",
-              fontWeight: "var(--font-weight-regular)",
-              color: "var(--muted-foreground)",
-              lineHeight: "1.6",
-            }}
-          >
+          </Heading>
+          <p className="font-sans font-normal text-base text-muted-foreground leading-relaxed">
             Excelência, integridade, inovação e compromisso com a verdade.
           </p>
         </div>
       </div>
 
-      {/* Team Section */}
-      <div style={{ marginBottom: "48px" }}>
-        <h2
-          style={{
-            fontFamily: "Playfair Display, serif",
-            fontSize: "var(--text-30)",
-            fontWeight: "var(--font-weight-semi-bold)",
-            color: "var(--foreground)",
-            marginBottom: "32px",
-            textAlign: "center",
-          }}
-        >
-          Nossa Equipa
-        </h2>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: "32px",
-          }}
-        >
+      <div className="mb-12">
+        <SectionHeader as="h2">Equipa</SectionHeader>
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-8">
           {teamMembers.map((member, idx) => (
-            <div key={idx} style={{ textAlign: "center" }}>
+            <div key={idx} className="text-center">
               <ImageWithFallback
                 src={member.image}
                 alt={member.name}
-                style={{
-                  width: "160px",
-                  height: "160px",
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                  margin: "0 auto 16px",
-                  border: "4px solid var(--border)",
-                }}
+                className="w-40 h-40 rounded-full object-cover mx-auto mb-4 border-4 border-border"
               />
-              <h3
-                style={{
-                  fontFamily: "Playfair Display, serif",
-                  fontSize: "var(--text-20)",
-                  fontWeight: "var(--font-weight-semi-bold)",
-                  color: "var(--foreground)",
-                  marginBottom: "4px",
-                }}
-              >
+              <Heading as="h3" variant="card-title" className="text-foreground mb-1">
                 {member.name}
-              </h3>
-              <p
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "var(--text-14)",
-                  fontWeight: "var(--font-weight-regular)",
-                  color: "var(--muted-foreground)",
-                }}
-              >
+              </Heading>
+              <p className="font-sans font-normal text-sm text-muted-foreground">
                 {member.role}
               </p>
             </div>

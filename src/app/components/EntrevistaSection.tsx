@@ -1,107 +1,64 @@
+import { Link } from "@tanstack/react-router";
+import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { getArticleBySlug } from "../../data/articles";
+import { Heading } from "./typography";
+
+const ENTREVISTA_CATEGORY = "empreendedorismo";
+const ENTREVISTA_SLUG = "dario-camal-bairro-central-mundo";
+
 export function EntrevistaSection() {
+  const article = getArticleBySlug(ENTREVISTA_CATEGORY, ENTREVISTA_SLUG);
+  if (!article) return null;
+
+  const articleLink = {
+    to: "/artigos/$category/$slug" as const,
+    params: { category: article.category, slug: article.slug },
+  };
+
+  const formattedDate = new Intl.DateTimeFormat("pt-PT", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  }).format(new Date(article.publishedAt));
+
   return (
-    <section
-      style={{
-        backgroundColor: "var(--primary)",
-        paddingTop: "var(--spacing-48)",
-        paddingBottom: "var(--spacing-48)",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: "1280px",
-          margin: "0 auto",
-          paddingLeft: "var(--spacing-16)",
-          paddingRight: "var(--spacing-16)",
-        }}
-      >
-        {/* Section Header */}
-        <div style={{ marginBottom: "var(--spacing-32)" }}>
-          <h2
-            style={{
-              fontFamily: "Inter, sans-serif",
-              fontSize: "var(--text-16)",
-              fontWeight: "var(--font-weight-extra-bold)",
-              color: "var(--primary-foreground)",
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              marginBottom: "var(--spacing-8)",
-            }}
-          >
-            ENTREVISTA
-          </h2>
-          <div
-            style={{ 
-              height: "1px", 
-              backgroundColor: "var(--primary-foreground)",
-              width: "100%",
-              opacity: 0.5
-            }}
-          />
-        </div>
+    <section className="px-4 md:px-8 bg-primary py-24 md:py-32">
+      <div className="max-w-[1280px] mx-auto">
+        <h2 className="font-sans font-bold text-xs md:text-sm uppercase tracking-[0.12em] text-primary-foreground mb-8">
+          Entrevista
+        </h2>
 
-        {/* Content Layout */}
-        <div
-          style={{
-            display: "flex",
-            gap: "var(--spacing-32)",
-            flexWrap: "wrap",
-            alignItems: "center",
-          }}
-        >
-          {/* Video / Image Placeholder */}
-          <div
-            style={{
-              flex: "1 1 500px",
-              backgroundColor: "#f0f0f0",
-              aspectRatio: "16 / 9",
-            }}
-          />
-
-          {/* Text Content */}
-          <div
-            style={{
-              flex: "1 1 400px",
-              color: "var(--primary-foreground)",
-            }}
+        <div className="grid gap-12 items-center grid-cols-1 md:grid-cols-2">
+          <Link
+            {...articleLink}
+            className="group block overflow-hidden no-underline aspect-[16/9] w-full bg-background"
+            aria-label="Ver entrevista completa"
           >
-            <h3
-              style={{
-                fontFamily: "Inter, sans-serif",
-                fontSize: "var(--text-20)",
-                fontWeight: "var(--font-weight-bold)",
-                marginBottom: "var(--spacing-16)",
-                lineHeight: "1.4",
-              }}
+            <ImageWithFallback
+              src={article.heroImage}
+              alt={article.title}
+              className="w-full h-full object-cover block transition-transform duration-500 group-hover:scale-105"
+            />
+          </Link>
+
+          <div>
+            <Link
+              {...articleLink}
+              className="block no-underline text-inherit transition-opacity hover:opacity-85"
             >
-              "Dário Camal" – Do Bairro Central para o mundo
-            </h3>
-            <p
-              style={{
-                fontFamily: "Inter, sans-serif",
-                fontSize: "var(--text-14)",
-                fontWeight: "var(--font-weight-regular)",
-                lineHeight: "1.75",
-                marginBottom: "var(--spacing-24)",
-                color: "var(--primary-foreground)",
-                opacity: 0.9,
-              }}
-            >
-              Conheça o nosso canal digital que conta com uma série documental sobre
-              empreendedorismo, economia, liderança e histórias de individualidades
-              que questionam o jeito que estão levando a vida, se desprendem da
-              carreira que construíram até então e partem para uma nova caminhada.
+              <Heading
+                as="h3"
+                variant="feature-title"
+                className="text-primary-foreground mb-4"
+              >
+                {article.title}
+              </Heading>
+            </Link>
+            <p className="font-sans text-base font-normal text-primary-foreground leading-[1.7] mb-6">
+              {article.excerpt}
             </p>
-            <p
-              style={{
-                fontFamily: "Inter, sans-serif",
-                fontSize: "var(--text-12)",
-                fontWeight: "var(--font-weight-regular)",
-                color: "var(--primary-foreground)",
-                opacity: 0.8,
-              }}
-            >
-              Autor, 20 de Abril de 2026
+            <p className="font-sans text-[13px] font-normal text-primary-foreground">
+              {article.author.name}, {formattedDate}
             </p>
           </div>
         </div>

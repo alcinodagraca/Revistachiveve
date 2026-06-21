@@ -1,4 +1,6 @@
 import { FileText, Calendar, ExternalLink } from "lucide-react";
+import { PageHeader } from "../components/PageHeader";
+import { Heading } from "../components/typography";
 
 const concursos = [
   {
@@ -37,144 +39,49 @@ const concursos = [
 
 export default function ConcursosPublicosPage() {
   return (
-    <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "48px 16px" }}>
-      <div style={{ marginBottom: "48px", textAlign: "center" }}>
-        <h1
-          style={{
-            fontFamily: "Playfair Display, serif",
-            fontSize: "var(--text-48)",
-            fontWeight: "var(--font-weight-semi-bold)",
-            color: "var(--foreground)",
-            marginBottom: "16px",
-          }}
-        >
-          Concursos Públicos
-        </h1>
-        <p
-          style={{
-            fontFamily: "Inter, sans-serif",
-            fontSize: "var(--text-20)",
-            fontWeight: "var(--font-weight-regular)",
-            color: "var(--muted-foreground)",
-            lineHeight: "1.6",
-          }}
-        >
-          Oportunidades no sector público
-        </p>
-      </div>
+    <div className="max-w-[1280px] mx-auto px-4 py-12">
+      <PageHeader
+        title="Concursos Públicos"
+        subtitle="Oportunidades no sector público"
+        breadcrumbs={[{ label: "Início", to: "/" }, { label: "Concursos Públicos" }]}
+      />
 
-      <div style={{ display: "grid", gap: "24px" }}>
+      <div className="grid gap-6">
         {concursos.map((concurso) => (
           <div
             key={concurso.id}
-            style={{
-              padding: "24px",
-              borderRadius: "var(--radius-card)",
-              border: "1px solid var(--border)",
-              backgroundColor: "var(--card)",
-              transition: "all 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.08)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.boxShadow = "none";
-            }}
+            className="p-6 rounded-lg border border-border bg-card transition-all hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
           >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", gap: "16px", flexWrap: "wrap" }}>
-              <div style={{ flex: 1, minWidth: "250px" }}>
-                <div
-                  style={{
-                    display: "inline-block",
-                    padding: "4px 12px",
-                    borderRadius: "4px",
-                    backgroundColor: "var(--secondary)",
-                    marginBottom: "12px",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontFamily: "Inter, sans-serif",
-                      fontSize: "11px",
-                      fontWeight: "var(--font-weight-semi-bold)",
-                      color: "var(--primary)",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                    }}
-                  >
+            <div className="flex justify-between items-start gap-4 flex-wrap">
+              <div className="flex-1 min-w-[250px]">
+                <div className="inline-block px-3 py-1 rounded bg-secondary mb-3">
+                  <span className="font-sans text-[11px] font-semibold text-primary uppercase tracking-[0.05em]">
                     {concurso.type}
                   </span>
                 </div>
-                <h2
-                  style={{
-                    fontFamily: "Playfair Display, serif",
-                    fontSize: "var(--text-24)",
-                    fontWeight: "var(--font-weight-semi-bold)",
-                    color: "var(--foreground)",
-                    marginBottom: "8px",
-                  }}
-                >
+                <Heading as="h2" variant="feature-title" className="text-foreground mb-2">
                   {concurso.title}
-                </h2>
-                <p
-                  style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "var(--text-16)",
-                    fontWeight: "var(--font-weight-medium)",
-                    color: "var(--muted-foreground)",
-                    marginBottom: "16px",
-                  }}
-                >
+                </Heading>
+                <p className="font-sans font-medium text-base text-muted-foreground mb-4">
                   {concurso.institution}
                 </p>
-                <div style={{ display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <Calendar size={16} style={{ color: "var(--muted-foreground)" }} />
-                    <span
-                      style={{
-                        fontFamily: "Inter, sans-serif",
-                        fontSize: "var(--text-14)",
-                        fontWeight: "var(--font-weight-regular)",
-                        color: "var(--muted-foreground)",
-                      }}
-                    >
+                <div className="flex items-center gap-4 flex-wrap">
+                  <div className="flex items-center gap-1.5">
+                    <Calendar size={16} className="text-muted-foreground" />
+                    <span className="font-sans font-normal text-sm text-muted-foreground">
                       Prazo: {concurso.deadline}
                     </span>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <FileText size={16} style={{ color: "var(--muted-foreground)" }} />
-                    <span
-                      style={{
-                        fontFamily: "Inter, sans-serif",
-                        fontSize: "var(--text-14)",
-                        fontWeight: "var(--font-weight-regular)",
-                        color: "var(--muted-foreground)",
-                      }}
-                    >
+                  <div className="flex items-center gap-1.5">
+                    <FileText size={16} className="text-muted-foreground" />
+                    <span className="font-sans font-normal text-sm text-muted-foreground">
                       {concurso.vacancies} {concurso.vacancies === 1 ? "vaga" : "vagas"}
                     </span>
                   </div>
                 </div>
               </div>
               <button
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  padding: "12px 24px",
-                  borderRadius: "var(--radius)",
-                  backgroundColor: "var(--primary)",
-                  color: "var(--primary-foreground)",
-                  border: "none",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "var(--text-14)",
-                  fontWeight: "var(--font-weight-medium)",
-                  cursor: "pointer",
-                  transition: "opacity 0.2s",
-                  whiteSpace: "nowrap",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
-                onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+                className="flex items-center gap-2 px-6 py-3 rounded-md bg-primary text-primary-foreground border-none font-sans font-medium text-sm cursor-pointer transition-opacity whitespace-nowrap hover:opacity-90"
               >
                 Ver Edital
                 <ExternalLink size={16} />

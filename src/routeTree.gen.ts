@@ -9,19 +9,43 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermosRouteImport } from './routes/termos'
 import { Route as SobreNosRouteImport } from './routes/sobre-nos'
+import { Route as PrivacidadeRouteImport } from './routes/privacidade'
+import { Route as PesquisaRouteImport } from './routes/pesquisa'
 import { Route as EventosRouteImport } from './routes/eventos'
 import { Route as EdicaoImpressaRouteImport } from './routes/edicao-impressa'
 import { Route as ContactosUteisRouteImport } from './routes/contactos-uteis'
 import { Route as ContactosRouteImport } from './routes/contactos'
 import { Route as ConcursosPublicosRouteImport } from './routes/concursos-publicos'
 import { Route as ArtigosRouteImport } from './routes/artigos'
+import { Route as AnunciosRouteImport } from './routes/anuncios'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as EventosIndexRouteImport } from './routes/eventos.index'
+import { Route as ArtigosIndexRouteImport } from './routes/artigos.index'
+import { Route as EventosSlugRouteImport } from './routes/eventos.$slug'
 import { Route as ArtigosCategoryRouteImport } from './routes/artigos.$category'
+import { Route as ArtigosCategoryIndexRouteImport } from './routes/artigos.$category.index'
+import { Route as ArtigosCategorySlugRouteImport } from './routes/artigos.$category.$slug'
 
+const TermosRoute = TermosRouteImport.update({
+  id: '/termos',
+  path: '/termos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SobreNosRoute = SobreNosRouteImport.update({
   id: '/sobre-nos',
   path: '/sobre-nos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacidadeRoute = PrivacidadeRouteImport.update({
+  id: '/privacidade',
+  path: '/privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PesquisaRoute = PesquisaRouteImport.update({
+  id: '/pesquisa',
+  path: '/pesquisa',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EventosRoute = EventosRouteImport.update({
@@ -54,105 +78,208 @@ const ArtigosRoute = ArtigosRouteImport.update({
   path: '/artigos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AnunciosRoute = AnunciosRouteImport.update({
+  id: '/anuncios',
+  path: '/anuncios',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const EventosIndexRoute = EventosIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => EventosRoute,
+} as any)
+const ArtigosIndexRoute = ArtigosIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ArtigosRoute,
+} as any)
+const EventosSlugRoute = EventosSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => EventosRoute,
 } as any)
 const ArtigosCategoryRoute = ArtigosCategoryRouteImport.update({
   id: '/$category',
   path: '/$category',
   getParentRoute: () => ArtigosRoute,
 } as any)
+const ArtigosCategoryIndexRoute = ArtigosCategoryIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ArtigosCategoryRoute,
+} as any)
+const ArtigosCategorySlugRoute = ArtigosCategorySlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ArtigosCategoryRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/anuncios': typeof AnunciosRoute
   '/artigos': typeof ArtigosRouteWithChildren
   '/concursos-publicos': typeof ConcursosPublicosRoute
   '/contactos': typeof ContactosRoute
   '/contactos-uteis': typeof ContactosUteisRoute
   '/edicao-impressa': typeof EdicaoImpressaRoute
-  '/eventos': typeof EventosRoute
+  '/eventos': typeof EventosRouteWithChildren
+  '/pesquisa': typeof PesquisaRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/sobre-nos': typeof SobreNosRoute
-  '/artigos/$category': typeof ArtigosCategoryRoute
+  '/termos': typeof TermosRoute
+  '/artigos/$category': typeof ArtigosCategoryRouteWithChildren
+  '/eventos/$slug': typeof EventosSlugRoute
+  '/artigos/': typeof ArtigosIndexRoute
+  '/eventos/': typeof EventosIndexRoute
+  '/artigos/$category/$slug': typeof ArtigosCategorySlugRoute
+  '/artigos/$category/': typeof ArtigosCategoryIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/artigos': typeof ArtigosRouteWithChildren
+  '/anuncios': typeof AnunciosRoute
   '/concursos-publicos': typeof ConcursosPublicosRoute
   '/contactos': typeof ContactosRoute
   '/contactos-uteis': typeof ContactosUteisRoute
   '/edicao-impressa': typeof EdicaoImpressaRoute
-  '/eventos': typeof EventosRoute
+  '/pesquisa': typeof PesquisaRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/sobre-nos': typeof SobreNosRoute
-  '/artigos/$category': typeof ArtigosCategoryRoute
+  '/termos': typeof TermosRoute
+  '/eventos/$slug': typeof EventosSlugRoute
+  '/artigos': typeof ArtigosIndexRoute
+  '/eventos': typeof EventosIndexRoute
+  '/artigos/$category/$slug': typeof ArtigosCategorySlugRoute
+  '/artigos/$category': typeof ArtigosCategoryIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/anuncios': typeof AnunciosRoute
   '/artigos': typeof ArtigosRouteWithChildren
   '/concursos-publicos': typeof ConcursosPublicosRoute
   '/contactos': typeof ContactosRoute
   '/contactos-uteis': typeof ContactosUteisRoute
   '/edicao-impressa': typeof EdicaoImpressaRoute
-  '/eventos': typeof EventosRoute
+  '/eventos': typeof EventosRouteWithChildren
+  '/pesquisa': typeof PesquisaRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/sobre-nos': typeof SobreNosRoute
-  '/artigos/$category': typeof ArtigosCategoryRoute
+  '/termos': typeof TermosRoute
+  '/artigos/$category': typeof ArtigosCategoryRouteWithChildren
+  '/eventos/$slug': typeof EventosSlugRoute
+  '/artigos/': typeof ArtigosIndexRoute
+  '/eventos/': typeof EventosIndexRoute
+  '/artigos/$category/$slug': typeof ArtigosCategorySlugRoute
+  '/artigos/$category/': typeof ArtigosCategoryIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/anuncios'
     | '/artigos'
     | '/concursos-publicos'
     | '/contactos'
     | '/contactos-uteis'
     | '/edicao-impressa'
     | '/eventos'
+    | '/pesquisa'
+    | '/privacidade'
     | '/sobre-nos'
+    | '/termos'
     | '/artigos/$category'
+    | '/eventos/$slug'
+    | '/artigos/'
+    | '/eventos/'
+    | '/artigos/$category/$slug'
+    | '/artigos/$category/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/artigos'
+    | '/anuncios'
     | '/concursos-publicos'
     | '/contactos'
     | '/contactos-uteis'
     | '/edicao-impressa'
-    | '/eventos'
+    | '/pesquisa'
+    | '/privacidade'
     | '/sobre-nos'
+    | '/termos'
+    | '/eventos/$slug'
+    | '/artigos'
+    | '/eventos'
+    | '/artigos/$category/$slug'
     | '/artigos/$category'
   id:
     | '__root__'
     | '/'
+    | '/anuncios'
     | '/artigos'
     | '/concursos-publicos'
     | '/contactos'
     | '/contactos-uteis'
     | '/edicao-impressa'
     | '/eventos'
+    | '/pesquisa'
+    | '/privacidade'
     | '/sobre-nos'
+    | '/termos'
     | '/artigos/$category'
+    | '/eventos/$slug'
+    | '/artigos/'
+    | '/eventos/'
+    | '/artigos/$category/$slug'
+    | '/artigos/$category/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnunciosRoute: typeof AnunciosRoute
   ArtigosRoute: typeof ArtigosRouteWithChildren
   ConcursosPublicosRoute: typeof ConcursosPublicosRoute
   ContactosRoute: typeof ContactosRoute
   ContactosUteisRoute: typeof ContactosUteisRoute
   EdicaoImpressaRoute: typeof EdicaoImpressaRoute
-  EventosRoute: typeof EventosRoute
+  EventosRoute: typeof EventosRouteWithChildren
+  PesquisaRoute: typeof PesquisaRoute
+  PrivacidadeRoute: typeof PrivacidadeRoute
   SobreNosRoute: typeof SobreNosRoute
+  TermosRoute: typeof TermosRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/termos': {
+      id: '/termos'
+      path: '/termos'
+      fullPath: '/termos'
+      preLoaderRoute: typeof TermosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sobre-nos': {
       id: '/sobre-nos'
       path: '/sobre-nos'
       fullPath: '/sobre-nos'
       preLoaderRoute: typeof SobreNosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacidade': {
+      id: '/privacidade'
+      path: '/privacidade'
+      fullPath: '/privacidade'
+      preLoaderRoute: typeof PrivacidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pesquisa': {
+      id: '/pesquisa'
+      path: '/pesquisa'
+      fullPath: '/pesquisa'
+      preLoaderRoute: typeof PesquisaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/eventos': {
@@ -197,12 +324,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArtigosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/anuncios': {
+      id: '/anuncios'
+      path: '/anuncios'
+      fullPath: '/anuncios'
+      preLoaderRoute: typeof AnunciosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/eventos/': {
+      id: '/eventos/'
+      path: '/'
+      fullPath: '/eventos/'
+      preLoaderRoute: typeof EventosIndexRouteImport
+      parentRoute: typeof EventosRoute
+    }
+    '/artigos/': {
+      id: '/artigos/'
+      path: '/'
+      fullPath: '/artigos/'
+      preLoaderRoute: typeof ArtigosIndexRouteImport
+      parentRoute: typeof ArtigosRoute
+    }
+    '/eventos/$slug': {
+      id: '/eventos/$slug'
+      path: '/$slug'
+      fullPath: '/eventos/$slug'
+      preLoaderRoute: typeof EventosSlugRouteImport
+      parentRoute: typeof EventosRoute
     }
     '/artigos/$category': {
       id: '/artigos/$category'
@@ -211,29 +366,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArtigosCategoryRouteImport
       parentRoute: typeof ArtigosRoute
     }
+    '/artigos/$category/': {
+      id: '/artigos/$category/'
+      path: '/'
+      fullPath: '/artigos/$category/'
+      preLoaderRoute: typeof ArtigosCategoryIndexRouteImport
+      parentRoute: typeof ArtigosCategoryRoute
+    }
+    '/artigos/$category/$slug': {
+      id: '/artigos/$category/$slug'
+      path: '/$slug'
+      fullPath: '/artigos/$category/$slug'
+      preLoaderRoute: typeof ArtigosCategorySlugRouteImport
+      parentRoute: typeof ArtigosCategoryRoute
+    }
   }
 }
 
+interface ArtigosCategoryRouteChildren {
+  ArtigosCategorySlugRoute: typeof ArtigosCategorySlugRoute
+  ArtigosCategoryIndexRoute: typeof ArtigosCategoryIndexRoute
+}
+
+const ArtigosCategoryRouteChildren: ArtigosCategoryRouteChildren = {
+  ArtigosCategorySlugRoute: ArtigosCategorySlugRoute,
+  ArtigosCategoryIndexRoute: ArtigosCategoryIndexRoute,
+}
+
+const ArtigosCategoryRouteWithChildren = ArtigosCategoryRoute._addFileChildren(
+  ArtigosCategoryRouteChildren,
+)
+
 interface ArtigosRouteChildren {
-  ArtigosCategoryRoute: typeof ArtigosCategoryRoute
+  ArtigosCategoryRoute: typeof ArtigosCategoryRouteWithChildren
+  ArtigosIndexRoute: typeof ArtigosIndexRoute
 }
 
 const ArtigosRouteChildren: ArtigosRouteChildren = {
-  ArtigosCategoryRoute: ArtigosCategoryRoute,
+  ArtigosCategoryRoute: ArtigosCategoryRouteWithChildren,
+  ArtigosIndexRoute: ArtigosIndexRoute,
 }
 
 const ArtigosRouteWithChildren =
   ArtigosRoute._addFileChildren(ArtigosRouteChildren)
 
+interface EventosRouteChildren {
+  EventosSlugRoute: typeof EventosSlugRoute
+  EventosIndexRoute: typeof EventosIndexRoute
+}
+
+const EventosRouteChildren: EventosRouteChildren = {
+  EventosSlugRoute: EventosSlugRoute,
+  EventosIndexRoute: EventosIndexRoute,
+}
+
+const EventosRouteWithChildren =
+  EventosRoute._addFileChildren(EventosRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnunciosRoute: AnunciosRoute,
   ArtigosRoute: ArtigosRouteWithChildren,
   ConcursosPublicosRoute: ConcursosPublicosRoute,
   ContactosRoute: ContactosRoute,
   ContactosUteisRoute: ContactosUteisRoute,
   EdicaoImpressaRoute: EdicaoImpressaRoute,
-  EventosRoute: EventosRoute,
+  EventosRoute: EventosRouteWithChildren,
+  PesquisaRoute: PesquisaRoute,
+  PrivacidadeRoute: PrivacidadeRoute,
   SobreNosRoute: SobreNosRoute,
+  TermosRoute: TermosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

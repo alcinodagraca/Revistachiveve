@@ -1,4 +1,35 @@
+import { Link } from "@tanstack/react-router";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { Heading, SectionHeader } from "./typography";
+
+// Maps display category label → slug used in /artigos/$category routes
+const categorySlug: Record<string, string> = {
+  Economia: "economia",
+  Empreendedorismo: "empreendedorismo",
+  Inovação: "inovacao-tecnologia",
+  "Inovação e Tecnologia": "inovacao-tecnologia",
+  Liderança: "lideranca",
+  Opinião: "opiniao",
+  Análise: "analise",
+};
+
+// Maps card id → article slug (subset wired to actual mock articles;
+// rest fall back to the category index page)
+const articleSlugById: Record<number, string | undefined> = {
+  1: undefined, // no dedicated article — link to category
+  2: undefined,
+  3: "cop-30-mocambique",
+  4: undefined,
+  5: "data-centers-africa",
+  6: "10-mais-ricos-mundo-abril-2026",
+  7: "mercado-trabalho-fed-2026",
+  8: "forbes-mulheres-mais-poderosas-2026",
+  9: undefined,
+  10: undefined,
+  11: undefined,
+  12: undefined,
+  13: undefined,
+};
 
 const lancamentos = [
   {
@@ -83,127 +114,78 @@ const lancamentos = [
 
 export function LancamentosSection() {
   return (
-    <section
-      style={{
-        backgroundColor: "var(--background)",
-        paddingTop: "var(--spacing-48)",
-        paddingBottom: "var(--spacing-48)",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: "1280px",
-          margin: "0 auto",
-          paddingLeft: "var(--spacing-16)",
-          paddingRight: "var(--spacing-16)",
-        }}
-      >
-        {/* Section Header */}
-        <div style={{ marginBottom: "var(--spacing-32)" }}>
-          <h2
-            style={{
-              fontFamily: "Inter, sans-serif",
-              fontSize: "var(--text-20)",
-              fontWeight: "var(--font-weight-extra-bold)",
-              color: "var(--primary)",
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              marginBottom: "var(--spacing-8)",
-            }}
-          >
-            Lançamentos
-          </h2>
-          <div
-            style={{
-              height: "2px",
-              backgroundColor: "var(--primary)",
-              width: "100%",
-            }}
-          />
-        </div>
+    <section className="bg-background py-12">
+      <div className="max-w-[1280px] mx-auto px-4">
+        <SectionHeader>Lançamentos</SectionHeader>
 
-        {/* Cards Grid - 3 columns */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "var(--spacing-24)",
-          }}
-        >
-          {lancamentos.map((item) => (
-            <article key={item.id}>
-              {/* Category Badge */}
-              <div style={{ marginBottom: "var(--spacing-12)" }}>
-                <span
-                  style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "var(--text-12)",
-                    fontWeight: "var(--font-weight-semi-bold)",
-                    color: "var(--primary)",
-                    backgroundColor: "var(--secondary)",
-                    padding: "4px var(--spacing-12)",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                    display: "inline-block",
-                  }}
-                >
-                  {item.category}
-                </span>
-              </div>
+        <div className="grid grid-cols-3 gap-6">
+          {lancamentos.map((item) => {
+            const catSlug = categorySlug[item.category] ?? "economia";
+            const articleSlug = articleSlugById[item.id];
 
-              {/* Image */}
-              <a
-                href="#"
-                style={{
-                  display: "block",
-                  overflow: "hidden",
-                  marginBottom: "var(--spacing-16)",
-                }}
-              >
-                <ImageWithFallback
-                  src={item.image}
-                  alt={item.title}
-                  style={{
-                    width: "100%",
-                    height: "200px",
-                    objectFit: "cover",
-                    transition: "transform 0.3s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    const img = e.currentTarget as HTMLImageElement;
-                    img.style.transform = "scale(1.05)";
-                  }}
-                  onMouseLeave={(e) => {
-                    const img = e.currentTarget as HTMLImageElement;
-                    img.style.transform = "scale(1)";
-                  }}
-                />
-              </a>
+            const imageInner = (
+              <ImageWithFallback
+                src={item.image}
+                alt={item.title}
+                className="w-full h-[200px] object-cover block transition-transform duration-500 group-hover:scale-105"
+              />
+            );
 
-              {/* Title */}
-              <a
-                href="#"
-                style={{
-                  display: "block",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "var(--text-14)",
-                  fontWeight: "var(--font-weight-medium)",
-                  color: "var(--primary)",
-                  lineHeight: "1.4",
-                  textDecoration: "none",
-                  transition: "opacity 0.2s ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.opacity = "0.8";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.opacity = "1";
-                }}
-              >
-                {item.title}
-              </a>
-            </article>
-          ))}
+            return (
+              <article key={item.id}>
+                <div className="mb-3">
+                  <Link
+                    to="/artigos/$category"
+                    params={{ category: catSlug }}
+                    className="font-sans text-xs font-semibold text-primary bg-secondary py-1 px-3 uppercase tracking-[0.05em] inline-block no-underline"
+                  >
+                    {item.category}
+                  </Link>
+                </div>
+
+                {articleSlug ? (
+                  <Link
+                    to="/artigos/$category/$slug"
+                    params={{ category: catSlug, slug: articleSlug }}
+                    className="group block overflow-hidden mb-4 no-underline"
+                  >
+                    {imageInner}
+                  </Link>
+                ) : (
+                  <Link
+                    to="/artigos/$category"
+                    params={{ category: catSlug }}
+                    className="group block overflow-hidden mb-4 no-underline"
+                  >
+                    {imageInner}
+                  </Link>
+                )}
+
+                {/* Title */}
+                {articleSlug ? (
+                  <Link
+                    to="/artigos/$category/$slug"
+                    params={{ category: catSlug, slug: articleSlug }}
+                    className="block no-underline transition-opacity hover:opacity-80"
+                  >
+                    <Heading as="h3" variant="card-title" className="text-foreground">
+                      {item.title}
+                    </Heading>
+                  </Link>
+                ) : (
+                  <Link
+                    to="/artigos/$category"
+                    params={{ category: catSlug }}
+                    className="block no-underline transition-opacity hover:opacity-80"
+                  >
+                    <Heading as="h3" variant="card-title" className="text-foreground">
+                      {item.title}
+                    </Heading>
+                  </Link>
+                )}
+              </article>
+            );
+          })}
         </div>
       </div>
 

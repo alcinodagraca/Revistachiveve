@@ -1,6 +1,15 @@
 import { useRef } from "react";
+import { Link } from "@tanstack/react-router";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
+import { Heading } from "./typography";
+
+const eventSlugById: Record<number, string> = {
+  1: "forum-empreendedorismo-maputo-2026",
+  2: "summit-negocios-inovacao-beira",
+  3: "tech-africa-solucoes-digitais-pme",
+  4: "workshop-lideranca-feminina-negocios",
+};
 
 const eventos = [
   {
@@ -68,50 +77,23 @@ export function EventosSection() {
   };
 
   return (
-    <section className="px-4 md:px-8 py-8" style={{ backgroundColor: "var(--secondary)" }}>
+    <section className="px-4 md:px-8 py-8 bg-secondary">
       <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
-        <div className="mb-4 flex items-center justify-between">
-          <div className="flex-1">
-            <h2
-              className="mb-2"
-              style={{
-                fontFamily: "Inter, sans-serif",
-                fontSize: "var(--text-20)",
-                fontWeight: "var(--font-weight-extra-bold)",
-                color: "var(--chart-1)",
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-              }}
-            >
-              Eventos
-            </h2>
-            <div
-              className="w-full"
-              style={{ height: "2px", backgroundColor: "var(--chart-1)" }}
-            />
-          </div>
+        <div className="mb-6 flex items-baseline justify-between gap-4 pb-3 border-b border-border">
+          <h2 className="font-sans font-bold text-xs md:text-sm uppercase tracking-[0.12em] text-foreground">
+            Eventos
+          </h2>
           <div className="flex items-center gap-2 ml-6">
             <button
               onClick={() => scroll("left")}
-              className="p-2 rounded-full transition-colors"
-              style={{
-                border: "1px solid var(--border)",
-                backgroundColor: "var(--background)",
-                color: "var(--foreground)",
-              }}
+              className="p-2 rounded-full transition-colors border border-border bg-background text-foreground"
               aria-label="Anterior"
             >
               <ChevronLeft size={18} />
             </button>
             <button
               onClick={() => scroll("right")}
-              className="p-2 rounded-full transition-colors"
-              style={{
-                border: "1px solid var(--border)",
-                backgroundColor: "var(--background)",
-                color: "var(--foreground)",
-              }}
+              className="p-2 rounded-full transition-colors border border-border bg-background text-foreground"
               aria-label="Próximo"
             >
               <ChevronRight size={18} />
@@ -119,57 +101,29 @@ export function EventosSection() {
           </div>
         </div>
 
-        {/* Horizontal Scroll */}
         <div
           ref={scrollRef}
-          className="flex gap-4 overflow-x-auto pb-2"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          className="flex gap-4 overflow-x-auto pb-2 [scrollbar-width:none] [-ms-overflow-style:none]"
         >
           {eventos.map((evento) => (
             <article
               key={evento.id}
-              className="flex-shrink-0 overflow-hidden group cursor-pointer"
-              style={{
-                width: "280px",
-                borderRadius: "var(--radius-card)",
-                border: "1px solid var(--border)",
-                backgroundColor: "var(--card)",
-              }}
+              className="flex-shrink-0 overflow-hidden group cursor-pointer w-[280px] rounded-lg border border-border bg-card"
             >
-              {/* Image */}
-              <div className="relative overflow-hidden" style={{ height: "160px" }}>
+              <div className="relative overflow-hidden h-[160px]">
                 <ImageWithFallback
                   src={evento.image}
                   alt={evento.title}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
-                {/* Date badge */}
                 <div
-                  className="absolute top-3 left-3 flex flex-col items-center justify-center px-2 py-1 rounded"
-                  style={{
-                    backgroundColor: "var(--chart-1)",
-                    color: "#ffffff",
-                    minWidth: "44px",
-                  }}
+                  className="absolute top-3 left-3 flex flex-col items-center justify-center px-2 py-1 rounded text-white min-w-[44px]"
+                  style={{ backgroundColor: "var(--chart-1)" }}
                 >
-                  <span
-                    style={{
-                      fontFamily: "Inter, sans-serif",
-                      fontSize: "var(--text-20)",
-                      fontWeight: "var(--font-weight-extra-bold)",
-                      lineHeight: "1",
-                    }}
-                  >
+                  <span className="font-sans text-xl font-bold leading-none">
                     {evento.day}
                   </span>
-                  <span
-                    style={{
-                      fontFamily: "Inter, sans-serif",
-                      fontSize: "10px",
-                      fontWeight: "var(--font-weight-semi-bold)",
-                      letterSpacing: "0.1em",
-                    }}
-                  >
+                  <span className="font-sans text-[10px] font-semibold tracking-[0.1em]">
                     {evento.month}
                   </span>
                 </div>
@@ -177,29 +131,29 @@ export function EventosSection() {
 
               {/* Content */}
               <div className="p-4">
-                <a
-                  href="#"
-                  className="block hover:underline"
-                  style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "var(--text-14)",
-                    fontWeight: "var(--font-weight-semi-bold)",
-                    color: "var(--chart-1)",
-                    lineHeight: "1.4",
-                  }}
-                >
-                  {evento.title}
-                </a>
-                <div className="flex items-center gap-1 mt-2">
-                  <Calendar size={12} style={{ color: "var(--muted-foreground)" }} />
-                  <span
-                    style={{
-                      fontFamily: "Inter, sans-serif",
-                      fontSize: "12px",
-                      fontWeight: "var(--font-weight-regular)",
-                      color: "var(--muted-foreground)",
-                    }}
+                {eventSlugById[evento.id] ? (
+                  <Link
+                    to="/eventos/$slug"
+                    params={{ slug: eventSlugById[evento.id] }}
+                    className="block no-underline hover:underline"
                   >
+                    <Heading as="h3" variant="card-title-sm" className="text-foreground">
+                      {evento.title}
+                    </Heading>
+                  </Link>
+                ) : (
+                  <Link
+                    to="/eventos"
+                    className="block no-underline hover:underline"
+                  >
+                    <Heading as="h3" variant="card-title-sm" className="text-foreground">
+                      {evento.title}
+                    </Heading>
+                  </Link>
+                )}
+                <div className="flex items-center gap-1 mt-2">
+                  <Calendar size={12} className="text-muted-foreground" />
+                  <span className="font-sans text-xs font-normal text-muted-foreground">
                     {evento.date} · {evento.location}
                   </span>
                 </div>

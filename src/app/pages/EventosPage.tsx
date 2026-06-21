@@ -1,5 +1,7 @@
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { Calendar, MapPin, Clock } from "lucide-react";
+import { PageHeader } from "../components/PageHeader";
+import { Heading, SectionHeader, Eyebrow } from "../components/typography";
 
 // Featured events (2 events)
 const featuredEvents = [
@@ -101,196 +103,65 @@ const regularEvents = [
 
 export default function EventosPage() {
   return (
-    <div style={{ backgroundColor: "var(--background)" }}>
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "var(--spacing-48) var(--spacing-16)" }}>
-        {/* Page Header */}
-        <div style={{ marginBottom: "var(--spacing-48)" }}>
-          <h1
-            style={{
-              fontFamily: "Playfair Display, serif",
-              fontSize: "var(--text-48)",
-              fontWeight: "var(--font-weight-semi-bold)",
-              color: "var(--foreground)",
-              marginBottom: "var(--spacing-8)",
-              lineHeight: "1.1",
-            }}
-          >
-            Eventos
-          </h1>
-          <p
-            style={{
-              fontFamily: "Inter, sans-serif",
-              fontSize: "var(--text-16)",
-              fontWeight: "var(--font-weight-regular)",
-              color: "var(--muted-foreground)",
-              lineHeight: "1.6",
-            }}
-          >
-            Participe nos nossos eventos e amplie a sua rede de contactos profissionais
-          </p>
-        </div>
+    <div className="bg-background">
+      <div className="max-w-[1280px] mx-auto px-4 py-12">
+        <PageHeader
+          title="Eventos"
+          subtitle="Participe nos nossos eventos e amplie a sua rede de contactos profissionais"
+          breadcrumbs={[{ label: "Início", to: "/" }, { label: "Eventos" }]}
+        />
 
-        {/* Featured Events Section - 2 columns */}
-        <div style={{ marginBottom: "var(--spacing-64)" }}>
-          <h2
-            style={{
-              fontFamily: "Inter, sans-serif",
-              fontSize: "var(--text-14)",
-              fontWeight: "var(--font-weight-semi-bold)",
-              color: "var(--foreground)",
-              marginBottom: "var(--spacing-20)",
-              textTransform: "uppercase",
-              letterSpacing: "0.08em",
-            }}
-          >
-            Em Destaque
-          </h2>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
-              gap: "var(--spacing-32)",
-            }}
-          >
+        <div className="mb-16">
+          <SectionHeader>Em Destaque</SectionHeader>
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-8">
             {featuredEvents.map((event) => (
               <article
                 key={event.id}
-                style={{
-                  borderRadius: "var(--radius-card)",
-                  overflow: "hidden",
-                  transition: "transform 0.2s ease",
-                  cursor: "pointer",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                }}
+                className="rounded-lg overflow-hidden transition-transform duration-200 hover:-translate-y-0.5 cursor-pointer"
               >
-                {/* Image */}
-                <div style={{ position: "relative", overflow: "hidden" }}>
+                <div className="relative overflow-hidden">
                   <ImageWithFallback
                     src={event.image}
                     alt={event.title}
-                    style={{
-                      width: "100%",
-                      height: "280px",
-                      objectFit: "cover",
-                      display: "block",
-                    }}
+                    className="w-full h-[280px] object-cover block"
                   />
                 </div>
 
-                {/* Content */}
-                <div style={{ paddingTop: "var(--spacing-16)" }}>
-                  <div
-                    style={{
-                      display: "inline-block",
-                      marginBottom: "var(--spacing-8)",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: "Inter, sans-serif",
-                        fontSize: "11px",
-                        fontWeight: "var(--font-weight-semi-bold)",
-                        color: "var(--primary)",
-                        textTransform: "uppercase",
-                        letterSpacing: "0.08em",
-                      }}
-                    >
-                      {event.category}
-                    </span>
+                <div className="pt-4">
+                  <div className="inline-block mb-2">
+                    <Eyebrow>{event.category}</Eyebrow>
                   </div>
 
-                  <h3
-                    style={{
-                      fontFamily: "Playfair Display, serif",
-                      fontSize: "var(--text-24)",
-                      fontWeight: "var(--font-weight-semi-bold)",
-                      color: "var(--foreground)",
-                      marginBottom: "var(--spacing-12)",
-                      lineHeight: "1.3",
-                    }}
-                  >
+                  <Heading as="h3" variant="feature-title" className="text-foreground mb-3 leading-[1.3]">
                     {event.title}
-                  </h3>
+                  </Heading>
 
-                  <p
-                    style={{
-                      fontFamily: "Inter, sans-serif",
-                      fontSize: "var(--text-14)",
-                      fontWeight: "var(--font-weight-regular)",
-                      color: "var(--muted-foreground)",
-                      lineHeight: "1.6",
-                      marginBottom: "var(--spacing-16)",
-                    }}
-                  >
+                  <p className="font-sans text-sm text-muted-foreground leading-[1.6] mb-4">
                     {event.description}
                   </p>
 
-                  {/* Event Details */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: "var(--spacing-8)", marginBottom: "var(--spacing-16)" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "var(--spacing-8)" }}>
-                      <Calendar size={16} style={{ color: "var(--primary)" }} />
-                      <span
-                        style={{
-                          fontFamily: "Inter, sans-serif",
-                          fontSize: "var(--text-14)",
-                          fontWeight: "var(--font-weight-medium)",
-                          color: "var(--foreground)",
-                        }}
-                      >
+                  <div className="flex flex-col gap-2 mb-4">
+                    <div className="flex items-center gap-2">
+                      <Calendar size={16} className="text-primary" />
+                      <span className="font-sans text-sm font-medium text-foreground">
                         {event.date}
                       </span>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: "var(--spacing-8)" }}>
-                      <Clock size={16} style={{ color: "var(--primary)" }} />
-                      <span
-                        style={{
-                          fontFamily: "Inter, sans-serif",
-                          fontSize: "var(--text-14)",
-                          fontWeight: "var(--font-weight-medium)",
-                          color: "var(--foreground)",
-                        }}
-                      >
+                    <div className="flex items-center gap-2">
+                      <Clock size={16} className="text-primary" />
+                      <span className="font-sans text-sm font-medium text-foreground">
                         {event.time}
                       </span>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: "var(--spacing-8)" }}>
-                      <MapPin size={16} style={{ color: "var(--primary)" }} />
-                      <span
-                        style={{
-                          fontFamily: "Inter, sans-serif",
-                          fontSize: "var(--text-14)",
-                          fontWeight: "var(--font-weight-medium)",
-                          color: "var(--foreground)",
-                        }}
-                      >
+                    <div className="flex items-center gap-2">
+                      <MapPin size={16} className="text-primary" />
+                      <span className="font-sans text-sm font-medium text-foreground">
                         {event.location}
                       </span>
                     </div>
                   </div>
 
-                  {/* CTA Button */}
-                  <button
-                    style={{
-                      width: "100%",
-                      padding: "var(--spacing-12) var(--spacing-24)",
-                      borderRadius: "var(--radius)",
-                      backgroundColor: "var(--primary)",
-                      color: "var(--primary-foreground)",
-                      border: "none",
-                      fontFamily: "Inter, sans-serif",
-                      fontSize: "var(--text-14)",
-                      fontWeight: "var(--font-weight-medium)",
-                      cursor: "pointer",
-                      transition: "opacity 0.2s",
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
-                    onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-                  >
+                  <button className="w-full py-3 px-6 rounded-md bg-primary text-primary-foreground border-none font-sans text-sm font-medium cursor-pointer transition-opacity hover:opacity-90">
                     Inscrever-se
                   </button>
                 </div>
@@ -299,167 +170,57 @@ export default function EventosPage() {
           </div>
         </div>
 
-        {/* Regular Events Grid - 3 columns */}
         <div>
-          <h2
-            style={{
-              fontFamily: "Inter, sans-serif",
-              fontSize: "var(--text-14)",
-              fontWeight: "var(--font-weight-semi-bold)",
-              color: "var(--foreground)",
-              marginBottom: "var(--spacing-20)",
-              textTransform: "uppercase",
-              letterSpacing: "0.08em",
-            }}
-          >
-            Próximos Eventos
-          </h2>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-              gap: "var(--spacing-24)",
-            }}
-          >
+          <SectionHeader>Próximos Eventos</SectionHeader>
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-6">
             {regularEvents.map((event) => (
               <article
                 key={event.id}
-                style={{
-                  borderRadius: "var(--radius-card)",
-                  overflow: "hidden",
-                  transition: "transform 0.2s ease",
-                  cursor: "pointer",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                }}
+                className="rounded-lg overflow-hidden transition-transform duration-200 hover:-translate-y-0.5 cursor-pointer"
               >
-                {/* Image */}
-                <div style={{ position: "relative", overflow: "hidden" }}>
+                <div className="relative overflow-hidden">
                   <ImageWithFallback
                     src={event.image}
                     alt={event.title}
-                    style={{
-                      width: "100%",
-                      height: "200px",
-                      objectFit: "cover",
-                      display: "block",
-                    }}
+                    className="w-full h-[200px] object-cover block"
                   />
                 </div>
 
-                {/* Content */}
-                <div style={{ paddingTop: "var(--spacing-16)" }}>
-                  <div
-                    style={{
-                      display: "inline-block",
-                      marginBottom: "var(--spacing-8)",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: "Inter, sans-serif",
-                        fontSize: "11px",
-                        fontWeight: "var(--font-weight-semi-bold)",
-                        color: "var(--primary)",
-                        textTransform: "uppercase",
-                        letterSpacing: "0.08em",
-                      }}
-                    >
-                      {event.category}
-                    </span>
+                <div className="pt-4">
+                  <div className="inline-block mb-2">
+                    <Eyebrow>{event.category}</Eyebrow>
                   </div>
 
-                  <h3
-                    style={{
-                      fontFamily: "Playfair Display, serif",
-                      fontSize: "var(--text-16)",
-                      fontWeight: "var(--font-weight-semi-bold)",
-                      color: "var(--foreground)",
-                      marginBottom: "var(--spacing-8)",
-                      lineHeight: "1.3",
-                    }}
-                  >
+                  <Heading as="h3" variant="card-title" className="text-foreground mb-2 leading-[1.3]">
                     {event.title}
-                  </h3>
+                  </Heading>
 
-                  <p
-                    style={{
-                      fontFamily: "Inter, sans-serif",
-                      fontSize: "var(--text-14)",
-                      fontWeight: "var(--font-weight-regular)",
-                      color: "var(--muted-foreground)",
-                      lineHeight: "1.6",
-                      marginBottom: "var(--spacing-12)",
-                    }}
-                  >
+                  <p className="font-sans text-sm text-muted-foreground leading-[1.6] mb-3">
                     {event.description}
                   </p>
 
-                  {/* Event Details */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: "var(--spacing-8)", marginBottom: "var(--spacing-16)" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "var(--spacing-8)" }}>
-                      <Calendar size={14} style={{ color: "var(--primary)" }} />
-                      <span
-                        style={{
-                          fontFamily: "Inter, sans-serif",
-                          fontSize: "var(--text-12)",
-                          fontWeight: "var(--font-weight-medium)",
-                          color: "var(--foreground)",
-                        }}
-                      >
+                  <div className="flex flex-col gap-2 mb-4">
+                    <div className="flex items-center gap-2">
+                      <Calendar size={14} className="text-primary" />
+                      <span className="font-sans text-xs font-medium text-foreground">
                         {event.date}
                       </span>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: "var(--spacing-8)" }}>
-                      <Clock size={14} style={{ color: "var(--primary)" }} />
-                      <span
-                        style={{
-                          fontFamily: "Inter, sans-serif",
-                          fontSize: "var(--text-12)",
-                          fontWeight: "var(--font-weight-medium)",
-                          color: "var(--foreground)",
-                        }}
-                      >
+                    <div className="flex items-center gap-2">
+                      <Clock size={14} className="text-primary" />
+                      <span className="font-sans text-xs font-medium text-foreground">
                         {event.time}
                       </span>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: "var(--spacing-8)" }}>
-                      <MapPin size={14} style={{ color: "var(--primary)" }} />
-                      <span
-                        style={{
-                          fontFamily: "Inter, sans-serif",
-                          fontSize: "var(--text-12)",
-                          fontWeight: "var(--font-weight-medium)",
-                          color: "var(--foreground)",
-                        }}
-                      >
+                    <div className="flex items-center gap-2">
+                      <MapPin size={14} className="text-primary" />
+                      <span className="font-sans text-xs font-medium text-foreground">
                         {event.location}
                       </span>
                     </div>
                   </div>
 
-                  {/* CTA Button */}
-                  <button
-                    style={{
-                      width: "100%",
-                      padding: "var(--spacing-12) var(--spacing-20)",
-                      borderRadius: "var(--radius)",
-                      backgroundColor: "var(--primary)",
-                      color: "var(--primary-foreground)",
-                      border: "none",
-                      fontFamily: "Inter, sans-serif",
-                      fontSize: "var(--text-12)",
-                      fontWeight: "var(--font-weight-medium)",
-                      cursor: "pointer",
-                      transition: "opacity 0.2s",
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
-                    onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-                  >
+                  <button className="w-full py-3 px-5 rounded-md bg-primary text-primary-foreground border-none font-sans text-xs font-medium cursor-pointer transition-opacity hover:opacity-90">
                     Inscrever-se
                   </button>
                 </div>

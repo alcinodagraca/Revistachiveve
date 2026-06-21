@@ -6,6 +6,7 @@ import {
   createRootRoute,
 } from '@tanstack/react-router'
 import { Layout } from '../app/components/Layout'
+import NotFoundPage from '../app/pages/NotFoundPage'
 import appCss from '../styles/index.css?url'
 
 export const Route = createRootRoute({
@@ -18,9 +19,18 @@ export const Route = createRootRoute({
       },
       { title: 'Revista Chiveve' },
     ],
-    links: [{ rel: 'stylesheet', href: appCss }],
+    links: [
+      { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+      { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
+      {
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap',
+      },
+      { rel: 'stylesheet', href: appCss },
+    ],
   }),
   component: Layout,
+  notFoundComponent: NotFoundPage,
   shellComponent: RootDocument,
 })
 

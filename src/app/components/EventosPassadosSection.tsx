@@ -1,5 +1,13 @@
+import { Link } from "@tanstack/react-router";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-import { ArrowRight } from "lucide-react";
+import { SectionHeader, Heading } from "./typography";
+
+const eventSlugById: Record<number, string> = {
+  1: "workshop-lideranca-feminina-negocios",
+  2: "forum-empreendedorismo-maputo-2026",
+  3: "summit-negocios-inovacao-beira",
+  4: "tech-africa-solucoes-digitais-pme",
+};
 
 const eventos = [
   {
@@ -38,188 +46,46 @@ const eventos = [
 
 export function EventosPassadosSection() {
   return (
-    <section
-      style={{
-        backgroundColor: "#F5F5F5",
-        paddingTop: "var(--spacing-48)",
-        paddingBottom: "var(--spacing-48)",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: "1280px",
-          margin: "0 auto",
-          paddingLeft: "var(--spacing-16)",
-          paddingRight: "var(--spacing-16)",
-        }}
-      >
-        {/* Section Header with "Ver todos" button */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "var(--spacing-32)",
-          }}
-        >
-          <div>
-            <h2
-              style={{
-                fontFamily: "Inter, sans-serif",
-                fontSize: "var(--text-20)",
-                fontWeight: "var(--font-weight-extra-bold)",
-                color: "var(--foreground)",
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                marginBottom: "var(--spacing-8)",
-              }}
-            >
-              Eventos Passados
-            </h2>
-            <div
-              style={{
-                height: "2px",
-                backgroundColor: "var(--foreground)",
-                width: "200px",
-              }}
-            />
-          </div>
+    <section className="bg-[#F5F5F5] py-12">
+      <div className="max-w-[1280px] mx-auto px-4">
+        <SectionHeader action={{ label: "Ver todos →", to: "/eventos" }}>
+          Eventos Passados
+        </SectionHeader>
 
-          {/* Ver todos button */}
-          <a
-            href="#"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "var(--spacing-8)",
-              fontFamily: "Inter, sans-serif",
-              fontSize: "var(--text-14)",
-              fontWeight: "var(--font-weight-semi-bold)",
-              color: "var(--primary)",
-              textDecoration: "none",
-              transition: "opacity 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.opacity = "0.7";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.opacity = "1";
-            }}
-          >
-            Ver todos
-            <ArrowRight size={16} />
-          </a>
-        </div>
-
-        {/* Events Grid - 4 columns */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: "var(--spacing-24)",
-          }}
-        >
+        <div className="grid grid-cols-4 gap-6">
           {eventos.map((evento) => (
             <article key={evento.id}>
-              {/* Image */}
-              <a
-                href="#"
-                style={{
-                  display: "block",
-                  overflow: "hidden",
-                  marginBottom: "var(--spacing-16)",
-                  position: "relative",
-                }}
+              <Link
+                to="/eventos/$slug"
+                params={{ slug: eventSlugById[evento.id] ?? "forum-empreendedorismo-maputo-2026" }}
+                className="group block overflow-hidden mb-4 relative no-underline"
               >
-                {/* Category Badge Overlay */}
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "var(--spacing-12)",
-                    left: "var(--spacing-12)",
-                    backgroundColor: "rgba(0, 0, 0, 0.8)",
-                    color: "#FFFFFF",
-                    padding: "4px var(--spacing-12)",
-                    fontSize: "var(--text-12)",
-                    fontFamily: "Inter, sans-serif",
-                    fontWeight: "var(--font-weight-semi-bold)",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                    zIndex: 1,
-                  }}
-                >
+                <div className="absolute top-3 left-3 bg-black/80 text-white py-1 px-3 font-sans text-xs font-semibold uppercase tracking-[0.05em] z-[1]">
                   {evento.category}
                 </div>
 
                 <ImageWithFallback
                   src={evento.image}
                   alt={evento.title}
-                  style={{
-                    width: "100%",
-                    height: "240px",
-                    objectFit: "cover",
-                    transition: "transform 0.3s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    const img = e.currentTarget as HTMLImageElement;
-                    img.style.transform = "scale(1.05)";
-                  }}
-                  onMouseLeave={(e) => {
-                    const img = e.currentTarget as HTMLImageElement;
-                    img.style.transform = "scale(1)";
-                  }}
+                  className="w-full h-[240px] object-cover block transition-transform duration-500 group-hover:scale-105"
                 />
-              </a>
+              </Link>
 
-              {/* Date */}
-              <p
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "var(--text-12)",
-                  fontWeight: "var(--font-weight-semi-bold)",
-                  color: "var(--muted-foreground)",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                  marginBottom: "var(--spacing-8)",
-                }}
-              >
+              <p className="font-sans text-xs font-semibold text-muted-foreground uppercase tracking-[0.05em] mb-2">
                 {evento.date}
               </p>
 
-              {/* Title */}
-              <a
-                href="#"
-                style={{
-                  display: "block",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "var(--text-16)",
-                  fontWeight: "var(--font-weight-semi-bold)",
-                  color: "var(--foreground)",
-                  lineHeight: "1.3",
-                  marginBottom: "var(--spacing-8)",
-                  textDecoration: "none",
-                  transition: "color 0.2s ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = "var(--primary)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = "var(--foreground)";
-                }}
+              <Link
+                to="/eventos/$slug"
+                params={{ slug: eventSlugById[evento.id] ?? "forum-empreendedorismo-maputo-2026" }}
+                className="block no-underline transition-colors hover:text-primary"
               >
-                {evento.title}
-              </a>
+                <Heading as="h3" variant="card-title" className="text-foreground mb-2">
+                  {evento.title}
+                </Heading>
+              </Link>
 
-              {/* Subtitle */}
-              <p
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "var(--text-14)",
-                  fontWeight: "var(--font-weight-regular)",
-                  color: "var(--muted-foreground)",
-                  lineHeight: "1.5",
-                }}
-              >
+              <p className="font-sans text-sm font-normal text-muted-foreground leading-[1.5]">
                 {evento.subtitle}
               </p>
             </article>

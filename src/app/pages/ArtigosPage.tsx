@@ -1,4 +1,6 @@
 import { Link } from "@tanstack/react-router";
+import { PageHeader } from "../components/PageHeader";
+import { Heading } from "../components/typography";
 
 const categories = [
   { name: "Economia", slug: "economia", color: "#1E4ED8" },
@@ -11,93 +13,29 @@ const categories = [
 
 export default function ArtigosPage() {
   return (
-    <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "48px 16px" }}>
-      {/* Page Header */}
-      <div style={{ marginBottom: "48px", textAlign: "center" }}>
-        <h1
-          style={{
-            fontFamily: "Playfair Display, serif",
-            fontSize: "var(--text-48)",
-            fontWeight: "var(--font-weight-semi-bold)",
-            color: "var(--foreground)",
-            marginBottom: "16px",
-          }}
-        >
-          Artigos
-        </h1>
-        <p
-          style={{
-            fontFamily: "Inter, sans-serif",
-            fontSize: "var(--text-20)",
-            fontWeight: "var(--font-weight-regular)",
-            color: "var(--muted-foreground)",
-            lineHeight: "1.6",
-          }}
-        >
-          Explore nossos artigos por categoria
-        </p>
-      </div>
+    <div className="max-w-[1280px] mx-auto px-4 py-12">
+      <PageHeader
+        title="Artigos"
+        subtitle="Explore nossos artigos por categoria"
+        breadcrumbs={[{ label: "Início", to: "/" }, { label: "Artigos" }]}
+      />
 
-      {/* Categories Grid */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-          gap: "24px",
-        }}
-      >
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6">
         {categories.map((category) => (
           <Link
             key={category.slug}
             to="/artigos/$category"
             params={{ category: category.slug }}
-            style={{
-              display: "block",
-              padding: "32px 24px",
-              borderRadius: "var(--radius-card)",
-              backgroundColor: "var(--card)",
-              border: "1px solid var(--border)",
-              textDecoration: "none",
-              transition: "all 0.2s ease",
-              cursor: "pointer",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-4px)";
-              e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.08)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow = "none";
-            }}
+            className="block py-8 px-6 rounded-lg bg-card border border-border no-underline transition-all duration-200 cursor-pointer hover:-translate-y-1 hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
           >
             <div
-              style={{
-                width: "48px",
-                height: "4px",
-                backgroundColor: category.color,
-                borderRadius: "2px",
-                marginBottom: "20px",
-              }}
+              className="w-12 h-1 rounded-sm mb-5"
+              style={{ backgroundColor: category.color }}
             />
-            <h3
-              style={{
-                fontFamily: "Playfair Display, serif",
-                fontSize: "var(--text-24)",
-                fontWeight: "var(--font-weight-semi-bold)",
-                color: "var(--foreground)",
-                marginBottom: "12px",
-              }}
-            >
+            <Heading as="h3" variant="feature-title" className="text-foreground mb-3">
               {category.name}
-            </h3>
-            <p
-              style={{
-                fontFamily: "Inter, sans-serif",
-                fontSize: "var(--text-14)",
-                fontWeight: "var(--font-weight-regular)",
-                color: "var(--muted-foreground)",
-              }}
-            >
+            </Heading>
+            <p className="font-sans text-sm text-muted-foreground">
               Ver todos os artigos →
             </p>
           </Link>

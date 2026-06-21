@@ -73,67 +73,18 @@ export function MaisLidosSection() {
   const dots = Array.from({ length: totalDots }, (_, i) => i);
 
   return (
-    <section
-      style={{
-        backgroundColor: "#111111",
-        position: "relative",
-        overflow: "hidden",
-        paddingTop: "var(--spacing-64)",
-        paddingBottom: "var(--spacing-64)",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: "1400px",
-          margin: "0 auto",
-          paddingLeft: "var(--spacing-16)",
-          paddingRight: "var(--spacing-16)",
-        }}
-      >
-        {/* Section Title */}
-        <h2
-          style={{
-            fontFamily: "Playfair Display, serif",
-            fontSize: "var(--text-30)",
-            fontWeight: "var(--font-weight-semi-bold)",
-            color: "#FFFFFF",
-            textAlign: "center",
-            marginBottom: "var(--spacing-48)",
-            letterSpacing: "-0.01em",
-          }}
-        >
+    <section className="bg-[#111111] relative overflow-hidden py-16">
+      <div className="max-w-[1400px] mx-auto px-4">
+        <h2 className="font-serif text-3xl font-semibold text-white text-center mb-12 tracking-[-0.01em]">
           As Mais Lidas agora
         </h2>
 
-        {/* Carousel Container */}
-        <div style={{ position: "relative" }}>
+        <div className="relative">
           {/* Navigation Buttons */}
           {canScrollLeft && (
             <button
               onClick={() => scroll("left")}
-              style={{
-                position: "absolute",
-                left: "-20px",
-                top: "40%",
-                transform: "translateY(-50%)",
-                zIndex: 10,
-                backgroundColor: "rgba(255, 255, 255, 0.1)",
-                border: "1px solid rgba(255, 255, 255, 0.2)",
-                width: "48px",
-                height: "48px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                transition: "all 0.3s ease",
-                borderRadius: "50%",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.2)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
-              }}
+              className="absolute left-[-20px] top-[40%] -translate-y-1/2 z-10 bg-white/10 border border-white/20 w-12 h-12 flex items-center justify-center cursor-pointer transition-all duration-300 rounded-full hover:bg-white/20"
               aria-label="Previous slide"
             >
               <ChevronLeft size={24} color="#FFFFFF" />
@@ -143,110 +94,31 @@ export function MaisLidosSection() {
           {canScrollRight && (
             <button
               onClick={() => scroll("right")}
-              style={{
-                position: "absolute",
-                right: "-20px",
-                top: "40%",
-                transform: "translateY(-50%)",
-                zIndex: 10,
-                backgroundColor: "rgba(255, 255, 255, 0.1)",
-                border: "1px solid rgba(255, 255, 255, 0.2)",
-                width: "48px",
-                height: "48px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                transition: "all 0.3s ease",
-                borderRadius: "50%",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.2)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
-              }}
+              className="absolute right-[-20px] top-[40%] -translate-y-1/2 z-10 bg-white/10 border border-white/20 w-12 h-12 flex items-center justify-center cursor-pointer transition-all duration-300 rounded-full hover:bg-white/20"
               aria-label="Next slide"
             >
               <ChevronRight size={24} color="#FFFFFF" />
             </button>
           )}
 
-          {/* Scrollable Cards Container */}
           <div
             ref={scrollContainerRef}
-            style={{
-              display: "flex",
-              gap: "var(--spacing-24)",
-              overflowX: "auto",
-              scrollbarWidth: "none",
-              msOverflowStyle: "none",
-              paddingBottom: "var(--spacing-24)",
-            }}
-            className="hide-scrollbar"
+            className="hide-scrollbar flex gap-6 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] pb-6"
           >
             {maisLidos.map((item) => (
               <article
                 key={item.id}
-                style={{
-                  minWidth: "260px",
-                  maxWidth: "260px",
-                  cursor: "pointer",
-                  transition: "transform 0.3s ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-8px)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                }}
+                className="group min-w-[260px] max-w-[260px] cursor-pointer transition-transform duration-300 hover:-translate-y-2"
               >
-                {/* Image */}
-                <div
-                  style={{
-                    width: "100%",
-                    aspectRatio: "3 / 4",
-                    overflow: "hidden",
-                    marginBottom: "var(--spacing-16)",
-                  }}
-                >
+                <div className="w-full aspect-[3/4] overflow-hidden mb-4">
                   <ImageWithFallback
                     src={item.image}
                     alt={item.title}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      transition: "transform 0.3s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      const img = e.currentTarget as HTMLImageElement;
-                      img.style.transform = "scale(1.05)";
-                    }}
-                    onMouseLeave={(e) => {
-                      const img = e.currentTarget as HTMLImageElement;
-                      img.style.transform = "scale(1)";
-                    }}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 </div>
 
-                {/* Title */}
-                <h3
-                  style={{
-                    fontFamily: "Playfair Display, serif",
-                    fontSize: "var(--text-16)",
-                    fontWeight: "var(--font-weight-medium)",
-                    color: "#FFFFFF",
-                    lineHeight: "1.4",
-                    transition: "color 0.2s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = "var(--primary)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = "#FFFFFF";
-                  }}
-                >
+                <h3 className="font-serif text-base font-medium text-white leading-[1.4] transition-colors duration-200 group-hover:text-primary">
                   {item.title}
                 </h3>
               </article>
@@ -254,48 +126,24 @@ export function MaisLidosSection() {
           </div>
         </div>
 
-        {/* Dots Pagination */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "var(--spacing-8)",
-            marginTop: "var(--spacing-32)",
-          }}
-        >
+        <div className="flex justify-center items-center gap-2 mt-8">
           {dots.map((dot, index) => (
             <button
               key={dot}
               onClick={() => {
                 if (scrollContainerRef.current) {
-                  const cardWidth = 284; // card width + gap
+                  const cardWidth = 284;
                   scrollContainerRef.current.scrollTo({
                     left: cardWidth * index * 2,
                     behavior: "smooth",
                   });
                 }
               }}
-              style={{
-                width: index === 0 ? "12px" : "8px",
-                height: index === 0 ? "12px" : "8px",
-                borderRadius: "50%",
-                backgroundColor: index === 0 ? "#EF4444" : "rgba(255, 255, 255, 0.4)",
-                border: "none",
-                cursor: "pointer",
-                transition: "all 0.3s ease",
-                padding: 0,
-              }}
-              onMouseEnter={(e) => {
-                if (index !== 0) {
-                  e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.6)";
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (index !== 0) {
-                  e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.4)";
-                }
-              }}
+              className={
+                index === 0
+                  ? "w-3 h-3 rounded-full bg-[#EF4444] border-none cursor-pointer transition-all duration-300 p-0"
+                  : "w-2 h-2 rounded-full bg-white/40 border-none cursor-pointer transition-all duration-300 p-0 hover:bg-white/60"
+              }
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}

@@ -1,5 +1,7 @@
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { Download, Calendar, FileText } from "lucide-react";
+import { PageHeader } from "../components/PageHeader";
+import { Heading, SectionHeader, Eyebrow } from "../components/typography";
 
 const currentEdition = {
   id: 1,
@@ -63,165 +65,49 @@ const pastEditions = [
 
 export default function EdicaoImpressaPage() {
   return (
-    <div style={{ backgroundColor: "var(--background)" }}>
-      {/* Hero Section - Current Edition */}
-      <section
-        style={{
-          backgroundColor: "var(--secondary)",
-          borderBottom: "var(--border-width) solid var(--border)",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "1200px",
-            margin: "0 auto",
-            padding: "var(--spacing-64) var(--spacing-16)",
-          }}
-        >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "var(--spacing-64)",
-              alignItems: "center",
-            }}
-            className="hero-grid"
-          >
-            {/* Left Column - Magazine Cover */}
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <div
-                style={{
-                  maxWidth: "400px",
-                  width: "100%",
-                  boxShadow: "0 20px 60px rgba(0, 0, 0, 0.15)",
-                  transition: "transform 0.3s ease",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
-                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-              >
-                <ImageWithFallback
-                  src={currentEdition.cover}
-                  alt={`Edição ${currentEdition.title}`}
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                    aspectRatio: "3/4",
-                    objectFit: "cover",
-                    display: "block",
-                  }}
-                />
-              </div>
+    <div className="bg-background">
+      <div className="max-w-[1280px] mx-auto pt-8 px-4">
+        <PageHeader
+          title="Edição Impressa"
+          subtitle="Edições anteriores e a edição actual em formato digital"
+          breadcrumbs={[
+            { label: "Início", to: "/" },
+            { label: "Edição Impressa" },
+          ]}
+        />
+      </div>
+
+      <section className="bg-secondary border-b border-border">
+        <div className="max-w-[1280px] mx-auto py-16 px-4">
+          <div className="grid grid-cols-1 md:grid-cols-[minmax(0,420px)_1fr] gap-8 md:gap-16 items-center">
+            <div className="w-full shadow-[0_20px_60px_rgba(0,0,0,0.15)] transition-transform duration-300 hover:scale-[1.02]">
+              <ImageWithFallback
+                src={currentEdition.cover}
+                alt={`Edição ${currentEdition.title}`}
+                className="w-full h-auto aspect-[3/4] object-cover block"
+              />
             </div>
 
-            {/* Right Column - Edition Details */}
             <div>
-              <div
-                style={{
-                  display: "inline-block",
-                  padding: "var(--spacing-4) var(--spacing-16)",
-                  backgroundColor: "var(--primary)",
-                  borderRadius: "var(--radius-sm)",
-                  marginBottom: "var(--spacing-16)",
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "11px",
-                    fontWeight: "var(--font-weight-semi-bold)",
-                    color: "var(--primary-foreground)",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.1em",
-                  }}
-                >
-                  Edição Atual
-                </span>
+              <div className="inline-block py-1 px-4 bg-primary rounded-sm mb-4">
+                <Eyebrow className="text-primary-foreground">Edição Atual</Eyebrow>
               </div>
 
-              <h1
-                style={{
-                  fontFamily: "Playfair Display, serif",
-                  fontSize: "var(--text-48)",
-                  fontWeight: "var(--font-weight-semi-bold)",
-                  color: "var(--foreground)",
-                  lineHeight: "1.1",
-                  marginBottom: "var(--spacing-12)",
-                }}
-              >
+              <Heading as="h1" variant="display" className="text-foreground mb-3">
                 {currentEdition.title}
-              </h1>
+              </Heading>
 
-              <h2
-                style={{
-                  fontFamily: "Playfair Display, serif",
-                  fontSize: "var(--text-30)",
-                  fontWeight: "var(--font-weight-medium)",
-                  color: "var(--foreground)",
-                  lineHeight: "1.3",
-                  marginBottom: "var(--spacing-24)",
-                }}
-              >
+              <Heading as="h2" variant="feature-title" className="text-foreground mb-6">
                 {currentEdition.subtitle}
-              </h2>
+              </Heading>
 
-              {/* Highlights */}
-              <div style={{ marginBottom: "var(--spacing-32)" }}>
-                <h3
-                  style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "var(--text-14)",
-                    fontWeight: "var(--font-weight-semi-bold)",
-                    color: "var(--foreground)",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                    marginBottom: "var(--spacing-16)",
-                  }}
-                >
-                  Nesta Edição
-                </h3>
-                <ul
-                  style={{
-                    listStyle: "none",
-                    padding: 0,
-                    margin: 0,
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "var(--spacing-12)",
-                  }}
-                >
+              <div className="mb-8">
+                <SectionHeader as="h3">Nesta Edição</SectionHeader>
+                <ul className="list-none p-0 m-0 flex flex-col gap-3">
                   {currentEdition.highlights.map((highlight, index) => (
-                    <li
-                      key={index}
-                      style={{
-                        display: "flex",
-                        alignItems: "start",
-                        gap: "var(--spacing-12)",
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: "4px",
-                          height: "4px",
-                          borderRadius: "50%",
-                          backgroundColor: "var(--primary)",
-                          marginTop: "8px",
-                          flexShrink: 0,
-                        }}
-                      />
-                      <span
-                        style={{
-                          fontFamily: "Inter, sans-serif",
-                          fontSize: "var(--text-16)",
-                          fontWeight: "var(--font-weight-regular)",
-                          color: "var(--foreground)",
-                          lineHeight: "1.6",
-                        }}
-                      >
+                    <li key={index} className="flex items-start gap-3">
+                      <div className="w-1 h-1 rounded-full bg-primary mt-2 shrink-0" />
+                      <span className="font-sans text-base text-foreground leading-[1.6]">
                         {highlight}
                       </span>
                     </li>
@@ -229,32 +115,7 @@ export default function EdicaoImpressaPage() {
                 </ul>
               </div>
 
-              {/* CTA Button */}
-              <button
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "var(--spacing-8)",
-                  padding: "var(--spacing-16) var(--spacing-32)",
-                  backgroundColor: "var(--primary)",
-                  color: "var(--primary-foreground)",
-                  border: "none",
-                  borderRadius: "var(--radius)",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "var(--text-16)",
-                  fontWeight: "var(--font-weight-medium)",
-                  cursor: "pointer",
-                  transition: "all 0.2s",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "var(--foreground)";
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "var(--primary)";
-                  e.currentTarget.style.transform = "translateY(0)";
-                }}
-              >
+              <button className="inline-flex items-center gap-2 py-4 px-8 bg-primary text-primary-foreground border-none rounded-md font-sans text-base font-medium cursor-pointer transition-all duration-200 hover:bg-foreground hover:-translate-y-0.5">
                 <Download size={20} />
                 Baixar Edição Atual
               </button>
@@ -263,152 +124,46 @@ export default function EdicaoImpressaPage() {
         </div>
       </section>
 
-      {/* Archive Section */}
-      <section style={{ maxWidth: "1200px", margin: "0 auto", padding: "var(--spacing-64) var(--spacing-16)" }}>
-        {/* Section Header */}
-        <div
-          style={{
-            marginBottom: "var(--spacing-48)",
-            paddingBottom: "var(--spacing-24)",
-            borderBottom: "var(--border-width) solid var(--border)",
-          }}
-        >
-          <h2
-            style={{
-              fontFamily: "Playfair Display, serif",
-              fontSize: "var(--text-30)",
-              fontWeight: "var(--font-weight-semi-bold)",
-              color: "var(--foreground)",
-              marginBottom: "var(--spacing-8)",
-            }}
-          >
-            Edições Anteriores
-          </h2>
-          <p
-            style={{
-              fontFamily: "Inter, sans-serif",
-              fontSize: "var(--text-16)",
-              fontWeight: "var(--font-weight-regular)",
-              color: "var(--muted-foreground)",
-              lineHeight: "1.6",
-            }}
-          >
+      <section className="max-w-[1280px] mx-auto py-16 px-4">
+        <div className="mb-12">
+          <SectionHeader>Edições Anteriores</SectionHeader>
+          <p className="font-sans text-base text-muted-foreground leading-[1.6]">
             Aceda ao arquivo completo das nossas publicações
           </p>
         </div>
 
-        {/* Editions Grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-            gap: "var(--spacing-48) var(--spacing-32)",
-          }}
-        >
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-y-12 gap-x-8">
           {pastEditions.map((edition) => (
             <article
               key={edition.id}
-              style={{
-                cursor: "pointer",
-                transition: "transform 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-4px)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0)";
-              }}
+              className="cursor-pointer transition-transform duration-200 hover:-translate-y-1"
             >
-              {/* Magazine Cover */}
-              <div
-                style={{
-                  marginBottom: "var(--spacing-16)",
-                  boxShadow: "0 8px 24px rgba(0, 0, 0, 0.1)",
-                  transition: "box-shadow 0.2s ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = "0 12px 32px rgba(0, 0, 0, 0.15)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = "0 8px 24px rgba(0, 0, 0, 0.1)";
-                }}
-              >
+              <div className="mb-4 shadow-[0_8px_24px_rgba(0,0,0,0.1)] transition-shadow duration-200 hover:shadow-[0_12px_32px_rgba(0,0,0,0.15)]">
                 <ImageWithFallback
                   src={edition.cover}
                   alt={`Edição ${edition.title}`}
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                    aspectRatio: "3/4",
-                    objectFit: "cover",
-                    display: "block",
-                  }}
+                  className="w-full h-auto aspect-[3/4] object-cover block"
                 />
               </div>
 
-              {/* Edition Info */}
-              <div style={{ display: "flex", alignItems: "center", gap: "var(--spacing-8)", marginBottom: "var(--spacing-8)" }}>
-                <Calendar size={14} style={{ color: "var(--muted-foreground)" }} />
-                <span
-                  style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "var(--text-12)",
-                    fontWeight: "var(--font-weight-medium)",
-                    color: "var(--muted-foreground)",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                  }}
-                >
+              <div className="flex items-center gap-2 mb-2">
+                <Calendar size={14} className="text-muted-foreground" />
+                <span className="font-sans text-xs font-medium text-muted-foreground uppercase tracking-[0.05em]">
                   {edition.date}
                 </span>
               </div>
 
-              <h3
-                style={{
-                  fontFamily: "Playfair Display, serif",
-                  fontSize: "var(--text-20)",
-                  fontWeight: "var(--font-weight-semi-bold)",
-                  color: "var(--foreground)",
-                  lineHeight: "1.3",
-                  marginBottom: "var(--spacing-4)",
-                }}
-              >
+              <Heading as="h3" variant="feature-title" className="text-foreground mb-1">
                 {edition.title}
-              </h3>
+              </Heading>
 
-              <p
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "var(--text-14)",
-                  fontWeight: "var(--font-weight-regular)",
-                  color: "var(--muted-foreground)",
-                  lineHeight: "1.5",
-                  marginBottom: "var(--spacing-12)",
-                }}
-              >
+              <p className="font-sans text-sm text-muted-foreground leading-[1.5] mb-3">
                 {edition.subtitle}
               </p>
 
-              {/* Download Link */}
               <a
                 href="#"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "var(--spacing-8)",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "var(--text-14)",
-                  fontWeight: "var(--font-weight-medium)",
-                  color: "var(--primary)",
-                  textDecoration: "none",
-                  transition: "gap 0.2s",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.gap = "var(--spacing-12)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.gap = "var(--spacing-8)";
-                }}
+                className="inline-flex items-center gap-2 font-sans text-sm font-medium text-primary no-underline transition-[gap] duration-200 hover:gap-3"
               >
                 <FileText size={16} />
                 Baixar PDF
@@ -417,16 +172,6 @@ export default function EdicaoImpressaPage() {
           ))}
         </div>
       </section>
-
-      {/* Responsive Styles */}
-      <style>{`
-        @media (max-width: 768px) {
-          .hero-grid {
-            grid-template-columns: 1fr !important;
-            gap: var(--spacing-32) !important;
-          }
-        }
-      `}</style>
     </div>
   );
 }

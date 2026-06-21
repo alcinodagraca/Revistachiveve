@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Phone, Mail, MapPin, Globe, Search, Building2 } from "lucide-react";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
+import { PageHeader } from "../components/PageHeader";
+import { Heading } from "../components/typography";
 
 const allContacts = [
   {
@@ -138,124 +140,40 @@ export default function ContactosUteisPage() {
   });
 
   return (
-    <div style={{ backgroundColor: "var(--background)" }}>
-      <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "var(--spacing-48) var(--spacing-16)" }}>
-        {/* Page Header */}
-        <div style={{ marginBottom: "var(--spacing-48)" }}>
-          <h1
-            style={{
-              fontFamily: "Playfair Display, serif",
-              fontSize: "var(--text-48)",
-              fontWeight: "var(--font-weight-semi-bold)",
-              color: "var(--foreground)",
-              marginBottom: "var(--spacing-8)",
-              lineHeight: "1.1",
-            }}
-          >
-            Directório de Contactos Úteis
-          </h1>
-          <p
-            style={{
-              fontFamily: "Inter, sans-serif",
-              fontSize: "var(--text-16)",
-              fontWeight: "var(--font-weight-regular)",
-              color: "var(--muted-foreground)",
-              lineHeight: "1.6",
-            }}
-          >
-            Encontre instituições, organizações e empresas essenciais para o seu negócio
-          </p>
-        </div>
+    <div className="bg-background">
+      <div className="max-w-[1280px] mx-auto px-4 py-12">
+        <PageHeader
+          title="Directório de Contactos Úteis"
+          subtitle="Encontre instituições, organizações e empresas essenciais para o seu negócio"
+          breadcrumbs={[
+            { label: "Início", to: "/" },
+            { label: "Contactos Úteis" },
+          ]}
+        />
 
-        {/* Main Layout: Sidebar + Content */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "280px 1fr",
-            gap: "var(--spacing-48)",
-          }}
-          className="directory-layout"
-        >
-          {/* Sidebar - Filters */}
-          <aside
-            style={{
-              position: "sticky",
-              top: "var(--spacing-24)",
-              height: "fit-content",
-            }}
-          >
-            {/* Search Box */}
-            <div style={{ marginBottom: "var(--spacing-32)" }}>
-              <label
-                style={{
-                  display: "block",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "var(--text-14)",
-                  fontWeight: "var(--font-weight-semi-bold)",
-                  color: "var(--foreground)",
-                  marginBottom: "var(--spacing-12)",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                }}
-              >
+        <div className="grid grid-cols-[280px_1fr] gap-12 directory-layout">
+          <aside className="sticky top-6 h-fit">
+            <div className="mb-8">
+              <label className="block font-sans font-semibold text-sm text-foreground mb-3 uppercase tracking-[0.05em]">
                 Pesquisar
               </label>
-              <div
-                style={{
-                  position: "relative",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <Search
-                  size={18}
-                  style={{
-                    position: "absolute",
-                    left: "var(--spacing-12)",
-                    color: "var(--muted-foreground)",
-                  }}
-                />
+              <div className="relative flex items-center">
+                <Search size={18} className="absolute left-3 text-muted-foreground" />
                 <input
                   type="text"
                   placeholder="Nome ou palavra-chave..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  style={{
-                    width: "100%",
-                    padding: "var(--spacing-12) var(--spacing-12) var(--spacing-12) 42px",
-                    borderRadius: "var(--radius)",
-                    border: "var(--border-width) solid var(--border)",
-                    backgroundColor: "var(--input-background)",
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "var(--text-14)",
-                    fontWeight: "var(--font-weight-regular)",
-                    color: "var(--foreground)",
-                    outline: "none",
-                    transition: "border-color 0.2s",
-                  }}
-                  onFocus={(e) => (e.currentTarget.style.borderColor = "var(--primary)")}
-                  onBlur={(e) => (e.currentTarget.style.borderColor = "var(--border)")}
+                  className="w-full py-3 pr-3 pl-[42px] rounded-md border border-border bg-[var(--input-background)] font-sans font-normal text-sm text-foreground outline-none transition-colors focus:border-primary"
                 />
               </div>
             </div>
 
-            {/* Category Filters */}
             <div>
-              <label
-                style={{
-                  display: "block",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "var(--text-14)",
-                  fontWeight: "var(--font-weight-semi-bold)",
-                  color: "var(--foreground)",
-                  marginBottom: "var(--spacing-12)",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                }}
-              >
+              <label className="block font-sans font-semibold text-sm text-foreground mb-3 uppercase tracking-[0.05em]">
                 Categorias
               </label>
-              <div style={{ display: "flex", flexDirection: "column", gap: "var(--spacing-4)" }}>
+              <div className="flex flex-col gap-1">
                 {categories.map((category) => {
                   const isSelected = selectedCategory === category;
                   const count =
@@ -267,283 +185,104 @@ export default function ContactosUteisPage() {
                     <button
                       key={category}
                       onClick={() => setSelectedCategory(category)}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        padding: "var(--spacing-12) var(--spacing-16)",
-                        borderRadius: "var(--radius)",
-                        border: "none",
-                        backgroundColor: isSelected ? "var(--primary)" : "transparent",
-                        color: isSelected ? "var(--primary-foreground)" : "var(--foreground)",
-                        fontFamily: "Inter, sans-serif",
-                        fontSize: "var(--text-14)",
-                        fontWeight: isSelected ? "var(--font-weight-medium)" : "var(--font-weight-regular)",
-                        cursor: "pointer",
-                        textAlign: "left",
-                        transition: "all 0.2s",
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isSelected) {
-                          e.currentTarget.style.backgroundColor = "var(--secondary)";
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isSelected) {
-                          e.currentTarget.style.backgroundColor = "transparent";
-                        }
-                      }}
+                      className={
+                        "flex items-center justify-between px-4 py-3 rounded-md border-none font-sans text-sm cursor-pointer text-left transition-all " +
+                        (isSelected
+                          ? "bg-primary text-primary-foreground font-medium"
+                          : "bg-transparent text-foreground font-normal hover:bg-secondary")
+                      }
                     >
                       <span>{category}</span>
-                      <span
-                        style={{
-                          fontSize: "var(--text-12)",
-                          opacity: 0.8,
-                        }}
-                      >
-                        {count}
-                      </span>
+                      <span className="text-xs opacity-80">{count}</span>
                     </button>
                   );
                 })}
               </div>
             </div>
 
-            {/* Results Count */}
-            <div
-              style={{
-                marginTop: "var(--spacing-24)",
-                padding: "var(--spacing-16)",
-                borderRadius: "var(--radius)",
-                backgroundColor: "var(--secondary)",
-              }}
-            >
-              <p
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "var(--text-14)",
-                  fontWeight: "var(--font-weight-medium)",
-                  color: "var(--foreground)",
-                  textAlign: "center",
-                }}
-              >
+            <div className="mt-6 p-4 rounded-md bg-secondary">
+              <p className="font-sans font-medium text-sm text-foreground text-center">
                 {filteredContacts.length} {filteredContacts.length === 1 ? "resultado" : "resultados"}
               </p>
             </div>
           </aside>
 
-          {/* Main Content - Directory Listings */}
           <main>
             {filteredContacts.length === 0 ? (
-              <div
-                style={{
-                  padding: "var(--spacing-64) var(--spacing-24)",
-                  textAlign: "center",
-                }}
-              >
-                <Building2 size={48} style={{ color: "var(--muted-foreground)", margin: "0 auto var(--spacing-16)" }} />
-                <h3
-                  style={{
-                    fontFamily: "Playfair Display, serif",
-                    fontSize: "var(--text-24)",
-                    fontWeight: "var(--font-weight-semi-bold)",
-                    color: "var(--foreground)",
-                    marginBottom: "var(--spacing-8)",
-                  }}
-                >
+              <div className="px-6 py-16 text-center">
+                <Building2 size={48} className="text-muted-foreground mx-auto mb-4" />
+                <Heading as="h3" variant="feature-title" className="text-foreground mb-2">
                   Nenhum resultado encontrado
-                </h3>
-                <p
-                  style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "var(--text-16)",
-                    fontWeight: "var(--font-weight-regular)",
-                    color: "var(--muted-foreground)",
-                    lineHeight: "1.6",
-                  }}
-                >
+                </Heading>
+                <p className="font-sans font-normal text-base text-muted-foreground leading-relaxed">
                   Tente ajustar os filtros ou termo de pesquisa
                 </p>
               </div>
             ) : (
-              <div style={{ display: "flex", flexDirection: "column", gap: "var(--spacing-20)" }}>
+              <div className="flex flex-col gap-5">
                 {filteredContacts.map((contact) => (
                   <article
                     key={contact.id}
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "120px 1fr",
-                      gap: "var(--spacing-24)",
-                      padding: "var(--spacing-24)",
-                      borderRadius: "var(--radius-card)",
-                      border: "var(--border-width) solid var(--border)",
-                      backgroundColor: "var(--card)",
-                      transition: "all 0.2s ease",
-                      cursor: "pointer",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.06)";
-                      e.currentTarget.style.borderColor = "var(--primary)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.boxShadow = "none";
-                      e.currentTarget.style.borderColor = "var(--border)";
-                    }}
+                    className="grid grid-cols-[120px_1fr] gap-6 p-6 rounded-lg border border-border bg-card transition-all cursor-pointer hover:border-primary hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)]"
                   >
-                    {/* Logo */}
-                    <div
-                      style={{
-                        width: "120px",
-                        height: "120px",
-                        borderRadius: "var(--radius)",
-                        overflow: "hidden",
-                        backgroundColor: "var(--secondary)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
+                    <div className="w-[120px] h-[120px] rounded-md overflow-hidden bg-secondary flex items-center justify-center">
                       <ImageWithFallback
                         src={contact.logo}
                         alt={`${contact.name} logo`}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                        }}
+                        className="w-full h-full object-cover"
                       />
                     </div>
 
-                    {/* Content */}
                     <div>
-                      {/* Category Badge */}
-                      <div style={{ marginBottom: "var(--spacing-8)" }}>
-                        <span
-                          style={{
-                            display: "inline-block",
-                            padding: "var(--spacing-4) var(--spacing-12)",
-                            borderRadius: "var(--radius-sm)",
-                            backgroundColor: "var(--secondary)",
-                            fontFamily: "Inter, sans-serif",
-                            fontSize: "11px",
-                            fontWeight: "var(--font-weight-semi-bold)",
-                            color: "var(--primary)",
-                            textTransform: "uppercase",
-                            letterSpacing: "0.05em",
-                          }}
-                        >
+                      <div className="mb-2">
+                        <span className="inline-block px-3 py-1 rounded-sm bg-secondary font-sans text-[11px] font-semibold text-primary uppercase tracking-[0.05em]">
                           {contact.category}
                         </span>
                       </div>
 
-                      {/* Name */}
-                      <h3
-                        style={{
-                          fontFamily: "Playfair Display, serif",
-                          fontSize: "var(--text-20)",
-                          fontWeight: "var(--font-weight-semi-bold)",
-                          color: "var(--foreground)",
-                          marginBottom: "var(--spacing-4)",
-                          lineHeight: "1.3",
-                        }}
-                      >
+                      <Heading as="h3" variant="card-title" className="text-foreground mb-1 leading-tight">
                         {contact.name}
-                      </h3>
+                      </Heading>
 
-                      {/* Description */}
-                      <p
-                        style={{
-                          fontFamily: "Inter, sans-serif",
-                          fontSize: "var(--text-14)",
-                          fontWeight: "var(--font-weight-regular)",
-                          color: "var(--muted-foreground)",
-                          marginBottom: "var(--spacing-16)",
-                          lineHeight: "1.6",
-                        }}
-                      >
+                      <p className="font-sans font-normal text-sm text-muted-foreground mb-4 leading-relaxed">
                         {contact.description}
                       </p>
 
-                      {/* Contact Details Grid */}
-                      <div
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-                          gap: "var(--spacing-12)",
-                        }}
-                      >
-                        {/* Phone */}
-                        <div style={{ display: "flex", alignItems: "center", gap: "var(--spacing-8)" }}>
-                          <Phone size={16} style={{ color: "var(--primary)", flexShrink: 0 }} />
+                      <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-3">
+                        <div className="flex items-center gap-2">
+                          <Phone size={16} className="text-primary flex-shrink-0" />
                           <a
                             href={`tel:${contact.phone}`}
-                            style={{
-                              fontFamily: "Inter, sans-serif",
-                              fontSize: "var(--text-14)",
-                              fontWeight: "var(--font-weight-regular)",
-                              color: "var(--foreground)",
-                              textDecoration: "none",
-                              transition: "color 0.2s",
-                            }}
-                            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--primary)")}
-                            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--foreground)")}
+                            className="font-sans font-normal text-sm text-foreground no-underline transition-colors hover:text-primary"
                           >
                             {contact.phone}
                           </a>
                         </div>
 
-                        {/* Email */}
-                        <div style={{ display: "flex", alignItems: "center", gap: "var(--spacing-8)" }}>
-                          <Mail size={16} style={{ color: "var(--primary)", flexShrink: 0 }} />
+                        <div className="flex items-center gap-2">
+                          <Mail size={16} className="text-primary flex-shrink-0" />
                           <a
                             href={`mailto:${contact.email}`}
-                            style={{
-                              fontFamily: "Inter, sans-serif",
-                              fontSize: "var(--text-14)",
-                              fontWeight: "var(--font-weight-regular)",
-                              color: "var(--foreground)",
-                              textDecoration: "none",
-                              transition: "color 0.2s",
-                            }}
-                            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--primary)")}
-                            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--foreground)")}
+                            className="font-sans font-normal text-sm text-foreground no-underline transition-colors hover:text-primary"
                           >
                             {contact.email}
                           </a>
                         </div>
 
-                        {/* Address */}
-                        <div style={{ display: "flex", alignItems: "start", gap: "var(--spacing-8)" }}>
-                          <MapPin size={16} style={{ color: "var(--primary)", flexShrink: 0, marginTop: "2px" }} />
-                          <span
-                            style={{
-                              fontFamily: "Inter, sans-serif",
-                              fontSize: "var(--text-14)",
-                              fontWeight: "var(--font-weight-regular)",
-                              color: "var(--foreground)",
-                            }}
-                          >
+                        <div className="flex items-start gap-2">
+                          <MapPin size={16} className="text-primary flex-shrink-0 mt-0.5" />
+                          <span className="font-sans font-normal text-sm text-foreground">
                             {contact.address}
                           </span>
                         </div>
 
-                        {/* Website */}
-                        <div style={{ display: "flex", alignItems: "center", gap: "var(--spacing-8)" }}>
-                          <Globe size={16} style={{ color: "var(--primary)", flexShrink: 0 }} />
+                        <div className="flex items-center gap-2">
+                          <Globe size={16} className="text-primary flex-shrink-0" />
                           <a
                             href={`https://${contact.website}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            style={{
-                              fontFamily: "Inter, sans-serif",
-                              fontSize: "var(--text-14)",
-                              fontWeight: "var(--font-weight-regular)",
-                              color: "var(--primary)",
-                              textDecoration: "none",
-                              transition: "opacity 0.2s",
-                            }}
-                            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.8")}
-                            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+                            className="font-sans font-normal text-sm text-primary no-underline transition-opacity hover:opacity-80"
                           >
                             {contact.website}
                           </a>
@@ -558,13 +297,12 @@ export default function ContactosUteisPage() {
         </div>
       </div>
 
-      {/* Responsive styles for mobile */}
       <style>{`
         @media (max-width: 768px) {
           .directory-layout {
             grid-template-columns: 1fr !important;
           }
-          
+
           aside {
             position: static !important;
           }

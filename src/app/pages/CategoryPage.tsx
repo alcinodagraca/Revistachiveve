@@ -1,6 +1,8 @@
 import { Link, useParams } from "@tanstack/react-router";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
-import { Clock, ArrowLeft } from "lucide-react";
+import { Clock } from "lucide-react";
+import { PageHeader } from "../components/PageHeader";
+import { Heading, SectionHeader, Eyebrow } from "../components/typography";
 
 const categoryData: Record<string, { name: string; color: string; description: string }> = {
   economia: {
@@ -139,28 +141,13 @@ export default function CategoryPage() {
 
   if (!categoryInfo) {
     return (
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "var(--spacing-48) var(--spacing-16)", textAlign: "center" }}>
-        <h1
-          style={{
-            fontFamily: "Playfair Display, serif",
-            fontSize: "var(--text-48)",
-            fontWeight: "var(--font-weight-semi-bold)",
-            color: "var(--foreground)",
-          }}
-        >
+      <div className="max-w-[1280px] mx-auto px-4 py-12 text-center">
+        <Heading as="h1" variant="page-title" className="text-foreground mb-6">
           Categoria não encontrada
-        </h1>
+        </Heading>
         <Link
           to="/artigos"
-          style={{
-            display: "inline-block",
-            marginTop: "var(--spacing-24)",
-            color: "var(--primary)",
-            textDecoration: "none",
-            fontFamily: "Inter, sans-serif",
-            fontSize: "var(--text-16)",
-            fontWeight: "var(--font-weight-medium)",
-          }}
+          className="inline-block mt-6 text-primary no-underline font-sans text-base font-medium"
         >
           ← Voltar para Artigos
         </Link>
@@ -169,189 +156,61 @@ export default function CategoryPage() {
   }
 
   return (
-    <div style={{ backgroundColor: "var(--background)" }}>
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "var(--spacing-48) var(--spacing-16)" }}>
-        {/* Category Header */}
-        <div style={{ marginBottom: "var(--spacing-32)" }}>
-          <h1
-            style={{
-              fontFamily: "Playfair Display, serif",
-              fontSize: "var(--text-48)",
-              fontWeight: "var(--font-weight-semi-bold)",
-              color: "var(--foreground)",
-              marginBottom: "var(--spacing-8)",
-              lineHeight: "1.1",
-            }}
-          >
-            {categoryInfo.name}
-          </h1>
-          <p
-            style={{
-              fontFamily: "Inter, sans-serif",
-              fontSize: "var(--text-16)",
-              fontWeight: "var(--font-weight-regular)",
-              color: "var(--muted-foreground)",
-              lineHeight: "1.6",
-            }}
-          >
-            {categoryInfo.description}
-          </p>
-        </div>
+    <div className="bg-background">
+      <div className="max-w-[1280px] mx-auto px-4 py-12">
+        <PageHeader
+          title={categoryInfo.name}
+          subtitle={categoryInfo.description}
+          breadcrumbs={[
+            { label: "Início", to: "/" },
+            { label: "Artigos", to: "/artigos" },
+            { label: categoryInfo.name },
+          ]}
+        />
 
-        {/* Featured Articles Section - 2 columns */}
-        <div style={{ marginBottom: "var(--spacing-48)" }}>
-          <h2
-            style={{
-              fontFamily: "Inter, sans-serif",
-              fontSize: "var(--text-14)",
-              fontWeight: "var(--font-weight-semi-bold)",
-              color: "var(--foreground)",
-              marginBottom: "var(--spacing-20)",
-              textTransform: "uppercase",
-              letterSpacing: "0.08em",
-            }}
-          >
-            Em Destaque
-          </h2>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-              gap: "var(--spacing-24)",
-            }}
-          >
+        <div className="mb-12">
+          <SectionHeader>Em Destaque</SectionHeader>
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6">
             {featuredArticles.map((article) => (
               <article
                 key={article.id}
-                style={{
-                  borderRadius: "var(--radius-card)",
-                  overflow: "hidden",
-                  transition: "transform 0.2s ease",
-                  cursor: "pointer",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                }}
+                className="rounded-lg overflow-hidden transition-transform duration-200 hover:-translate-y-0.5 cursor-pointer"
               >
-                {/* Image */}
-                <div style={{ position: "relative", overflow: "hidden" }}>
+                <div className="relative overflow-hidden">
                   <ImageWithFallback
                     src={article.image}
                     alt={article.title}
-                    style={{
-                      width: "100%",
-                      height: "280px",
-                      objectFit: "cover",
-                      display: "block",
-                    }}
+                    className="w-full h-[280px] object-cover block"
                   />
                 </div>
 
-                {/* Content */}
-                <div style={{ paddingTop: "var(--spacing-16)" }}>
-                  <div
-                    style={{
-                      display: "inline-block",
-                      marginBottom: "var(--spacing-8)",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: "Inter, sans-serif",
-                        fontSize: "11px",
-                        fontWeight: "var(--font-weight-semi-bold)",
-                        color: categoryInfo.color,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.08em",
-                      }}
-                    >
+                <div className="pt-4">
+                  <div className="mb-2">
+                    <Eyebrow style={{ color: categoryInfo.color }}>
                       {categoryInfo.name}
-                    </span>
+                    </Eyebrow>
                   </div>
 
-                  <h3
-                    style={{
-                      fontFamily: "Playfair Display, serif",
-                      fontSize: "var(--text-20)",
-                      fontWeight: "var(--font-weight-semi-bold)",
-                      color: "var(--foreground)",
-                      marginBottom: "var(--spacing-8)",
-                      lineHeight: "1.3",
-                    }}
-                  >
+                  <Heading as="h3" variant="feature-title" className="text-foreground mb-2">
                     {article.title}
-                  </h3>
+                  </Heading>
 
-                  <p
-                    style={{
-                      fontFamily: "Inter, sans-serif",
-                      fontSize: "var(--text-14)",
-                      fontWeight: "var(--font-weight-regular)",
-                      color: "var(--muted-foreground)",
-                      lineHeight: "1.6",
-                      marginBottom: "var(--spacing-12)",
-                    }}
-                  >
+                  <p className="font-sans text-sm text-muted-foreground leading-[1.6] mb-3">
                     {article.excerpt}
                   </p>
 
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "var(--spacing-8)",
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: "Inter, sans-serif",
-                        fontSize: "var(--text-12)",
-                        fontWeight: "var(--font-weight-medium)",
-                        color: "var(--foreground)",
-                      }}
-                    >
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-sans text-xs font-medium text-foreground">
                       {article.author}
                     </span>
-                    <span
-                      style={{
-                        width: "3px",
-                        height: "3px",
-                        borderRadius: "50%",
-                        backgroundColor: "var(--muted-foreground)",
-                      }}
-                    />
-                    <span
-                      style={{
-                        fontFamily: "Inter, sans-serif",
-                        fontSize: "var(--text-12)",
-                        fontWeight: "var(--font-weight-regular)",
-                        color: "var(--muted-foreground)",
-                      }}
-                    >
+                    <span className="w-[3px] h-[3px] rounded-full bg-muted-foreground" />
+                    <span className="font-sans text-xs text-muted-foreground">
                       {article.date}
                     </span>
-                    <span
-                      style={{
-                        width: "3px",
-                        height: "3px",
-                        borderRadius: "50%",
-                        backgroundColor: "var(--muted-foreground)",
-                      }}
-                    />
-                    <div style={{ display: "flex", alignItems: "center", gap: "var(--spacing-4)" }}>
-                      <Clock size={12} style={{ color: "var(--muted-foreground)" }} />
-                      <span
-                        style={{
-                          fontFamily: "Inter, sans-serif",
-                          fontSize: "var(--text-12)",
-                          fontWeight: "var(--font-weight-regular)",
-                          color: "var(--muted-foreground)",
-                        }}
-                      >
+                    <span className="w-[3px] h-[3px] rounded-full bg-muted-foreground" />
+                    <div className="flex items-center gap-1">
+                      <Clock size={12} className="text-muted-foreground" />
+                      <span className="font-sans text-xs text-muted-foreground">
                         {article.readTime}
                       </span>
                     </div>
@@ -362,160 +221,49 @@ export default function CategoryPage() {
           </div>
         </div>
 
-        {/* Regular Articles Grid - 3 columns */}
         <div>
-          <h2
-            style={{
-              fontFamily: "Inter, sans-serif",
-              fontSize: "var(--text-14)",
-              fontWeight: "var(--font-weight-semi-bold)",
-              color: "var(--foreground)",
-              marginBottom: "var(--spacing-20)",
-              textTransform: "uppercase",
-              letterSpacing: "0.08em",
-            }}
-          >
-            Todos os Artigos
-          </h2>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-              gap: "var(--spacing-24)",
-            }}
-          >
+          <SectionHeader>Todos os Artigos</SectionHeader>
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-6">
             {regularArticles.map((article) => (
               <article
                 key={article.id}
-                style={{
-                  borderRadius: "var(--radius-card)",
-                  overflow: "hidden",
-                  transition: "transform 0.2s ease",
-                  cursor: "pointer",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                }}
+                className="rounded-lg overflow-hidden transition-transform duration-200 hover:-translate-y-0.5 cursor-pointer"
               >
-                {/* Image */}
-                <div style={{ position: "relative", overflow: "hidden" }}>
+                <div className="relative overflow-hidden">
                   <ImageWithFallback
                     src={article.image}
                     alt={article.title}
-                    style={{
-                      width: "100%",
-                      height: "200px",
-                      objectFit: "cover",
-                      display: "block",
-                    }}
+                    className="w-full h-[200px] object-cover block"
                   />
                 </div>
 
-                {/* Content */}
-                <div style={{ paddingTop: "var(--spacing-16)" }}>
-                  <div
-                    style={{
-                      display: "inline-block",
-                      marginBottom: "var(--spacing-8)",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: "Inter, sans-serif",
-                        fontSize: "11px",
-                        fontWeight: "var(--font-weight-semi-bold)",
-                        color: categoryInfo.color,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.08em",
-                      }}
-                    >
+                <div className="pt-4">
+                  <div className="mb-2">
+                    <Eyebrow style={{ color: categoryInfo.color }}>
                       {categoryInfo.name}
-                    </span>
+                    </Eyebrow>
                   </div>
 
-                  <h3
-                    style={{
-                      fontFamily: "Playfair Display, serif",
-                      fontSize: "var(--text-16)",
-                      fontWeight: "var(--font-weight-semi-bold)",
-                      color: "var(--foreground)",
-                      marginBottom: "var(--spacing-8)",
-                      lineHeight: "1.3",
-                    }}
-                  >
+                  <Heading as="h3" variant="card-title" className="text-foreground mb-2">
                     {article.title}
-                  </h3>
+                  </Heading>
 
-                  <p
-                    style={{
-                      fontFamily: "Inter, sans-serif",
-                      fontSize: "var(--text-14)",
-                      fontWeight: "var(--font-weight-regular)",
-                      color: "var(--muted-foreground)",
-                      lineHeight: "1.6",
-                      marginBottom: "var(--spacing-12)",
-                    }}
-                  >
+                  <p className="font-sans text-sm text-muted-foreground leading-[1.6] mb-3">
                     {article.excerpt}
                   </p>
 
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "var(--spacing-8)",
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: "Inter, sans-serif",
-                        fontSize: "var(--text-12)",
-                        fontWeight: "var(--font-weight-medium)",
-                        color: "var(--foreground)",
-                      }}
-                    >
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-sans text-xs font-medium text-foreground">
                       {article.author}
                     </span>
-                    <span
-                      style={{
-                        width: "3px",
-                        height: "3px",
-                        borderRadius: "50%",
-                        backgroundColor: "var(--muted-foreground)",
-                      }}
-                    />
-                    <span
-                      style={{
-                        fontFamily: "Inter, sans-serif",
-                        fontSize: "var(--text-12)",
-                        fontWeight: "var(--font-weight-regular)",
-                        color: "var(--muted-foreground)",
-                      }}
-                    >
+                    <span className="w-[3px] h-[3px] rounded-full bg-muted-foreground" />
+                    <span className="font-sans text-xs text-muted-foreground">
                       {article.date}
                     </span>
-                    <span
-                      style={{
-                        width: "3px",
-                        height: "3px",
-                        borderRadius: "50%",
-                        backgroundColor: "var(--muted-foreground)",
-                      }}
-                    />
-                    <div style={{ display: "flex", alignItems: "center", gap: "var(--spacing-4)" }}>
-                      <Clock size={12} style={{ color: "var(--muted-foreground)" }} />
-                      <span
-                        style={{
-                          fontFamily: "Inter, sans-serif",
-                          fontSize: "var(--text-12)",
-                          fontWeight: "var(--font-weight-regular)",
-                          color: "var(--muted-foreground)",
-                        }}
-                      >
+                    <span className="w-[3px] h-[3px] rounded-full bg-muted-foreground" />
+                    <div className="flex items-center gap-1">
+                      <Clock size={12} className="text-muted-foreground" />
+                      <span className="font-sans text-xs text-muted-foreground">
                         {article.readTime}
                       </span>
                     </div>

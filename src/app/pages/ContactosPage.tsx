@@ -1,5 +1,7 @@
 import { Mail, Phone, MapPin, Send } from "lucide-react";
 import { useState } from "react";
+import { PageHeader } from "../components/PageHeader";
+import { Heading, SectionHeader } from "../components/typography";
 
 export default function ContactosPage() {
   const [formData, setFormData] = useState({
@@ -11,180 +13,65 @@ export default function ContactosPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
     alert("Mensagem enviada! Entraremos em contacto em breve.");
     setFormData({ name: "", email: "", subject: "", message: "" });
   };
 
   return (
-    <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "48px 16px" }}>
-      <div style={{ marginBottom: "48px", textAlign: "center" }}>
-        <h1
-          style={{
-            fontFamily: "Playfair Display, serif",
-            fontSize: "var(--text-48)",
-            fontWeight: "var(--font-weight-semi-bold)",
-            color: "var(--foreground)",
-            marginBottom: "16px",
-          }}
-        >
-          Contactos
-        </h1>
-        <p
-          style={{
-            fontFamily: "Inter, sans-serif",
-            fontSize: "var(--text-20)",
-            fontWeight: "var(--font-weight-regular)",
-            color: "var(--muted-foreground)",
-            lineHeight: "1.6",
-          }}
-        >
-          Entre em contacto connosco
-        </p>
-      </div>
+    <div className="max-w-[1280px] mx-auto px-4 py-12">
+      <PageHeader
+        title="Contactos"
+        subtitle="Entre em contacto connosco"
+        breadcrumbs={[{ label: "Início", to: "/" }, { label: "Contactos" }]}
+      />
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr",
-          gap: "48px",
-        }}
-        className="md:grid-cols-[1fr_1.5fr]"
-      >
-        {/* Contact Information */}
+      <div className="grid grid-cols-1 gap-12 md:grid-cols-[1fr_1.5fr]">
         <div>
-          <h2
-            style={{
-              fontFamily: "Playfair Display, serif",
-              fontSize: "var(--text-30)",
-              fontWeight: "var(--font-weight-semi-bold)",
-              color: "var(--foreground)",
-              marginBottom: "24px",
-            }}
-          >
-            Informações de Contacto
-          </h2>
-          <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-            <div style={{ display: "flex", alignItems: "start", gap: "16px" }}>
-              <div
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "50%",
-                  backgroundColor: "var(--secondary)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                }}
-              >
-                <Mail size={20} style={{ color: "var(--primary)" }} />
+          <SectionHeader as="h2">Informações de contacto</SectionHeader>
+          <div className="flex flex-col gap-6">
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
+                <Mail size={20} className="text-primary" />
               </div>
               <div>
-                <h3
-                  style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "var(--text-16)",
-                    fontWeight: "var(--font-weight-semi-bold)",
-                    color: "var(--foreground)",
-                    marginBottom: "4px",
-                  }}
-                >
+                <Heading as="h3" variant="card-title" className="text-foreground mb-1">
                   Email
-                </h3>
+                </Heading>
                 <a
                   href="mailto:geral@negociosnochiveve.co.mz"
-                  style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "var(--text-16)",
-                    fontWeight: "var(--font-weight-regular)",
-                    color: "var(--muted-foreground)",
-                    textDecoration: "none",
-                  }}
+                  className="font-sans font-normal text-base text-muted-foreground no-underline"
                 >
                   geral@negociosnochiveve.co.mz
                 </a>
               </div>
             </div>
 
-            <div style={{ display: "flex", alignItems: "start", gap: "16px" }}>
-              <div
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "50%",
-                  backgroundColor: "var(--secondary)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                }}
-              >
-                <Phone size={20} style={{ color: "var(--primary)" }} />
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
+                <Phone size={20} className="text-primary" />
               </div>
               <div>
-                <h3
-                  style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "var(--text-16)",
-                    fontWeight: "var(--font-weight-semi-bold)",
-                    color: "var(--foreground)",
-                    marginBottom: "4px",
-                  }}
-                >
+                <Heading as="h3" variant="card-title" className="text-foreground mb-1">
                   Telefone
-                </h3>
+                </Heading>
                 <a
                   href="tel:+258843001234"
-                  style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "var(--text-16)",
-                    fontWeight: "var(--font-weight-regular)",
-                    color: "var(--muted-foreground)",
-                    textDecoration: "none",
-                  }}
+                  className="font-sans font-normal text-base text-muted-foreground no-underline"
                 >
                   +258 84 300 1234
                 </a>
               </div>
             </div>
 
-            <div style={{ display: "flex", alignItems: "start", gap: "16px" }}>
-              <div
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "50%",
-                  backgroundColor: "var(--secondary)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                }}
-              >
-                <MapPin size={20} style={{ color: "var(--primary)" }} />
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
+                <MapPin size={20} className="text-primary" />
               </div>
               <div>
-                <h3
-                  style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "var(--text-16)",
-                    fontWeight: "var(--font-weight-semi-bold)",
-                    color: "var(--foreground)",
-                    marginBottom: "4px",
-                  }}
-                >
+                <Heading as="h3" variant="card-title" className="text-foreground mb-1">
                   Endereço
-                </h3>
-                <p
-                  style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "var(--text-16)",
-                    fontWeight: "var(--font-weight-regular)",
-                    color: "var(--muted-foreground)",
-                    lineHeight: "1.6",
-                  }}
-                >
+                </Heading>
+                <p className="font-sans font-normal text-base text-muted-foreground leading-relaxed">
                   Av. Julius Nyerere, 1234
                   <br />
                   Maputo, Moçambique
@@ -194,38 +81,13 @@ export default function ContactosPage() {
           </div>
         </div>
 
-        {/* Contact Form */}
-        <div
-          style={{
-            padding: "32px",
-            borderRadius: "var(--radius-card)",
-            border: "1px solid var(--border)",
-            backgroundColor: "var(--card)",
-          }}
-        >
-          <h2
-            style={{
-              fontFamily: "Playfair Display, serif",
-              fontSize: "var(--text-30)",
-              fontWeight: "var(--font-weight-semi-bold)",
-              color: "var(--foreground)",
-              marginBottom: "24px",
-            }}
-          >
-            Envie-nos uma mensagem
-          </h2>
-          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+        <div className="p-8 rounded-lg border border-border bg-card">
+          <SectionHeader as="h2">Envie-nos uma mensagem</SectionHeader>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div>
               <label
                 htmlFor="name"
-                style={{
-                  display: "block",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "var(--text-14)",
-                  fontWeight: "var(--font-weight-medium)",
-                  color: "var(--foreground)",
-                  marginBottom: "8px",
-                }}
+                className="block font-sans font-medium text-sm text-foreground mb-2"
               >
                 Nome
               </label>
@@ -235,31 +97,14 @@ export default function ContactosPage() {
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                style={{
-                  width: "100%",
-                  padding: "12px 16px",
-                  borderRadius: "var(--radius)",
-                  border: "1px solid var(--border)",
-                  backgroundColor: "var(--input-background)",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "var(--text-16)",
-                  color: "var(--foreground)",
-                  outline: "none",
-                }}
+                className="w-full px-4 py-3 rounded-md border border-border bg-[var(--input-background)] font-sans text-base text-foreground outline-none"
               />
             </div>
 
             <div>
               <label
                 htmlFor="email"
-                style={{
-                  display: "block",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "var(--text-14)",
-                  fontWeight: "var(--font-weight-medium)",
-                  color: "var(--foreground)",
-                  marginBottom: "8px",
-                }}
+                className="block font-sans font-medium text-sm text-foreground mb-2"
               >
                 Email
               </label>
@@ -269,31 +114,14 @@ export default function ContactosPage() {
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                style={{
-                  width: "100%",
-                  padding: "12px 16px",
-                  borderRadius: "var(--radius)",
-                  border: "1px solid var(--border)",
-                  backgroundColor: "var(--input-background)",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "var(--text-16)",
-                  color: "var(--foreground)",
-                  outline: "none",
-                }}
+                className="w-full px-4 py-3 rounded-md border border-border bg-[var(--input-background)] font-sans text-base text-foreground outline-none"
               />
             </div>
 
             <div>
               <label
                 htmlFor="subject"
-                style={{
-                  display: "block",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "var(--text-14)",
-                  fontWeight: "var(--font-weight-medium)",
-                  color: "var(--foreground)",
-                  marginBottom: "8px",
-                }}
+                className="block font-sans font-medium text-sm text-foreground mb-2"
               >
                 Assunto
               </label>
@@ -303,31 +131,14 @@ export default function ContactosPage() {
                 required
                 value={formData.subject}
                 onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                style={{
-                  width: "100%",
-                  padding: "12px 16px",
-                  borderRadius: "var(--radius)",
-                  border: "1px solid var(--border)",
-                  backgroundColor: "var(--input-background)",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "var(--text-16)",
-                  color: "var(--foreground)",
-                  outline: "none",
-                }}
+                className="w-full px-4 py-3 rounded-md border border-border bg-[var(--input-background)] font-sans text-base text-foreground outline-none"
               />
             </div>
 
             <div>
               <label
                 htmlFor="message"
-                style={{
-                  display: "block",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "var(--text-14)",
-                  fontWeight: "var(--font-weight-medium)",
-                  color: "var(--foreground)",
-                  marginBottom: "8px",
-                }}
+                className="block font-sans font-medium text-sm text-foreground mb-2"
               >
                 Mensagem
               </label>
@@ -337,41 +148,13 @@ export default function ContactosPage() {
                 rows={6}
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                style={{
-                  width: "100%",
-                  padding: "12px 16px",
-                  borderRadius: "var(--radius)",
-                  border: "1px solid var(--border)",
-                  backgroundColor: "var(--input-background)",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "var(--text-16)",
-                  color: "var(--foreground)",
-                  outline: "none",
-                  resize: "vertical",
-                }}
+                className="w-full px-4 py-3 rounded-md border border-border bg-[var(--input-background)] font-sans text-base text-foreground outline-none resize-y"
               />
             </div>
 
             <button
               type="submit"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "8px",
-                padding: "14px 32px",
-                borderRadius: "var(--radius)",
-                backgroundColor: "var(--primary)",
-                color: "var(--primary-foreground)",
-                border: "none",
-                fontFamily: "Inter, sans-serif",
-                fontSize: "var(--text-16)",
-                fontWeight: "var(--font-weight-medium)",
-                cursor: "pointer",
-                transition: "opacity 0.2s",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
-              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+              className="flex items-center justify-center gap-2 px-8 py-3.5 rounded-md bg-primary text-primary-foreground border-none font-sans font-medium text-base cursor-pointer transition-opacity hover:opacity-90"
             >
               <Send size={18} />
               Enviar Mensagem
