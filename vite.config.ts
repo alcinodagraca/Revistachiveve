@@ -39,7 +39,11 @@ export default defineConfig(({ mode }) => {
       srcDirectory: 'src',
     }),
     react(),
-    nitro(),
+    nitro({
+      // Use Vercel preset when deploying to Vercel; defaults to node-server
+      // elsewhere. Vercel sets VERCEL=1 in its build env.
+      preset: process.env.VERCEL ? 'vercel' : undefined,
+    }),
   ],
   server: {
     port: 3000,
