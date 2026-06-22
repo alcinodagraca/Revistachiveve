@@ -5,9 +5,10 @@
   "type": "module",
   "packageManager": "pnpm@10.33.0",
   "scripts": {
-    "build": "vite build",
+    "build": "pnpm sitemap && vite build",
     "dev": "vite dev",
     "preview": "vite preview",
+    "sitemap": "tsx scripts/build-sitemap.ts",
     "start": "node .output/server/index.mjs",
     "typecheck": "tsc --noEmit"
   },

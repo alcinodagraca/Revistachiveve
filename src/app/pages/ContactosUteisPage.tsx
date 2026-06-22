@@ -3,6 +3,7 @@ import { FaPhone, FaEnvelope, FaLocationDot, FaGlobe, FaMagnifyingGlass, FaBuild
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { PageHeader } from "../components/PageHeader";
 import { Heading } from "../components/typography";
+import { Route } from "../../routes/contactos-uteis";
 
 const allContacts = [
   {
@@ -117,19 +118,20 @@ const allContacts = [
   },
 ];
 
-const categories = [
-  "Todas as Categorias",
-  "Instituições Financeiras",
-  "Associações Empresariais",
-  "Entidades Governamentais",
-  "Tecnologia e Inovação",
-];
-
 export default function ContactosUteisPage() {
+  const { contacts: wpContacts } = Route.useLoaderData();
+  const items = wpContacts && wpContacts.length > 0 ? wpContacts : allContacts;
+
+  // Derive category list dynamically from the data so WP-added categories show up.
+  const categories = [
+    "Todas as Categorias",
+    ...Array.from(new Set(items.map((c) => c.category).filter(Boolean))),
+  ];
+
   const [selectedCategory, setSelectedCategory] = useState("Todas as Categorias");
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredContacts = allContacts.filter((contact) => {
+  const filteredContacts = items.filter((contact) => {
     const matchesCategory =
       selectedCategory === "Todas as Categorias" || contact.category === selectedCategory;
     const matchesSearch =
@@ -178,8 +180,8 @@ export default function ContactosUteisPage() {
                   const isSelected = selectedCategory === category;
                   const count =
                     category === "Todas as Categorias"
-                      ? allContacts.length
-                      : allContacts.filter((c) => c.category === category).length;
+                      ? items.length
+                      : items.filter((c) => c.category === category).length;
 
                   return (
                     <button

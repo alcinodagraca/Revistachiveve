@@ -2,6 +2,8 @@ import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { FaDownload, FaCalendarDays, FaFileLines } from "react-icons/fa6";
 import { PageHeader } from "../components/PageHeader";
 import { Heading, SectionHeader, Eyebrow } from "../components/typography";
+import { Route } from "../../routes/edicao-impressa";
+import type { Edition } from "../../server/wp";
 
 const currentEdition = {
   id: 1,
@@ -63,7 +65,43 @@ const pastEditions = [
   },
 ];
 
+const MOCK_CURRENT: Edition = {
+  id: currentEdition.id,
+  slug: "atual",
+  title: currentEdition.title,
+  subtitle: currentEdition.subtitle,
+  cover: currentEdition.cover,
+  date: currentEdition.date,
+  featured: true,
+  highlights: currentEdition.highlights,
+};
+
+const MOCK_PAST: Edition[] = pastEditions.map((e) => ({
+  id: e.id,
+  slug: `edicao-${e.id}`,
+  title: e.title,
+  subtitle: e.subtitle,
+  cover: e.cover,
+  date: e.date,
+  featured: false,
+  highlights: [],
+}));
+
 export default function EdicaoImpressaPage() {
+  const { editions } = Route.useLoaderData();
+
+  // When the WP CPT exists, editions !== null. Pick the most-recent featured
+  // for the hero, others go to the archive grid.
+  let current: Edition;
+  let past: Edition[];
+  if (editions && editions.length > 0) {
+    current = editions.find((e) => e.featured) ?? editions[0];
+    past = editions.filter((e) => e !== current);
+  } else {
+    current = MOCK_CURRENT;
+    past = MOCK_PAST;
+  }
+
   return (
     <div className="bg-background">
       <div className="max-w-[1280px] mx-auto pt-8 px-4">
@@ -82,8 +120,8 @@ export default function EdicaoImpressaPage() {
           <div className="grid grid-cols-1 md:grid-cols-[minmax(0,420px)_1fr] gap-8 md:gap-16 items-center">
             <div className="w-full shadow-[0_20px_60px_rgba(0,0,0,0.15)] transition-transform duration-300 hover:scale-[1.02]">
               <ImageWithFallback
-                src={currentEdition.cover}
-                alt={`Edição ${currentEdition.title}`}
+                src={current.cover}
+                alt={`Edição ${current.title}`}
                 className="w-full h-auto aspect-[3/4] object-cover block"
               />
             </div>
@@ -94,31 +132,47 @@ export default function EdicaoImpressaPage() {
               </div>
 
               <Heading as="h1" variant="display" className="text-foreground mb-3">
-                {currentEdition.title}
+                {current.title}
               </Heading>
 
-              <Heading as="h2" variant="feature-title" className="text-foreground mb-6">
-                {currentEdition.subtitle}
-              </Heading>
+              {current.subtitle && (
+                <Heading as="h2" variant="feature-title" className="text-foreground mb-6">
+                  {current.subtitle}
+                </Heading>
+              )}
 
-              <div className="mb-8">
-                <SectionHeader as="h3">Nesta Edição</SectionHeader>
-                <ul className="list-none p-0 m-0 flex flex-col gap-3">
-                  {currentEdition.highlights.map((highlight, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <div className="w-1 h-1 rounded-full bg-primary mt-2 shrink-0" />
-                      <span className="font-sans text-base text-foreground leading-[1.6]">
-                        {highlight}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {current.highlights.length > 0 && (
+                <div className="mb-8">
+                  <SectionHeader as="h3">Nesta Edição</SectionHeader>
+                  <ul className="list-none p-0 m-0 flex flex-col gap-3">
+                    {current.highlights.map((highlight, index) => (
+                      <li key={index} className="flex items-start gap-3">
+                        <div className="w-1 h-1 rounded-full bg-primary mt-2 shrink-0" />
+                        <span className="font-sans text-base text-foreground leading-[1.6]">
+                          {highlight}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
-              <button className="inline-flex items-center gap-2 py-4 px-8 bg-primary text-primary-foreground border-none rounded-md font-sans text-base font-medium cursor-pointer transition-all duration-200 hover:bg-foreground hover:-translate-y-0.5">
-                <FaDownload size={20} />
-                Baixar Edição Atual
-              </button>
+              {current.pdfDownloadUrl ? (
+                <a
+                  href={current.pdfDownloadUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 py-4 px-8 bg-primary text-primary-foreground border-none rounded-md font-sans text-base font-medium cursor-pointer transition-all duration-200 hover:bg-foreground hover:-translate-y-0.5 no-underline"
+                >
+                  <FaDownload size={20} />
+                  Baixar Edição Atual
+                </a>
+              ) : (
+                <button className="inline-flex items-center gap-2 py-4 px-8 bg-primary text-primary-foreground border-none rounded-md font-sans text-base font-medium cursor-pointer transition-all duration-200 hover:bg-foreground hover:-translate-y-0.5">
+                  <FaDownload size={20} />
+                  Baixar Edição Atual
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -133,7 +187,7 @@ export default function EdicaoImpressaPage() {
         </div>
 
         <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-y-12 gap-x-8">
-          {pastEditions.map((edition) => (
+          {past.map((edition) => (
             <article
               key={edition.id}
               className="cursor-pointer transition-transform duration-200 hover:-translate-y-1"

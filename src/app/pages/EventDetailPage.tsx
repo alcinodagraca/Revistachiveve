@@ -1,21 +1,14 @@
-import { Link, useParams, notFound } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { FaCalendarDays, FaLocationDot, FaTicket, FaUsers } from "react-icons/fa6";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { Breadcrumb } from "../components/Breadcrumb";
 import { Prose } from "../components/Prose";
-import { getEventBySlug, events } from "../../data/events";
 import { Heading, SectionHeader } from "../components/typography";
+import { Route } from "../../routes/eventos.$slug";
 
 export default function EventDetailPage() {
-  const { slug } = useParams({ from: "/eventos/$slug" });
-  const event = getEventBySlug(slug);
-
-  if (!event) {
-    throw notFound();
-  }
-
-  const related = events.filter((e) => e.slug !== event.slug).slice(0, 3);
+  const { event, related } = Route.useLoaderData();
 
   return (
     <div className="bg-background">
@@ -51,11 +44,15 @@ export default function EventDetailPage() {
             </Heading>
 
             <Prose>
-              {event.description.map((p, i) => (
-                <p key={i} className="mb-6">
-                  {p}
-                </p>
-              ))}
+              {event.bodyHtml ? (
+                <div dangerouslySetInnerHTML={{ __html: event.bodyHtml }} />
+              ) : (
+                event.description.map((p, i) => (
+                  <p key={i} className="mb-6">
+                    {p}
+                  </p>
+                ))
+              )}
             </Prose>
           </div>
 

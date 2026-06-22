@@ -6,6 +6,11 @@ import {
   listArticles,
 } from "./articles";
 import { getCategoryBySlug, listCategories } from "./categories";
+import { getEventBySlug, listEvents } from "./events";
+import { listEditions } from "./editions";
+import { listTenders } from "./tenders";
+import { listContacts } from "./contacts";
+import { listTeam } from "./team";
 
 export const fnListArticles = createServerFn({ method: "GET" })
   .inputValidator(
@@ -58,3 +63,27 @@ export const fnGetCategoryWithArticles = createServerFn({ method: "GET" })
     });
     return { category, ...list };
   });
+
+export const fnListEvents = createServerFn({ method: "GET" }).handler(() =>
+  listEvents(),
+);
+
+export const fnGetEventBySlug = createServerFn({ method: "GET" })
+  .inputValidator((slug: string) => slug)
+  .handler(({ data: slug }) => getEventBySlug(slug));
+
+export const fnListEditions = createServerFn({ method: "GET" }).handler(() =>
+  listEditions(),
+);
+
+export const fnListTenders = createServerFn({ method: "GET" }).handler(() =>
+  listTenders(),
+);
+
+export const fnListContacts = createServerFn({ method: "GET" }).handler(() =>
+  listContacts(),
+);
+
+export const fnListTeam = createServerFn({ method: "GET" }).handler(() =>
+  listTeam(),
+);

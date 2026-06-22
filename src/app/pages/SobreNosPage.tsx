@@ -2,6 +2,7 @@ import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { FaBullseye, FaEye, FaAward } from "react-icons/fa6";
 import { PageHeader } from "../components/PageHeader";
 import { Heading, SectionHeader } from "../components/typography";
+import { Route } from "../../routes/sobre-nos";
 
 const teamMembers = [
   {
@@ -27,6 +28,8 @@ const teamMembers = [
 ];
 
 export default function SobreNosPage() {
+  const { team: wpTeam } = Route.useLoaderData();
+  const members = wpTeam && wpTeam.length > 0 ? wpTeam : teamMembers;
   return (
     <div className="max-w-[1280px] mx-auto px-4 py-12">
       <PageHeader
@@ -78,7 +81,7 @@ export default function SobreNosPage() {
       <div className="mb-12">
         <SectionHeader as="h2">Equipa</SectionHeader>
         <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-8">
-          {teamMembers.map((member, idx) => (
+          {members.map((member, idx) => (
             <div key={idx} className="text-center">
               <ImageWithFallback
                 src={member.image}

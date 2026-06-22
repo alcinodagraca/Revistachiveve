@@ -1,6 +1,8 @@
 import { FaFileLines, FaCalendarDays, FaUpRightFromSquare } from "react-icons/fa6";
 import { PageHeader } from "../components/PageHeader";
 import { Heading } from "../components/typography";
+import { Route } from "../../routes/concursos-publicos";
+import type { Tender } from "../../server/wp";
 
 const concursos = [
   {
@@ -37,7 +39,20 @@ const concursos = [
   },
 ];
 
+const MOCK_TENDERS: Tender[] = concursos.map((c) => ({
+  id: c.id,
+  slug: `concurso-${c.id}`,
+  title: c.title,
+  institution: c.institution,
+  deadline: c.deadline,
+  type: c.type,
+  vacancies: c.vacancies,
+}));
+
 export default function ConcursosPublicosPage() {
+  const { tenders } = Route.useLoaderData();
+  const items = tenders ?? MOCK_TENDERS;
+
   return (
     <div className="max-w-[1280px] mx-auto px-4 py-12">
       <PageHeader
@@ -46,8 +61,13 @@ export default function ConcursosPublicosPage() {
         breadcrumbs={[{ label: "Início", to: "/" }, { label: "Concursos Públicos" }]}
       />
 
+      {items.length === 0 ? (
+        <p className="font-sans text-base text-muted-foreground py-12 text-center">
+          Ainda não há concursos publicados.
+        </p>
+      ) : (
       <div className="grid gap-6">
-        {concursos.map((concurso) => (
+        {items.map((concurso) => (
           <div
             key={concurso.id}
             className="p-6 rounded-lg border border-border bg-card transition-all hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
@@ -80,16 +100,29 @@ export default function ConcursosPublicosPage() {
                   </div>
                 </div>
               </div>
-              <button
-                className="flex items-center gap-2 px-6 py-3 rounded-md bg-primary text-primary-foreground border-none font-sans font-medium text-sm cursor-pointer transition-opacity whitespace-nowrap hover:opacity-90"
-              >
-                Ver Edital
-                <FaUpRightFromSquare size={16} />
-              </button>
+              {concurso.editalUrl ? (
+                <a
+                  href={concurso.editalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-6 py-3 rounded-md bg-primary text-primary-foreground border-none font-sans font-medium text-sm cursor-pointer transition-opacity whitespace-nowrap hover:opacity-90 no-underline"
+                >
+                  Ver Edital
+                  <FaUpRightFromSquare size={16} />
+                </a>
+              ) : (
+                <button
+                  className="flex items-center gap-2 px-6 py-3 rounded-md bg-primary text-primary-foreground border-none font-sans font-medium text-sm cursor-pointer transition-opacity whitespace-nowrap hover:opacity-90"
+                >
+                  Ver Edital
+                  <FaUpRightFromSquare size={16} />
+                </button>
+              )}
             </div>
           </div>
         ))}
       </div>
+      )}
     </div>
   );
 }
