@@ -1,23 +1,16 @@
 import { useState } from "react";
-import { Link, useNavigate, useSearch } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { Breadcrumb } from "../components/Breadcrumb";
 import { ArticleCard, articleCardGridVariants } from "../components/ArticleCard";
-import { searchArticles } from "../../data/articles";
-import { searchEvents } from "../../data/events";
-import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { Heading, SectionHeader } from "../components/typography";
+import { Route } from "../../routes/pesquisa";
 
 export default function SearchPage() {
-  const { q } = useSearch({ from: "/pesquisa" });
+  const { list, q } = Route.useLoaderData();
   const navigate = useNavigate();
   const [input, setInput] = useState(q ?? "");
-
-  const query = (q ?? "").trim();
-  const articleResults = query ? searchArticles(query) : [];
-  const eventResults = query ? searchEvents(query) : [];
-  const total = articleResults.length + eventResults.length;
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -44,7 +37,7 @@ export default function SearchPage() {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Pesquisar artigos, eventos, tags..."
+            placeholder="Pesquisar artigos por palavra-chave..."
             className="flex-1 px-4 py-3 bg-transparent outline-none font-sans text-base text-foreground"
           />
           <button
@@ -56,72 +49,40 @@ export default function SearchPage() {
           </button>
         </form>
 
-        {!query && (
+        {!q && (
           <EmptyState
             title="Comece a pesquisar"
             message="Escreva uma palavra-chave acima — pode ser um tema, um nome ou uma cidade."
           />
         )}
 
-        {query && total === 0 && (
+        {q && list.articles.length === 0 && (
           <EmptyState
-            title={`Nenhum resultado para "${query}"`}
+            title={`Nenhum resultado para "${q}"`}
             message="Tente outras palavras-chave ou explore as nossas categorias."
           />
         )}
 
-        {query && total > 0 && (
+        {q && list.articles.length > 0 && (
           <>
             <p className="font-sans text-sm text-muted-foreground mb-6">
-              {total} resultado{total === 1 ? "" : "s"} para{" "}
-              <strong className="text-foreground">"{query}"</strong>
+              {list.total} resultado{list.total === 1 ? "" : "s"} para{" "}
+              <strong className="text-foreground">"{q}"</strong>
             </p>
 
-            {articleResults.length > 0 && (
-              <section className="mb-12">
-                <SectionHeader as="h2">Artigos</SectionHeader>
-                <motion.div
-                  variants={articleCardGridVariants}
-                  initial="hidden"
-                  animate="show"
-                  className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6"
-                >
-                  {articleResults.map((a) => (
-                    <ArticleCard key={a.slug} article={a} />
-                  ))}
-                </motion.div>
-              </section>
-            )}
-
-            {eventResults.length > 0 && (
-              <section>
-                <SectionHeader as="h2">Eventos</SectionHeader>
-                <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6">
-                  {eventResults.map((e) => (
-                    <Link
-                      key={e.slug}
-                      to="/eventos/$slug"
-                      params={{ slug: e.slug }}
-                      className="group block no-underline"
-                    >
-                      <div className="overflow-hidden rounded-lg mb-3">
-                        <ImageWithFallback
-                          src={e.image}
-                          alt={e.title}
-                          className="transition-transform duration-500 group-hover:scale-105 w-full h-[200px] object-cover block"
-                        />
-                      </div>
-                      <div className="font-sans text-xs text-primary tracking-[0.1em] uppercase font-semibold mb-1">
-                        {e.displayDate}
-                      </div>
-                      <div className="font-sans text-base font-semibold text-foreground leading-tight">
-                        {e.title}
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </section>
-            )}
+            <section>
+              <SectionHeader as="h2">Artigos</SectionHeader>
+              <motion.div
+                variants={articleCardGridVariants}
+                initial="hidden"
+                animate="show"
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12"
+              >
+                {list.articles.map((a) => (
+                  <ArticleCard key={a.id} article={a} />
+                ))}
+              </motion.div>
+            </section>
           </>
         )}
       </div>

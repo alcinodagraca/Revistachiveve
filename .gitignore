@@ -3,3 +3,12 @@ node_modules
 .vinxi
 dist
 .DS_Store
+
+# Local secrets — keep .env.example tracked, never the real .env
+.env
+.env.local
+.env.*.local
+
+# TanStack Start build cache
+.tanstack/
+.nitro/

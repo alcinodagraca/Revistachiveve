@@ -201,9 +201,12 @@ importers:
       '@vitejs/plugin-react':
         specifier: 6.0.1
         version: 6.0.1(vite@8.0.10(@types/node@24.10.2)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0))
+      dotenv:
+        specifier: ^17.4.2
+        version: 17.4.2
       nitro:
         specifier: 3.0.260415-beta
-        version: 3.0.260415-beta(jiti@2.6.1)(vite@8.0.10(@types/node@24.10.2)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0))
+        version: 3.0.260415-beta(dotenv@17.4.2)(jiti@2.6.1)(vite@8.0.10(@types/node@24.10.2)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0))
       tailwindcss:
         specifier: 4.2.4
         version: 4.2.4
@@ -1961,6 +1964,10 @@ packages:
 
   domutils@3.2.2:
     resolution: {integrity: sha512-6kZKyUajlDuqlHKVX1w7gyslj9MPIXzIFiz/rGu35uC1wMi+kMhQwGhl4lt9unC9Vb9INnY9Z3/ZA3+FhASLaw==}
+
+  dotenv@17.4.2:
+    resolution: {integrity: sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==}
+    engines: {node: '>=12'}
 
   electron-to-chromium@1.5.344:
     resolution: {integrity: sha512-4MxfbmNDm+KPh066EZy+eUnkcDPcZ35wNmOWzFuh/ijvHsve6kbLTLURy88uCNK5FbpN+yk2nQY6BYh1GEt+wg==}
@@ -4624,6 +4631,8 @@ snapshots:
       domelementtype: 2.3.0
       domhandler: 5.0.3
 
+  dotenv@17.4.2: {}
+
   electron-to-chromium@1.5.344: {}
 
   embla-carousel-react@8.6.0(react@19.2.5):
@@ -4924,7 +4933,7 @@ snapshots:
 
   nf3@0.3.16: {}
 
-  nitro@3.0.260415-beta(jiti@2.6.1)(vite@8.0.10(@types/node@24.10.2)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0)):
+  nitro@3.0.260415-beta(dotenv@17.4.2)(jiti@2.6.1)(vite@8.0.10(@types/node@24.10.2)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0)):
     dependencies:
       consola: 3.4.2
       crossws: 0.4.5(srvx@0.11.15)
@@ -4941,6 +4950,7 @@ snapshots:
       unenv: 2.0.0-rc.24
       unstorage: 2.0.0-alpha.7(db0@0.3.4)(ofetch@2.0.0-alpha.3)
     optionalDependencies:
+      dotenv: 17.4.2
       jiti: 2.6.1
       vite: 8.0.10(@types/node@24.10.2)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0)
     transitivePeerDependencies:

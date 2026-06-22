@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react'
 import { nitro } from 'nitro/vite'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -21,7 +21,15 @@ function figmaAssetResolver() {
   }
 }
 
-export default defineConfig({
+export default defineConfig(({ mode }) => {
+  // Expose server-side env (WP_*, etc.) to process.env so server functions
+  // can read them. Vite normally only injects VITE_* into import.meta.env.
+  const env = loadEnv(mode, process.cwd(), '')
+  for (const [k, v] of Object.entries(env)) {
+    if (process.env[k] === undefined) process.env[k] = v
+  }
+
+  return {
   plugins: [
     figmaAssetResolver(),
     // The React and Tailwind plugins are both required for Make, even if
@@ -46,4 +54,5 @@ export default defineConfig({
 
   // File types to support raw imports. Never add .css, .tsx, or .ts files to this.
   assetsInclude: ['**/*.svg', '**/*.csv'],
+  }
 })

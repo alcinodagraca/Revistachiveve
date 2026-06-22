@@ -1,29 +1,23 @@
-import { Link, useParams, notFound } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { Breadcrumb } from "../components/Breadcrumb";
 import { NewsletterCTA } from "../components/NewsletterCTA";
-import {
-  articles as allArticles,
-  getArticleBySlug,
-  getRelatedArticles,
-} from "../../data/articles";
-import { getCategoryBySlug } from "../../data/categories";
+import { Prose } from "../components/Prose";
 import { Heading, SectionHeader } from "../components/typography";
+import { Route } from "../../routes/artigos.$category.$slug";
+
+function formatDateLong(iso: string): string {
+  const d = new Date(iso);
+  return new Intl.DateTimeFormat("pt-PT", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  }).format(d);
+}
 
 export default function ArticleDetailPage() {
-  const { category, slug } = useParams({ from: "/artigos/$category/$slug" });
-  const article = getArticleBySlug(category, slug);
-
-  if (!article) {
-    throw notFound();
-  }
-
-  const cat = getCategoryBySlug(article.category);
-  const related = getRelatedArticles(article, 3);
-  const maisLidos = allArticles
-    .filter((a) => a.slug !== article.slug)
-    .slice(0, 3);
+  const { article, related, maisLidos } = Route.useLoaderData();
 
   return (
     <div className="bg-background">
@@ -32,20 +26,20 @@ export default function ArticleDetailPage() {
           <Breadcrumb
             items={[
               { label: "Início", to: "/" },
-              ...(cat ? [{ label: cat.name, to: `/artigos/${cat.slug}` }] : []),
+              { label: "Artigos", to: "/artigos" },
+              {
+                label: article.categoryName,
+                to: `/artigos/${article.category}`,
+              },
             ]}
           />
         </div>
 
-        {/* 2-column layout */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10">
-          {/* Main content */}
           <article>
-            {cat && (
-              <Heading as="h1" variant="page-title" className="text-foreground mb-6">
-                {cat.name}
-              </Heading>
-            )}
+            <Heading as="h1" variant="page-title" className="text-foreground mb-6">
+              {article.categoryName}
+            </Heading>
 
             <motion.div
               initial={{ opacity: 0, y: 8 }}
@@ -53,30 +47,26 @@ export default function ArticleDetailPage() {
               transition={{ duration: 0.45, ease: "easeOut" }}
               className="w-full aspect-[16/9] bg-secondary overflow-hidden mb-6 relative"
             >
-              {article.heroImage ? (
-                <ImageWithFallback
-                  src={article.heroImage}
-                  alt={article.title}
-                  className="w-full h-full object-cover block"
-                />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center font-sans text-sm text-muted-foreground">
-                  Sem imagem
-                </div>
-              )}
+              <ImageWithFallback
+                src={article.heroImage}
+                alt={article.heroAlt}
+                className="w-full h-full object-cover block"
+              />
             </motion.div>
 
             <Heading as="h2" variant="article-title" className="text-foreground mb-4">
               {article.title}
             </Heading>
 
-            <div className="font-sans text-base leading-[1.75] text-foreground">
-              {article.body.map((p, i) => (
-                <p key={i} className="mb-4">
-                  {p}
-                </p>
-              ))}
-            </div>
+            {article.excerpt && (
+              <p className="font-sans text-lg md:text-xl text-muted-foreground leading-relaxed mb-6">
+                {article.excerpt}
+              </p>
+            )}
+
+            <Prose>
+              <div dangerouslySetInnerHTML={{ __html: article.bodyHtml }} />
+            </Prose>
 
             <div className="mt-6 pt-4 border-t border-border font-sans text-[13px] text-muted-foreground flex flex-wrap gap-x-4 gap-y-1">
               <span>
@@ -104,17 +94,11 @@ export default function ArticleDetailPage() {
                         className="group grid grid-cols-[140px_1fr] gap-4 py-4 no-underline text-inherit"
                       >
                         <div className="w-[140px] h-[90px] bg-secondary overflow-hidden relative">
-                          {a.heroImage ? (
-                            <ImageWithFallback
-                              src={a.heroImage}
-                              alt={a.title}
-                              className="w-full h-full object-cover block transition-transform duration-500 group-hover:scale-105"
-                            />
-                          ) : (
-                            <div className="absolute inset-0 flex items-center justify-center font-sans text-xs text-muted-foreground">
-                              Sem imagem
-                            </div>
-                          )}
+                          <ImageWithFallback
+                            src={a.heroImage}
+                            alt={a.heroAlt}
+                            className="w-full h-full object-cover block transition-transform duration-500 group-hover:scale-105"
+                          />
                         </div>
 
                         <div>
@@ -178,17 +162,7 @@ export default function ArticleDetailPage() {
         </div>
       </div>
 
-      {/* Newsletter band */}
       <NewsletterCTA />
     </div>
   );
-}
-
-function formatDateLong(iso: string): string {
-  const d = new Date(iso);
-  return new Intl.DateTimeFormat("pt-PT", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  }).format(d);
 }

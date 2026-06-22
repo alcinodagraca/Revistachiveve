@@ -26,7 +26,7 @@ const navItems = [
   { label: "Contactos", href: "/contactos" },
 ];
 
-const artigosCategories = [
+const FALLBACK_CATEGORIES = [
   { name: "Economia", slug: "economia" },
   { name: "Empreendedorismo", slug: "empreendedorismo" },
   { name: "Inovação e Tecnologia", slug: "inovacao-tecnologia" },
@@ -74,7 +74,11 @@ const socials = [
   { Icon: FaLinkedin, href: "#", label: "LinkedIn" },
 ];
 
-export function Header() {
+type HeaderCategory = { name: string; slug: string };
+
+export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
+  const artigosCategories =
+    categories && categories.length > 0 ? categories : FALLBACK_CATEGORIES;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");

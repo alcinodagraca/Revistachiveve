@@ -1,8 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { motion, type Variants } from "motion/react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-import type { Article } from "../../data/articles";
-import { getCategoryBySlug } from "../../data/categories";
+import type { Article } from "../../server/wp";
 import { Heading, Eyebrow } from "./typography";
 
 function formatDate(iso: string): string {
@@ -20,7 +19,6 @@ export function ArticleCard({
   article: Article;
   variant?: "default" | "compact";
 }) {
-  const category = getCategoryBySlug(article.category);
   const imageHeight = variant === "compact" ? "180px" : "260px";
 
   return (
@@ -45,8 +43,8 @@ export function ArticleCard({
           />
         </div>
 
-        {category && (
-          <Eyebrow className="inline-block mb-2">{category.name}</Eyebrow>
+        {article.categoryName && (
+          <Eyebrow className="inline-block mb-2">{article.categoryName}</Eyebrow>
         )}
 
         <Heading

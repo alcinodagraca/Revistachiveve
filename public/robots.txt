@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /pesquisa
+
+Sitemap: https://revistachiveve.co.mz/sitemap.xml
