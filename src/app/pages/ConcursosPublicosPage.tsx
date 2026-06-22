@@ -1,4 +1,4 @@
-import { FileText, Calendar, ExternalLink } from "lucide-react";
+import { FaFileLines, FaCalendarDays, FaUpRightFromSquare } from "react-icons/fa6";
 import { PageHeader } from "../components/PageHeader";
 import { Heading } from "../components/typography";
 
@@ -67,13 +67,13 @@ export default function ConcursosPublicosPage() {
                 </p>
                 <div className="flex items-center gap-4 flex-wrap">
                   <div className="flex items-center gap-1.5">
-                    <Calendar size={16} className="text-muted-foreground" />
+                    <FaCalendarDays size={16} className="text-muted-foreground" />
                     <span className="font-sans font-normal text-sm text-muted-foreground">
                       Prazo: {concurso.deadline}
                     </span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <FileText size={16} className="text-muted-foreground" />
+                    <FaFileLines size={16} className="text-muted-foreground" />
                     <span className="font-sans font-normal text-sm text-muted-foreground">
                       {concurso.vacancies} {concurso.vacancies === 1 ? "vaga" : "vagas"}
                     </span>
@@ -84,7 +84,7 @@ export default function ConcursosPublicosPage() {
                 className="flex items-center gap-2 px-6 py-3 rounded-md bg-primary text-primary-foreground border-none font-sans font-medium text-sm cursor-pointer transition-opacity whitespace-nowrap hover:opacity-90"
               >
                 Ver Edital
-                <ExternalLink size={16} />
+                <FaUpRightFromSquare size={16} />
               </button>
             </div>
           </div>

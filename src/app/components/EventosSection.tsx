@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
+import { FaChevronLeft, FaChevronRight, FaCalendarDays } from "react-icons/fa6";
 import { Heading } from "./typography";
 
 const eventSlugById: Record<number, string> = {
@@ -89,14 +89,14 @@ export function EventosSection() {
               className="p-2 rounded-full transition-colors border border-border bg-background text-foreground"
               aria-label="Anterior"
             >
-              <ChevronLeft size={18} />
+              <FaChevronLeft size={18} />
             </button>
             <button
               onClick={() => scroll("right")}
               className="p-2 rounded-full transition-colors border border-border bg-background text-foreground"
               aria-label="Próximo"
             >
-              <ChevronRight size={18} />
+              <FaChevronRight size={18} />
             </button>
           </div>
         </div>
@@ -152,7 +152,7 @@ export function EventosSection() {
                   </Link>
                 )}
                 <div className="flex items-center gap-1 mt-2">
-                  <Calendar size={12} className="text-muted-foreground" />
+                  <FaCalendarDays size={12} className="text-muted-foreground" />
                   <span className="font-sans text-xs font-normal text-muted-foreground">
                     {evento.date} · {evento.location}
                   </span>

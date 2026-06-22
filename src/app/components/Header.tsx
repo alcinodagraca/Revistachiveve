@@ -2,16 +2,18 @@ import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import {
-  Menu,
-  X as CloseIcon,
-  Search,
-  Facebook,
-  Instagram,
-  Linkedin,
-  Youtube,
-  ChevronDown,
-} from "lucide-react";
+  FaBars,
+  FaXmark,
+  FaMagnifyingGlass,
+  FaFacebook,
+  FaInstagram,
+  FaLinkedin,
+  FaYoutube,
+  FaChevronDown,
+  FaXTwitter,
+} from "react-icons/fa6";
 import { cn } from "./ui/utils";
+import logoAlt from "../../assets/logo-alt.png";
 
 const navItems = [
   { label: "Página Inicial", href: "/" },
@@ -64,12 +66,12 @@ function WhatsAppIcon({ size = 14 }: { size?: number }) {
 }
 
 const socials = [
-  { Icon: Facebook, href: "#", label: "Facebook" },
-  { Icon: Instagram, href: "#", label: "Instagram" },
-  { Icon: XIcon, href: "#", label: "X" },
+  { Icon: FaFacebook, href: "#", label: "Facebook" },
+  { Icon: FaInstagram, href: "#", label: "Instagram" },
+  { Icon: FaXTwitter, href: "#", label: "X" },
   { Icon: WhatsAppIcon, href: "#", label: "WhatsApp" },
-  { Icon: Youtube, href: "#", label: "YouTube" },
-  { Icon: Linkedin, href: "#", label: "LinkedIn" },
+  { Icon: FaYoutube, href: "#", label: "YouTube" },
+  { Icon: FaLinkedin, href: "#", label: "LinkedIn" },
 ];
 
 export function Header() {
@@ -129,37 +131,19 @@ export function Header() {
             className="p-1 transition-opacity hover:opacity-80 text-white"
             aria-label="Menu"
           >
-            {mobileOpen ? <CloseIcon size={24} /> : <Menu size={24} />}
+            {mobileOpen ? <FaXmark size={24} /> : <FaBars size={24} />}
           </button>
 
           <Link
             to="/"
-            className="flex items-center gap-2 flex-shrink-0 no-underline"
+            className="flex items-center flex-shrink-0 no-underline"
+            aria-label="Negócios no Chiveve — Revista"
           >
-            <svg
-              width="38"
-              height="38"
-              viewBox="0 0 38 38"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M6 6 L18 2 L18 34 L6 30 Z" fill="#ffffff" />
-              <path
-                d="M20 2 L32 6 L32 30 L20 34 Z"
-                fill="#ffffff"
-                opacity="0.6"
-              />
-              <path d="M18 2 L20 2 L20 34 L18 34 Z" fill="#ffffff" opacity="0.9" />
-            </svg>
-            <div className="flex flex-col leading-tight">
-              <span className="uppercase font-sans text-base font-bold text-white tracking-[0.06em]">
-                Negócios no Chiveve
-                <span className="text-white opacity-70">.</span>
-              </span>
-              <span className="uppercase font-sans text-[10px] font-semibold text-white/75 tracking-[0.24em]">
-                Revista
-              </span>
-            </div>
+            <img
+              src={logoAlt}
+              alt="Negócios no Chiveve — Revista"
+              className="h-10 md:h-12 w-auto block"
+            />
           </Link>
 
           <div className="hidden md:flex items-center gap-2">
@@ -201,7 +185,7 @@ export function Header() {
                   )}
                 >
                   {item.label}
-                  {item.hasDropdown && <ChevronDown size={13} />}
+                  {item.hasDropdown && <FaChevronDown size={13} />}
                 </Link>
 
                 {item.hasDropdown && artigosDropdownOpen && (
@@ -226,7 +210,7 @@ export function Header() {
             className="p-2 transition-colors text-foreground hover:text-primary"
             aria-label="Pesquisar"
           >
-            <Search size={18} />
+            <FaMagnifyingGlass size={18} />
           </button>
         </div>
         <AnimatePresence initial={false}>
@@ -244,7 +228,7 @@ export function Header() {
                   onSubmit={handleSearchSubmit}
                   className="group flex items-center bg-background border-b-2 border-border transition-colors focus-within:border-primary"
                 >
-                  <Search
+                  <FaMagnifyingGlass
                     size={20}
                     className="text-muted-foreground mr-3 flex-shrink-0"
                   />
@@ -263,7 +247,7 @@ export function Header() {
                       aria-label="Limpar"
                       className="p-2 transition-opacity hover:opacity-80 text-muted-foreground"
                     >
-                      <CloseIcon size={18} />
+                      <FaXmark size={18} />
                     </button>
                   )}
                   <button
@@ -316,7 +300,7 @@ export function Header() {
                   className="flex items-center gap-2 transition-opacity hover:opacity-80 text-white bg-transparent border-none cursor-pointer p-0 font-sans text-base font-medium"
                   aria-label="Fechar menu"
                 >
-                  <CloseIcon size={24} />
+                  <FaXmark size={24} />
                   Fechar Menu
                 </button>
               </div>

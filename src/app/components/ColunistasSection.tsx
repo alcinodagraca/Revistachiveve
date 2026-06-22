@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowUpRight } from "lucide-react";
+import { FaUpRightFromSquare } from "react-icons/fa6";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { articles } from "../../data/articles";
 import { Heading, Eyebrow } from "./typography";
@@ -26,7 +26,7 @@ export function ColunistasSection() {
             className="inline-flex items-center gap-1 font-sans font-medium text-xs md:text-sm text-primary no-underline py-2 transition-opacity hover:opacity-80"
           >
             Ver tudo
-            <ArrowUpRight size={14} />
+            <FaUpRightFromSquare size={14} />
           </Link>
         </div>
 

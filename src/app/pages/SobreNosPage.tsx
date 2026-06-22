@@ -1,5 +1,5 @@
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
-import { Target, Eye, Award } from "lucide-react";
+import { FaBullseye, FaEye, FaAward } from "react-icons/fa6";
 import { PageHeader } from "../components/PageHeader";
 import { Heading, SectionHeader } from "../components/typography";
 
@@ -38,7 +38,7 @@ export default function SobreNosPage() {
       <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-8 mb-16">
         <div className="p-8 rounded-lg bg-secondary">
           <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center mb-5">
-            <Target size={24} color="white" />
+            <FaBullseye size={24} color="white" />
           </div>
           <Heading as="h3" variant="feature-title" className="text-foreground mb-3">
             Missão
@@ -51,7 +51,7 @@ export default function SobreNosPage() {
 
         <div className="p-8 rounded-lg bg-secondary">
           <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center mb-5">
-            <Eye size={24} color="white" />
+            <FaEye size={24} color="white" />
           </div>
           <Heading as="h3" variant="feature-title" className="text-foreground mb-3">
             Visão
@@ -64,7 +64,7 @@ export default function SobreNosPage() {
 
         <div className="p-8 rounded-lg bg-secondary">
           <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center mb-5">
-            <Award size={24} color="white" />
+            <FaAward size={24} color="white" />
           </div>
           <Heading as="h3" variant="feature-title" className="text-foreground mb-3">
             Valores

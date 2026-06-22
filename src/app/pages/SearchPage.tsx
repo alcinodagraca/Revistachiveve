@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { motion } from "motion/react";
-import { Search as SearchIcon } from "lucide-react";
+import { FaMagnifyingGlass } from "react-icons/fa6";
 import { Breadcrumb } from "../components/Breadcrumb";
 import { ArticleCard, articleCardGridVariants } from "../components/ArticleCard";
 import { searchArticles } from "../../data/articles";
@@ -52,7 +52,7 @@ export default function SearchPage() {
             aria-label="Pesquisar"
             className="px-4 py-3 transition-opacity hover:opacity-80 text-muted-foreground"
           >
-            <SearchIcon size={18} />
+            <FaMagnifyingGlass size={18} />
           </button>
         </form>
 

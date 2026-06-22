@@ -1,6 +1,6 @@
 import { Link, useParams, notFound } from "@tanstack/react-router";
 import { motion } from "motion/react";
-import { Calendar, MapPin, Ticket, Users } from "lucide-react";
+import { FaCalendarDays, FaLocationDot, FaTicket, FaUsers } from "react-icons/fa6";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { Breadcrumb } from "../components/Breadcrumb";
 import { Prose } from "../components/Prose";
@@ -80,9 +80,9 @@ export default function EventDetailPage() {
                 </div>
               </div>
 
-              <MetaRow icon={MapPin} label="Local" value={event.location} />
-              <MetaRow icon={Ticket} label="Preço" value={event.price} />
-              <MetaRow icon={Users} label="Organização" value={event.organizer} />
+              <MetaRow icon={FaLocationDot} label="Local" value={event.location} />
+              <MetaRow icon={FaTicket} label="Preço" value={event.price} />
+              <MetaRow icon={FaUsers} label="Organização" value={event.organizer} />
 
               <a
                 href={event.registrationUrl}
@@ -133,7 +133,7 @@ function MetaRow({
   label,
   value,
 }: {
-  icon: typeof Calendar;
+  icon: typeof FaCalendarDays;
   label: string;
   value: string;
 }) {

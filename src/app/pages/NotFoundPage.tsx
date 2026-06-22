@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
-import { ArrowLeft } from "lucide-react";
+import { FaArrowLeft } from "react-icons/fa6";
 import { Heading } from "../components/typography";
 
 export default function NotFoundPage() {
@@ -31,7 +31,7 @@ export default function NotFoundPage() {
           to="/"
           className="inline-flex items-center gap-2 transition-opacity hover:opacity-90 py-3 px-5 bg-primary text-white rounded-md font-sans text-sm font-semibold tracking-[0.05em] uppercase no-underline"
         >
-          <ArrowLeft size={16} />
+          <FaArrowLeft size={16} />
           Voltar à página inicial
         </Link>
       </motion.div>

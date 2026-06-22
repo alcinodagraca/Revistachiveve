@@ -1,4 +1,4 @@
-import { Facebook, Twitter, Youtube, Linkedin } from "lucide-react";
+import { FaFacebook, FaTwitter, FaYoutube, FaLinkedin } from "react-icons/fa6";
 
 export function ContinueImpactadoSection() {
   return (
@@ -39,7 +39,7 @@ export function ContinueImpactadoSection() {
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center transition-all duration-200 border border-white/30 hover:bg-white/25 hover:-translate-y-0.5"
               >
-                <Facebook size={18} color="#FFFFFF" />
+                <FaFacebook size={18} color="#FFFFFF" />
               </a>
               <a
                 href="https://twitter.com"
@@ -47,7 +47,7 @@ export function ContinueImpactadoSection() {
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center transition-all duration-200 border border-white/30 hover:bg-white/25 hover:-translate-y-0.5"
               >
-                <Twitter size={18} color="#FFFFFF" />
+                <FaTwitter size={18} color="#FFFFFF" />
               </a>
               <a
                 href="https://youtube.com"
@@ -55,7 +55,7 @@ export function ContinueImpactadoSection() {
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center transition-all duration-200 border border-white/30 hover:bg-white/25 hover:-translate-y-0.5"
               >
-                <Youtube size={18} color="#FFFFFF" />
+                <FaYoutube size={18} color="#FFFFFF" />
               </a>
               <a
                 href="https://linkedin.com"
@@ -63,7 +63,7 @@ export function ContinueImpactadoSection() {
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center transition-all duration-200 border border-white/30 hover:bg-white/25 hover:-translate-y-0.5"
               >
-                <Linkedin size={18} color="#FFFFFF" />
+                <FaLinkedin size={18} color="#FFFFFF" />
               </a>
             </div>
           </div>

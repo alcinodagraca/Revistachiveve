@@ -1,6 +1,6 @@
 import { Link, useParams } from "@tanstack/react-router";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
-import { Clock } from "lucide-react";
+import { FaClock } from "react-icons/fa6";
 import { PageHeader } from "../components/PageHeader";
 import { Heading, SectionHeader, Eyebrow } from "../components/typography";
 
@@ -209,7 +209,7 @@ export default function CategoryPage() {
                     </span>
                     <span className="w-[3px] h-[3px] rounded-full bg-muted-foreground" />
                     <div className="flex items-center gap-1">
-                      <Clock size={12} className="text-muted-foreground" />
+                      <FaClock size={12} className="text-muted-foreground" />
                       <span className="font-sans text-xs text-muted-foreground">
                         {article.readTime}
                       </span>
@@ -262,7 +262,7 @@ export default function CategoryPage() {
                     </span>
                     <span className="w-[3px] h-[3px] rounded-full bg-muted-foreground" />
                     <div className="flex items-center gap-1">
-                      <Clock size={12} className="text-muted-foreground" />
+                      <FaClock size={12} className="text-muted-foreground" />
                       <span className="font-sans text-xs text-muted-foreground">
                         {article.readTime}
                       </span>

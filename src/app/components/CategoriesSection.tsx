@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-import { ArrowRight } from "lucide-react";
+import { FaArrowRight } from "react-icons/fa6";
 import { SectionHeader } from "./typography";
 
 const categories = [
@@ -70,7 +70,7 @@ export function CategoriesSection() {
                     {cat.count} artigos
                   </span>
                 </div>
-                <ArrowRight
+                <FaArrowRight
                   size={18}
                   className="transition-transform duration-300 group-hover:translate-x-1 text-white/85"
                 />

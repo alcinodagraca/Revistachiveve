@@ -1,5 +1,6 @@
-import { Facebook, Instagram, Twitter, MessageCircle, Youtube, Linkedin } from "lucide-react";
+import { FaFacebook, FaInstagram, FaTwitter, FaWhatsapp, FaYoutube, FaLinkedin } from "react-icons/fa6";
 import { Link } from "@tanstack/react-router";
+import logoAlt from "../../assets/logo-alt.png";
 
 const footerCategoryLinks: { label: string; to: string; params?: { category: string } }[] = [
   { label: "Desenvolvimento Pessoal", to: "/artigos/$category", params: { category: "desenvolvimento-pessoal" } },
@@ -25,12 +26,12 @@ const usefulLinks: { label: string; to: string }[] = [
 ];
 
 const socials = [
-  { Icon: Facebook, href: "#", label: "Facebook" },
-  { Icon: Instagram, href: "#", label: "Instagram" },
-  { Icon: Twitter, href: "#", label: "Twitter" },
-  { Icon: MessageCircle, href: "#", label: "WhatsApp" },
-  { Icon: Youtube, href: "#", label: "YouTube" },
-  { Icon: Linkedin, href: "#", label: "LinkedIn" },
+  { Icon: FaFacebook, href: "#", label: "Facebook" },
+  { Icon: FaInstagram, href: "#", label: "Instagram" },
+  { Icon: FaTwitter, href: "#", label: "Twitter" },
+  { Icon: FaWhatsapp, href: "#", label: "WhatsApp" },
+  { Icon: FaYoutube, href: "#", label: "YouTube" },
+  { Icon: FaLinkedin, href: "#", label: "LinkedIn" },
 ];
 
 const linkClass =
@@ -47,21 +48,11 @@ export function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {/* Brand Column */}
             <div>
-              <div className="flex items-center gap-2 mb-4">
-                <svg width="34" height="34" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M6 6 L18 2 L18 34 L6 30 Z" fill="#ffffff" />
-                  <path d="M20 2 L32 6 L32 30 L20 34 Z" fill="rgba(255,255,255,0.7)" />
-                  <path d="M18 2 L20 2 L20 34 L18 34 Z" fill="#ffffff" />
-                </svg>
-                <div className="flex flex-col leading-tight">
-                  <span className="font-sans text-sm font-bold text-primary-foreground tracking-[0.05em]">
-                    NEGÓCIOS NO CHIVEVE.
-                  </span>
-                  <span className="font-sans text-[10px] font-medium text-primary-foreground tracking-[0.18em]">
-                    REVISTA
-                  </span>
-                </div>
-              </div>
+              <img
+                src={logoAlt}
+                alt="Negócios no Chiveve — Revista"
+                className="h-12 w-auto block mb-4"
+              />
 
               <p className="mb-5 font-sans text-sm font-normal text-primary-foreground leading-[1.7]">
                 A sua revista de referência para negócios, empreendedorismo,

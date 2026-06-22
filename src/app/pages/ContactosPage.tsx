@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { FaEnvelope, FaPhone, FaLocationDot, FaPaperPlane } from "react-icons/fa6";
 import { useState } from "react";
 import { PageHeader } from "../components/PageHeader";
 import { Heading, SectionHeader } from "../components/typography";
@@ -31,7 +31,7 @@ export default function ContactosPage() {
           <div className="flex flex-col gap-6">
             <div className="flex items-start gap-4">
               <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
-                <Mail size={20} className="text-primary" />
+                <FaEnvelope size={20} className="text-primary" />
               </div>
               <div>
                 <Heading as="h3" variant="card-title" className="text-foreground mb-1">
@@ -48,7 +48,7 @@ export default function ContactosPage() {
 
             <div className="flex items-start gap-4">
               <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
-                <Phone size={20} className="text-primary" />
+                <FaPhone size={20} className="text-primary" />
               </div>
               <div>
                 <Heading as="h3" variant="card-title" className="text-foreground mb-1">
@@ -65,7 +65,7 @@ export default function ContactosPage() {
 
             <div className="flex items-start gap-4">
               <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
-                <MapPin size={20} className="text-primary" />
+                <FaLocationDot size={20} className="text-primary" />
               </div>
               <div>
                 <Heading as="h3" variant="card-title" className="text-foreground mb-1">
@@ -156,7 +156,7 @@ export default function ContactosPage() {
               type="submit"
               className="flex items-center justify-center gap-2 px-8 py-3.5 rounded-md bg-primary text-primary-foreground border-none font-sans font-medium text-base cursor-pointer transition-opacity hover:opacity-90"
             >
-              <Send size={18} />
+              <FaPaperPlane size={18} />
               Enviar Mensagem
             </button>
           </form>

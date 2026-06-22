@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Phone, Mail, MapPin, Globe, Search, Building2 } from "lucide-react";
+import { FaPhone, FaEnvelope, FaLocationDot, FaGlobe, FaMagnifyingGlass, FaBuilding } from "react-icons/fa6";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { PageHeader } from "../components/PageHeader";
 import { Heading } from "../components/typography";
@@ -158,7 +158,7 @@ export default function ContactosUteisPage() {
                 Pesquisar
               </label>
               <div className="relative flex items-center">
-                <Search size={18} className="absolute left-3 text-muted-foreground" />
+                <FaMagnifyingGlass size={18} className="absolute left-3 text-muted-foreground" />
                 <input
                   type="text"
                   placeholder="Nome ou palavra-chave..."
@@ -210,7 +210,7 @@ export default function ContactosUteisPage() {
           <main>
             {filteredContacts.length === 0 ? (
               <div className="px-6 py-16 text-center">
-                <Building2 size={48} className="text-muted-foreground mx-auto mb-4" />
+                <FaBuilding size={48} className="text-muted-foreground mx-auto mb-4" />
                 <Heading as="h3" variant="feature-title" className="text-foreground mb-2">
                   Nenhum resultado encontrado
                 </Heading>
@@ -250,7 +250,7 @@ export default function ContactosUteisPage() {
 
                       <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-3">
                         <div className="flex items-center gap-2">
-                          <Phone size={16} className="text-primary flex-shrink-0" />
+                          <FaPhone size={16} className="text-primary flex-shrink-0" />
                           <a
                             href={`tel:${contact.phone}`}
                             className="font-sans font-normal text-sm text-foreground no-underline transition-colors hover:text-primary"
@@ -260,7 +260,7 @@ export default function ContactosUteisPage() {
                         </div>
 
                         <div className="flex items-center gap-2">
-                          <Mail size={16} className="text-primary flex-shrink-0" />
+                          <FaEnvelope size={16} className="text-primary flex-shrink-0" />
                           <a
                             href={`mailto:${contact.email}`}
                             className="font-sans font-normal text-sm text-foreground no-underline transition-colors hover:text-primary"
@@ -270,14 +270,14 @@ export default function ContactosUteisPage() {
                         </div>
 
                         <div className="flex items-start gap-2">
-                          <MapPin size={16} className="text-primary flex-shrink-0 mt-0.5" />
+                          <FaLocationDot size={16} className="text-primary flex-shrink-0 mt-0.5" />
                           <span className="font-sans font-normal text-sm text-foreground">
                             {contact.address}
                           </span>
                         </div>
 
                         <div className="flex items-center gap-2">
-                          <Globe size={16} className="text-primary flex-shrink-0" />
+                          <FaGlobe size={16} className="text-primary flex-shrink-0" />
                           <a
                             href={`https://${contact.website}`}
                             target="_blank"

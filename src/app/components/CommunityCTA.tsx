@@ -1,4 +1,4 @@
-import { Users } from "lucide-react";
+import { FaUsers } from "react-icons/fa6";
 
 export function CommunityCTA() {
   return (
@@ -6,7 +6,7 @@ export function CommunityCTA() {
       <div className="max-w-[1280px] mx-auto px-4 flex items-center justify-between gap-8">
         <div className="flex items-start gap-4">
           <div className="flex-shrink-0 w-14 h-14 rounded-full bg-primary flex items-center justify-center">
-            <Users size={28} color="#FFFFFF" />
+            <FaUsers size={28} color="#FFFFFF" />
           </div>
           <div>
             <h3 className="font-serif text-[26px] font-semibold text-foreground leading-[1.3] mb-3">

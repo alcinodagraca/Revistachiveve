@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ChevronRight } from "lucide-react";
+import { FaChevronRight } from "react-icons/fa6";
 import { Fragment } from "react";
 
 export type Crumb = {
@@ -39,7 +39,7 @@ export function Breadcrumb({ items }: { items: Crumb[] }) {
                 )}
               </li>
               {!isLast && (
-                <ChevronRight
+                <FaChevronRight
                   size={13}
                   className="text-muted-foreground opacity-60"
                 />

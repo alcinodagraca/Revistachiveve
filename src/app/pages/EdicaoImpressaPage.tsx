@@ -1,5 +1,5 @@
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
-import { Download, Calendar, FileText } from "lucide-react";
+import { FaDownload, FaCalendarDays, FaFileLines } from "react-icons/fa6";
 import { PageHeader } from "../components/PageHeader";
 import { Heading, SectionHeader, Eyebrow } from "../components/typography";
 
@@ -116,7 +116,7 @@ export default function EdicaoImpressaPage() {
               </div>
 
               <button className="inline-flex items-center gap-2 py-4 px-8 bg-primary text-primary-foreground border-none rounded-md font-sans text-base font-medium cursor-pointer transition-all duration-200 hover:bg-foreground hover:-translate-y-0.5">
-                <Download size={20} />
+                <FaDownload size={20} />
                 Baixar Edição Atual
               </button>
             </div>
@@ -147,7 +147,7 @@ export default function EdicaoImpressaPage() {
               </div>
 
               <div className="flex items-center gap-2 mb-2">
-                <Calendar size={14} className="text-muted-foreground" />
+                <FaCalendarDays size={14} className="text-muted-foreground" />
                 <span className="font-sans text-xs font-medium text-muted-foreground uppercase tracking-[0.05em]">
                   {edition.date}
                 </span>
@@ -165,7 +165,7 @@ export default function EdicaoImpressaPage() {
                 href="#"
                 className="inline-flex items-center gap-2 font-sans text-sm font-medium text-primary no-underline transition-[gap] duration-200 hover:gap-3"
               >
-                <FileText size={16} />
+                <FaFileLines size={16} />
                 Baixar PDF
               </a>
             </article>

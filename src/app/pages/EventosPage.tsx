@@ -1,5 +1,5 @@
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
-import { Calendar, MapPin, Clock } from "lucide-react";
+import { FaCalendarDays, FaLocationDot, FaClock } from "react-icons/fa6";
 import { PageHeader } from "../components/PageHeader";
 import { Heading, SectionHeader, Eyebrow } from "../components/typography";
 
@@ -142,19 +142,19 @@ export default function EventosPage() {
 
                   <div className="flex flex-col gap-2 mb-4">
                     <div className="flex items-center gap-2">
-                      <Calendar size={16} className="text-primary" />
+                      <FaCalendarDays size={16} className="text-primary" />
                       <span className="font-sans text-sm font-medium text-foreground">
                         {event.date}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Clock size={16} className="text-primary" />
+                      <FaClock size={16} className="text-primary" />
                       <span className="font-sans text-sm font-medium text-foreground">
                         {event.time}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <MapPin size={16} className="text-primary" />
+                      <FaLocationDot size={16} className="text-primary" />
                       <span className="font-sans text-sm font-medium text-foreground">
                         {event.location}
                       </span>
@@ -201,19 +201,19 @@ export default function EventosPage() {
 
                   <div className="flex flex-col gap-2 mb-4">
                     <div className="flex items-center gap-2">
-                      <Calendar size={14} className="text-primary" />
+                      <FaCalendarDays size={14} className="text-primary" />
                       <span className="font-sans text-xs font-medium text-foreground">
                         {event.date}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Clock size={14} className="text-primary" />
+                      <FaClock size={14} className="text-primary" />
                       <span className="font-sans text-xs font-medium text-foreground">
                         {event.time}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <MapPin size={14} className="text-primary" />
+                      <FaLocationDot size={14} className="text-primary" />
                       <span className="font-sans text-xs font-medium text-foreground">
                         {event.location}
                       </span>

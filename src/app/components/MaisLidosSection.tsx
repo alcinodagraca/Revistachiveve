@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 
 const maisLidos = [
@@ -87,7 +87,7 @@ export function MaisLidosSection() {
               className="absolute left-[-20px] top-[40%] -translate-y-1/2 z-10 bg-white/10 border border-white/20 w-12 h-12 flex items-center justify-center cursor-pointer transition-all duration-300 rounded-full hover:bg-white/20"
               aria-label="Previous slide"
             >
-              <ChevronLeft size={24} color="#FFFFFF" />
+              <FaChevronLeft size={24} color="#FFFFFF" />
             </button>
           )}
 
@@ -97,7 +97,7 @@ export function MaisLidosSection() {
               className="absolute right-[-20px] top-[40%] -translate-y-1/2 z-10 bg-white/10 border border-white/20 w-12 h-12 flex items-center justify-center cursor-pointer transition-all duration-300 rounded-full hover:bg-white/20"
               aria-label="Next slide"
             >
-              <ChevronRight size={24} color="#FFFFFF" />
+              <FaChevronRight size={24} color="#FFFFFF" />
             </button>
           )}
 
