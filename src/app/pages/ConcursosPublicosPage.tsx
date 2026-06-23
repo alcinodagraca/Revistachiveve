@@ -1,5 +1,6 @@
-import { FaFileLines, FaCalendarDays, FaUpRightFromSquare } from "react-icons/fa6";
+import { FaFileLines, FaCalendarDays, FaUpRightFromSquare, FaBriefcase } from "react-icons/fa6";
 import { PageHeader } from "../components/PageHeader";
+import { EmptyState } from "../components/EmptyState";
 import { Heading } from "../components/typography";
 import { Route } from "../../routes/concursos-publicos";
 import type { Tender } from "../../server/wp";
@@ -62,9 +63,12 @@ export default function ConcursosPublicosPage() {
       />
 
       {items.length === 0 ? (
-        <p className="font-sans text-base text-muted-foreground py-12 text-center">
-          Ainda não há concursos publicados.
-        </p>
+        <EmptyState
+          icon={FaBriefcase}
+          title="Sem concursos abertos"
+          message="De momento não há concursos públicos publicados. Esta página actualiza assim que novos editais forem abertos."
+          cta={{ label: "Ver edições recentes", to: "/edicao-impressa" }}
+        />
       ) : (
       <div className="grid gap-6">
         {items.map((concurso) => (

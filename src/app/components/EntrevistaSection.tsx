@@ -1,13 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-import { getArticleBySlug } from "../../data/articles";
 import { Heading } from "./typography";
+import type { Article } from "../../server/wp";
 
-const ENTREVISTA_CATEGORY = "empreendedorismo";
-const ENTREVISTA_SLUG = "dario-camal-bairro-central-mundo";
-
-export function EntrevistaSection() {
-  const article = getArticleBySlug(ENTREVISTA_CATEGORY, ENTREVISTA_SLUG);
+export function EntrevistaSection({ article }: { article: Article | null }) {
   if (!article) return null;
 
   const articleLink = {
@@ -36,7 +32,7 @@ export function EntrevistaSection() {
           >
             <ImageWithFallback
               src={article.heroImage}
-              alt={article.title}
+              alt={article.heroAlt || article.title}
               className="w-full h-full object-cover block transition-transform duration-500 group-hover:scale-105"
             />
           </Link>

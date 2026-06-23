@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { FaCalendarDays, FaLocationDot } from "react-icons/fa6";
 import { PageHeader } from "../components/PageHeader";
+import { EmptyState } from "../components/EmptyState";
 import { Heading, SectionHeader, Eyebrow } from "../components/typography";
 import { Route } from "../../routes/eventos.index";
 import type { Event } from "../../server/wp";
@@ -18,9 +19,12 @@ export default function EventosPage() {
             subtitle="Participe nos nossos eventos e amplie a sua rede de contactos profissionais"
             breadcrumbs={[{ label: "Início", to: "/" }, { label: "Eventos" }]}
           />
-          <p className="font-sans text-base text-muted-foreground py-12 text-center">
-            Ainda não há eventos publicados.
-          </p>
+          <EmptyState
+            icon={FaCalendarDays}
+            title="Sem eventos por enquanto"
+            message="Ainda não há eventos publicados. Volte em breve — estamos a preparar a próxima agenda de encontros, conferências e workshops."
+            cta={{ label: "Voltar à página inicial", to: "/" }}
+          />
         </div>
       </div>
     );

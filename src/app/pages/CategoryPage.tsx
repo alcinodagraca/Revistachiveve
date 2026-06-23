@@ -1,8 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
-import { FaClock } from "react-icons/fa6";
+import { FaClock, FaNewspaper } from "react-icons/fa6";
 import { PageHeader } from "../components/PageHeader";
+import { EmptyState } from "../components/EmptyState";
 import { Heading, SectionHeader, Eyebrow } from "../components/typography";
 import { ArticleCard, articleCardGridVariants } from "../components/ArticleCard";
 import { Route } from "../../routes/artigos.$category.index";
@@ -40,9 +41,12 @@ export default function CategoryPage() {
         />
 
         {articles.length === 0 ? (
-          <p className="font-sans text-base text-muted-foreground py-12 text-center">
-            Ainda não há artigos nesta categoria.
-          </p>
+          <EmptyState
+            icon={FaNewspaper}
+            title={`Sem artigos em ${category.name}`}
+            message="Ainda não publicámos artigos nesta categoria. Explore as outras secções enquanto preparamos novos conteúdos."
+            cta={{ label: "Ver todos os artigos", to: "/artigos" }}
+          />
         ) : (
           <>
             {featured.length > 0 && (

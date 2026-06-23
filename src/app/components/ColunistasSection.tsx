@@ -1,17 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { FaUpRightFromSquare } from "react-icons/fa6";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-import { articles } from "../../data/articles";
 import { Heading, Eyebrow } from "./typography";
+import type { Article } from "../../server/wp";
 
-const opinionArticles = (() => {
-  const opiniao = articles.filter((a) => a.category === "opiniao");
-  if (opiniao.length >= 3) return opiniao.slice(0, 3);
-  const filler = articles.filter((a) => a.category !== "opiniao").slice(0, 3 - opiniao.length);
-  return [...opiniao, ...filler];
-})();
+export function ColunistasSection({ articles }: { articles: Article[] }) {
+  if (articles.length === 0) return null;
 
-export function ColunistasSection() {
   return (
     <section className="px-4 md:px-8 bg-secondary py-16">
       <div className="max-w-[1280px] mx-auto">
@@ -31,19 +26,23 @@ export function ColunistasSection() {
         </div>
 
         <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-          {opinionArticles.map((article) => (
+          {articles.map((article) => (
             <Link
               key={article.slug}
               to="/artigos/$category/$slug"
               params={{ category: article.category, slug: article.slug }}
               className="group block no-underline text-inherit"
             >
-              <Eyebrow as="p" className="text-foreground mb-2">Forbes Life</Eyebrow>
+              {article.categoryName && (
+                <Eyebrow as="p" className="text-foreground mb-2">
+                  {article.categoryName}
+                </Eyebrow>
+              )}
 
               <div className="w-full aspect-[4/3] overflow-hidden mb-3 bg-background">
                 <ImageWithFallback
                   src={article.heroImage}
-                  alt={article.title}
+                  alt={article.heroAlt || article.title}
                   className="w-full h-full object-cover block transition-transform duration-500 group-hover:scale-105"
                 />
               </div>

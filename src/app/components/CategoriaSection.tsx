@@ -1,50 +1,39 @@
 import { Link } from "@tanstack/react-router";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { Heading } from "./typography";
+import type { Article } from "../../server/wp";
 
-export function CategoriaSection() {
-  const newsItems = [
-    {
-      title:
-        "Índia Aumenta Subsídio para Fertilizantes Enquanto Guerra Eleva Preços Globais",
-      description:
-        "O aumento foi de 11,6% em relação ao ano anterior, de forma a proteger agricultores diante de período de instabilidade",
-    },
-    {
-      title: "Governo Quer Elevar Mistura de Etanol na Gasolina para 32%",
-      description:
-        "Segundo o ministro Alexandre Silveira, a mudança deve acontecer ainda neste primeiro semestre de 2026",
-    },
-    {
-      title:
-        'Governo Tem Plano de "Estender Linha" de Crédito Ao Setor Agropecuário',
-      description:
-        "A declaração feita por Durigan acerca do crédito ponderou que o setor tem sofrido prejuízos com eventos climáticos e com a guerra no Oriente Médio",
-    },
-    {
-      title: "Mosaic Vai Paralisar Operações de Fosfato no Brasil",
-      description:
-        "A Mosaic anunciou nesta quarta (08) que vai paralisar duas unidades no Brasil, cortar empregos e reduzir a produção anual em cerca de 1 milhão de toneladas",
-    },
-  ];
+export function CategoriaSection({
+  categoryName,
+  categorySlug,
+  articles,
+}: {
+  categoryName: string;
+  categorySlug: string;
+  articles: Article[];
+}) {
+  if (articles.length === 0) return null;
+
+  const [lead, ...rest] = articles;
+  const subItems = rest.slice(0, 4);
 
   return (
     <section className="px-4 md:px-8 bg-background py-16">
       <div className="max-w-[1280px] mx-auto">
         <div className="flex items-center mb-8 border-b border-border">
           <span className="font-sans font-bold text-xs md:text-sm uppercase tracking-[0.12em] bg-primary text-primary-foreground px-3 py-1.5 rounded-sm -mb-px">
-            Categoria
+            {categoryName}
           </span>
           <div className="flex-1" />
           <Link
-            to="/artigos"
+            to="/artigos/$category"
+            params={{ category: categorySlug }}
             className="font-sans font-medium text-xs md:text-sm text-primary no-underline py-2 transition-opacity hover:opacity-80"
           >
             Ver tudo
           </Link>
         </div>
 
-        {/* Content grid */}
         <style>{`
           .categoria-grid-container {
             display: grid;
@@ -75,14 +64,14 @@ export function CategoriaSection() {
           <div className="flex flex-col">
             <article>
               <Link
-                to="/artigos/$category"
-                params={{ category: "economia" }}
+                to="/artigos/$category/$slug"
+                params={{ category: lead.category, slug: lead.slug }}
                 className="group block no-underline text-inherit"
               >
                 <div className="mb-4 w-full overflow-hidden aspect-[16/9] bg-secondary">
                   <ImageWithFallback
-                    src="https://images.unsplash.com/photo-1607062400977-80da9282b8f8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXRjaGVyfGVufDB8fHx8MTcyMTAxNzYyNA&ixlib=rb-4.1.0&q=80&w=1080"
-                    alt="Exportação de Carne Suína do Brasil"
+                    src={lead.heroImage}
+                    alt={lead.heroAlt || lead.title}
                     className="w-full h-full object-cover block transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
@@ -91,40 +80,38 @@ export function CategoriaSection() {
                   variant="feature-title"
                   className="text-foreground transition-colors group-hover:text-primary"
                 >
-                  Exportação de Carne Suína do Brasil Tem Recorde em Março
+                  {lead.title}
                 </Heading>
               </Link>
             </article>
 
-            {/* Sub-articles Grid */}
-            <div className="sub-articles-grid">
-              {newsItems.map((item, index) => (
-                <article key={index}>
-                  <Link
-                    to="/artigos/$category"
-                    params={{ category: "economia" }}
-                    className="group block no-underline text-inherit"
-                  >
-                    <Heading
-                      as="h4"
-                      variant="card-title"
-                      className="text-foreground mb-2 transition-colors group-hover:text-primary"
+            {subItems.length > 0 && (
+              <div className="sub-articles-grid">
+                {subItems.map((item) => (
+                  <article key={item.id}>
+                    <Link
+                      to="/artigos/$category/$slug"
+                      params={{ category: item.category, slug: item.slug }}
+                      className="group block no-underline text-inherit"
                     >
-                      {item.title}
-                    </Heading>
-                    <p className="font-sans text-sm text-muted-foreground leading-[1.55]">
-                      {item.description}
-                    </p>
-                  </Link>
-                </article>
-              ))}
-            </div>
+                      <Heading
+                        as="h4"
+                        variant="card-title"
+                        className="text-foreground mb-2 transition-colors group-hover:text-primary"
+                      >
+                        {item.title}
+                      </Heading>
+                      <p className="font-sans text-sm text-muted-foreground leading-[1.55]">
+                        {item.excerpt}
+                      </p>
+                    </Link>
+                  </article>
+                ))}
+              </div>
+            )}
           </div>
 
-          <aside
-            aria-hidden
-            className="bg-secondary min-h-[300px] w-full"
-          />
+          <aside aria-hidden className="bg-secondary min-h-[300px] w-full" />
         </div>
       </div>
     </section>

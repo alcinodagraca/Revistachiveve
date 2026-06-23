@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FaPhone, FaEnvelope, FaLocationDot, FaGlobe, FaMagnifyingGlass, FaBuilding } from "react-icons/fa6";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { PageHeader } from "../components/PageHeader";
+import { EmptyState } from "../components/EmptyState";
 import { Heading } from "../components/typography";
 import { Route } from "../../routes/contactos-uteis";
 
@@ -211,15 +212,11 @@ export default function ContactosUteisPage() {
 
           <main>
             {filteredContacts.length === 0 ? (
-              <div className="px-6 py-16 text-center">
-                <FaBuilding size={48} className="text-muted-foreground mx-auto mb-4" />
-                <Heading as="h3" variant="feature-title" className="text-foreground mb-2">
-                  Nenhum resultado encontrado
-                </Heading>
-                <p className="font-sans font-normal text-base text-muted-foreground leading-relaxed">
-                  Tente ajustar os filtros ou termo de pesquisa
-                </p>
-              </div>
+              <EmptyState
+                icon={FaBuilding}
+                title="Nenhum resultado encontrado"
+                message="Tente ajustar os filtros ou usar outra palavra-chave na pesquisa."
+              />
             ) : (
               <div className="flex flex-col gap-5">
                 {filteredContacts.map((contact) => (

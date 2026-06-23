@@ -47,10 +47,11 @@ if (!BASE || !USER || !PASS) {
 
 const AUTH = "Basic " + Buffer.from(`${USER}:${PASS}`).toString("base64");
 
-const REST_BASE: Record<string, string> = {
+export const REST_BASE: Record<string, string> = {
   event: "eventos",
   tender: "concurso",
   contact: "contacto-util",
+  post: "posts",
 };
 
 // Field-name allowlists per kind — anything in this set is routed through
@@ -83,6 +84,8 @@ const ACF_KEYS: Record<string, ReadonlySet<string>> = {
     // forward if you add a morada (address) field in SCF later:
     "morada",
   ]),
+  // Built-in WP posts use only top-level fields — see TOP_LEVEL_KEYS.
+  post: new Set([]),
 };
 
 const TOP_LEVEL_KEYS = new Set([
@@ -116,7 +119,7 @@ function buildPayload(kind: string, input: Record<string, unknown>) {
   return out;
 }
 
-async function wpFetch(
+export async function wpFetch(
   method: string,
   path: string,
   body?: unknown,
@@ -136,6 +139,45 @@ async function wpFetch(
     throw new Error(`WP ${method} ${path} → ${res.status}\n${text.slice(0, 800)}`);
   }
   return text ? JSON.parse(text) : null;
+}
+
+/**
+ * Download an image from a public URL and upload it to /wp/v2/media as a raw
+ * binary body (simpler than multipart, works fine with WP REST).
+ * Returns the new media attachment ID.
+ */
+export async function uploadMediaFromUrl(
+  imageUrl: string,
+  filename: string,
+  alt?: string,
+): Promise<number> {
+  const fetched = await fetch(imageUrl);
+  if (!fetched.ok) {
+    throw new Error(`fetch ${imageUrl} → ${fetched.status}`);
+  }
+  const mime = fetched.headers.get("content-type") ?? "image/jpeg";
+  const buf = Buffer.from(await fetched.arrayBuffer());
+
+  const res = await fetch(BASE + "/media", {
+    method: "POST",
+    headers: {
+      Authorization: AUTH,
+      "Content-Type": mime,
+      "Content-Disposition": `attachment; filename="${filename}"`,
+      Accept: "application/json",
+    },
+    body: buf,
+  });
+  const text = await res.text();
+  if (!res.ok) {
+    throw new Error(`WP POST /media → ${res.status}\n${text.slice(0, 800)}`);
+  }
+  const media = JSON.parse(text) as { id: number };
+
+  if (alt) {
+    await wpFetch("POST", `/media/${media.id}`, { alt_text: alt });
+  }
+  return media.id;
 }
 
 function parseJsonArg(raw: string | undefined): Record<string, unknown> {
@@ -160,7 +202,10 @@ function usage(code = 1): never {
       "  wp-write.ts <kind> delete <id>",
       "  wp-write.ts <kind> list",
       "",
-      "  kind = event | tender | contact",
+      "  kind = event | tender | contact | post",
+      "",
+      "  For `post create`, JSON may include `featured_image_url` (+ optional",
+      "  `featured_image_alt`) to auto-upload the image and set featured_media.",
     ].join("\n"),
   );
   process.exit(code);
@@ -177,6 +222,27 @@ async function main() {
 
   if (cmd === "create") {
     const data = parseJsonArg(rest[0]);
+    // Intercept featured_image_url before buildPayload (it's not a WP field).
+    const imageUrl = data.featured_image_url;
+    const imageAlt = data.featured_image_alt;
+    delete data.featured_image_url;
+    delete data.featured_image_alt;
+    if (typeof imageUrl === "string" && imageUrl) {
+      const filename =
+        (typeof data.slug === "string" && data.slug
+          ? data.slug
+          : (typeof data.title === "string" ? data.title : "image")
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-")
+              .replace(/^-|-$/g, "")) + ".jpg";
+      const mediaId = await uploadMediaFromUrl(
+        imageUrl,
+        filename,
+        typeof imageAlt === "string" ? imageAlt : undefined,
+      );
+      data.featured_media = mediaId;
+      console.log(`  uploaded media id=${mediaId} from ${imageUrl}`);
+    }
     const payload = buildPayload(kind, data);
     const r = (await wpFetch("POST", `/${base}`, payload)) as {
       id: number;
@@ -215,7 +281,13 @@ async function main() {
   }
 }
 
-main().catch((e) => {
-  console.error(e instanceof Error ? e.message : e);
-  process.exit(1);
-});
+// Only run the CLI when invoked directly (allows other scripts to import
+// `wpFetch` and `uploadMediaFromUrl` without re-entering main).
+const invokedDirectly =
+  process.argv[1] && process.argv[1].endsWith("wp-write.ts");
+if (invokedDirectly) {
+  main().catch((e) => {
+    console.error(e instanceof Error ? e.message : e);
+    process.exit(1);
+  });
+}

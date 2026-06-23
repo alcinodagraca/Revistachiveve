@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { Breadcrumb } from "../components/Breadcrumb";
 import { ArticleCard, articleCardGridVariants } from "../components/ArticleCard";
+import { EmptyState } from "../components/EmptyState";
 import { Heading, SectionHeader } from "../components/typography";
 import { Route } from "../../routes/pesquisa";
 
@@ -51,6 +52,7 @@ export default function SearchPage() {
 
         {!q && (
           <EmptyState
+            icon={FaMagnifyingGlass}
             title="Comece a pesquisar"
             message="Escreva uma palavra-chave acima — pode ser um tema, um nome ou uma cidade."
           />
@@ -58,8 +60,10 @@ export default function SearchPage() {
 
         {q && list.articles.length === 0 && (
           <EmptyState
+            icon={FaMagnifyingGlass}
             title={`Nenhum resultado para "${q}"`}
             message="Tente outras palavras-chave ou explore as nossas categorias."
+            cta={{ label: "Ver todos os artigos", to: "/artigos" }}
           />
         )}
 
@@ -90,13 +94,3 @@ export default function SearchPage() {
   );
 }
 
-function EmptyState({ title, message }: { title: string; message: string }) {
-  return (
-    <div className="text-center px-4 py-12 border border-dashed border-border rounded-lg bg-secondary">
-      <Heading as="h2" variant="feature-title" className="text-foreground mb-2">
-        {title}
-      </Heading>
-      <p className="font-sans text-sm text-muted-foreground">{message}</p>
-    </div>
-  );
-}
