@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import SearchPage from "../app/pages/SearchPage";
 import { fnListArticles } from "../server/wp/server-fns";
+import { pageSeo } from "../server/seo";
 
 type SearchParams = { q?: string };
 
@@ -17,14 +18,12 @@ export const Route = createFileRoute("/pesquisa")({
     });
     return { list, q: deps.q };
   },
-  head: ({ loaderData }) => ({
-    meta: [
-      {
-        title: loaderData?.q
-          ? `"${loaderData.q}" · Pesquisa · Revista Chiveve`
-          : "Pesquisa · Revista Chiveve",
-      },
-      { name: "robots", content: "noindex,follow" },
-    ],
-  }),
+  head: ({ loaderData }) =>
+    pageSeo({
+      title: loaderData?.q ? `"${loaderData.q}" · Pesquisa` : "Pesquisa",
+      description:
+        "Pesquise artigos da Revista Chiveve por palavra-chave, tema, cidade ou autor.",
+      path: "/pesquisa",
+      noindex: true,
+    }),
 });

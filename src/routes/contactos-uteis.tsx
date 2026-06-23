@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import ContactosUteisPage from '../app/pages/ContactosUteisPage'
 import { fnListContacts } from '../server/wp/server-fns'
+import { pageSeo } from '../server/seo'
 
 export const Route = createFileRoute('/contactos-uteis')({
   component: ContactosUteisPage,
@@ -8,14 +9,11 @@ export const Route = createFileRoute('/contactos-uteis')({
     const contacts = await fnListContacts()
     return { contacts }
   },
-  head: () => ({
-    meta: [
-      { title: 'Contactos Úteis · Revista Chiveve' },
-      {
-        name: 'description',
-        content:
-          'Directório de instituições, bancos e organizações úteis em Moçambique.',
-      },
-    ],
-  }),
+  head: () =>
+    pageSeo({
+      title: 'Contactos Úteis',
+      description:
+        'Directório de instituições, bancos, associações empresariais e organizações úteis em Moçambique.',
+      path: '/contactos-uteis',
+    }),
 })

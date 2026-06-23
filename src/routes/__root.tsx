@@ -9,6 +9,7 @@ import { Layout } from '../app/components/Layout'
 import NotFoundPage from '../app/pages/NotFoundPage'
 import appCss from '../styles/index.css?url'
 import { fnListCategories } from '../server/wp/server-fns'
+import { organizationJsonLd, websiteJsonLd, SITE_NAME } from '../server/seo'
 
 export const Route = createRootRoute({
   head: () => ({
@@ -18,9 +19,12 @@ export const Route = createRootRoute({
         name: 'viewport',
         content: 'width=device-width, initial-scale=1.0',
       },
-      { title: 'Revista Chiveve' },
+      { title: SITE_NAME },
+      { name: 'theme-color', content: '#1E4ED8' },
     ],
     links: [
+      { rel: 'icon', href: '/logo-alt.png', type: 'image/png' },
+      { rel: 'apple-touch-icon', href: '/logo-alt.png' },
       { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
       { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
       {
@@ -28,6 +32,16 @@ export const Route = createRootRoute({
         href: 'https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap',
       },
       { rel: 'stylesheet', href: appCss },
+    ],
+    scripts: [
+      {
+        type: 'application/ld+json',
+        children: JSON.stringify(organizationJsonLd()),
+      },
+      {
+        type: 'application/ld+json',
+        children: JSON.stringify(websiteJsonLd()),
+      },
     ],
   }),
   loader: async () => {

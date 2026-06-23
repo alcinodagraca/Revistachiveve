@@ -2,6 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import EventDetailPage from "../app/pages/EventDetailPage";
 import NotFoundPage from "../app/pages/NotFoundPage";
 import { fnGetEventBySlug, fnListEvents } from "../server/wp/server-fns";
+import { breadcrumbJsonLd, eventJsonLd, pageSeo } from "../server/seo";
 
 export const Route = createFileRoute("/eventos/$slug")({
   component: EventDetailPage,
@@ -20,17 +21,32 @@ export const Route = createFileRoute("/eventos/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) return {};
     const { event } = loaderData;
-    return {
-      meta: [
-        { title: `${event.title} · Revista Chiveve` },
-        {
-          name: "description",
-          content: event.description?.[0] ?? event.title,
-        },
-        { property: "og:title", content: event.title },
-        { property: "og:image", content: event.image },
-        { property: "og:type", content: "event" },
+    const description = event.description?.[0] ?? event.title;
+    const path = `/eventos/${event.slug}`;
+    return pageSeo({
+      title: event.title,
+      description,
+      path,
+      image: event.image,
+      imageAlt: event.title,
+      jsonLd: [
+        eventJsonLd({
+          title: event.title,
+          description,
+          url: path,
+          image: event.image,
+          startDate: event.date,
+          locationName: event.location,
+          city: event.city,
+          organizer: event.organizer,
+          registrationUrl: event.registrationUrl,
+        }),
+        breadcrumbJsonLd([
+          { name: "Início", path: "/" },
+          { name: "Eventos", path: "/eventos" },
+          { name: event.title, path },
+        ]),
       ],
-    };
+    });
   },
 });

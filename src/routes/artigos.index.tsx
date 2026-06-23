@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import ArtigosPage from '../app/pages/ArtigosPage'
 import { fnListArticles } from '../server/wp/server-fns'
+import { pageSeo } from '../server/seo'
 
 export const Route = createFileRoute('/artigos/')({
   component: ArtigosPage,
@@ -8,14 +9,13 @@ export const Route = createFileRoute('/artigos/')({
     const list = await fnListArticles({ data: { perPage: 12 } })
     return { list }
   },
-  head: () => ({
-    meta: [
-      { title: 'Artigos · Revista Chiveve' },
-      {
-        name: 'description',
-        content:
-          'Todos os artigos da Revista Chiveve — economia, empreendedorismo, liderança, inovação e mais.',
-      },
-    ],
-  }),
+  head: ({ loaderData }) =>
+    pageSeo({
+      title: 'Artigos',
+      description:
+        'Todos os artigos da Revista Chiveve — economia, empreendedorismo, liderança, inovação e mais.',
+      path: '/artigos',
+      image: loaderData?.list.articles[0]?.heroImage,
+      imageAlt: loaderData?.list.articles[0]?.heroAlt,
+    }),
 })
