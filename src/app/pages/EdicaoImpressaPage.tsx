@@ -1,106 +1,39 @@
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
-import { FaDownload, FaCalendarDays, FaFileLines } from "react-icons/fa6";
+import { FaDownload, FaCalendarDays, FaFileLines, FaBook } from "react-icons/fa6";
 import { PageHeader } from "../components/PageHeader";
+import { EmptyState } from "../components/EmptyState";
 import { Heading, SectionHeader, Eyebrow } from "../components/typography";
 import { Route } from "../../routes/edicao-impressa";
-import type { Edition } from "../../server/wp";
-
-const currentEdition = {
-  id: 1,
-  title: "Abril 2026",
-  subtitle: "Transformação Digital em Moçambique",
-  cover: "https://images.unsplash.com/photo-1634224111525-7c631808aa61?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYWdhemluZSUyMGNvdmVyJTIwYnVzaW5lc3MlMjBmb3JiZXN8ZW58MXx8fHwxNzc1NjQ5Nzc4fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-  date: "Abril 2026",
-  featured: true,
-  highlights: [
-    "Especial: O futuro das fintechs em África",
-    "Entrevista exclusiva com CEOs de sucesso",
-    "Análise: Economia digital moçambicana",
-    "Top 30 jovens empreendedores",
-  ],
-};
-
-const pastEditions = [
-  {
-    id: 2,
-    title: "Março 2026",
-    subtitle: "O Futuro do Empreendedorismo",
-    cover: "https://images.unsplash.com/photo-1647668068108-748576356aaf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG1hZ2F6aW5lJTIwZWRpdG9yaWFsJTIwZGVzaWdufGVufDF8fHx8MTc3NTY0OTc3OXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    date: "Março 2026",
-  },
-  {
-    id: 3,
-    title: "Fevereiro 2026",
-    subtitle: "Liderança em Tempos de Mudança",
-    cover: "https://images.unsplash.com/photo-1569097715724-f705a82c4a88?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBtYWdhemluZSUyMGNvdmVyJTIwY29ycG9yYXRlfGVufDF8fHx8MTc3NTY0OTc3OXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    date: "Fevereiro 2026",
-  },
-  {
-    id: 4,
-    title: "Janeiro 2026",
-    subtitle: "Inovação e Sustentabilidade",
-    cover: "https://images.unsplash.com/photo-1610251064409-8d94b0939629?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlbnRyZXByZW5ldXIlMjBtYWdhemluZSUyMHB1YmxpY2F0aW9ufGVufDF8fHx8MTc3NTY0OTc4MXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    date: "Janeiro 2026",
-  },
-  {
-    id: 5,
-    title: "Dezembro 2025",
-    subtitle: "Balanço do Ano Económico",
-    cover: "https://images.unsplash.com/photo-1763889167910-b13b12b49bd1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYWdhemluZSUyMG5ld3NzdGFuZCUyMHB1YmxpY2F0aW9ufGVufDF8fHx8MTc3NTY0OTc4MXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    date: "Dezembro 2025",
-  },
-  {
-    id: 6,
-    title: "Novembro 2025",
-    subtitle: "Startups Africanas em Destaque",
-    cover: "https://images.unsplash.com/photo-1634224111525-7c631808aa61?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYWdhemluZSUyMGNvdmVyJTIwYnVzaW5lc3MlMjBmb3JiZXN8ZW58MXx8fHwxNzc1NjQ5Nzc4fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    date: "Novembro 2025",
-  },
-  {
-    id: 7,
-    title: "Outubro 2025",
-    subtitle: "Investimento em Infraestrutura",
-    cover: "https://images.unsplash.com/photo-1647668068108-748576356aaf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG1hZ2F6aW5lJTIwZWRpdG9yaWFsJTIwZGVzaWdufGVufDF8fHx8MTc3NTY0OTc3OXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    date: "Outubro 2025",
-  },
-];
-
-const MOCK_CURRENT: Edition = {
-  id: currentEdition.id,
-  slug: "atual",
-  title: currentEdition.title,
-  subtitle: currentEdition.subtitle,
-  cover: currentEdition.cover,
-  date: currentEdition.date,
-  featured: true,
-  highlights: currentEdition.highlights,
-};
-
-const MOCK_PAST: Edition[] = pastEditions.map((e) => ({
-  id: e.id,
-  slug: `edicao-${e.id}`,
-  title: e.title,
-  subtitle: e.subtitle,
-  cover: e.cover,
-  date: e.date,
-  featured: false,
-  highlights: [],
-}));
 
 export default function EdicaoImpressaPage() {
   const { editions } = Route.useLoaderData();
 
-  // When the WP CPT exists, editions !== null. Pick the most-recent featured
-  // for the hero, others go to the archive grid.
-  let current: Edition;
-  let past: Edition[];
-  if (editions && editions.length > 0) {
-    current = editions.find((e) => e.featured) ?? editions[0];
-    past = editions.filter((e) => e !== current);
-  } else {
-    current = MOCK_CURRENT;
-    past = MOCK_PAST;
+  if (!editions || editions.length === 0) {
+    return (
+      <div className="bg-background">
+        <div className="max-w-[1280px] mx-auto pt-8 px-4 pb-16">
+          <PageHeader
+            title="Edição Impressa"
+            subtitle="Edições anteriores e a edição actual em formato digital"
+            breadcrumbs={[
+              { label: "Início", to: "/" },
+              { label: "Edição Impressa" },
+            ]}
+          />
+          <EmptyState
+            icon={FaBook}
+            title="Nenhuma edição disponível"
+            message="Estamos a preparar as próximas edições da Revista Chiveve. Volte em breve para descarregar os novos números."
+            cta={{ label: "Voltar à página inicial", to: "/" }}
+          />
+        </div>
+      </div>
+    );
   }
+
+  // Pick the most-recent featured for the hero, others go to the archive grid.
+  const current = editions.find((e) => e.featured) ?? editions[0];
+  const past = editions.filter((e) => e !== current);
 
   return (
     <div className="bg-background">
@@ -200,28 +133,36 @@ export default function EdicaoImpressaPage() {
                 />
               </div>
 
-              <div className="flex items-center gap-2 mb-2">
-                <FaCalendarDays size={14} className="text-muted-foreground" />
-                <span className="font-sans text-xs font-medium text-muted-foreground uppercase tracking-[0.05em]">
-                  {edition.date}
-                </span>
-              </div>
+              {edition.date && (
+                <div className="flex items-center gap-2 mb-2">
+                  <FaCalendarDays size={14} className="text-muted-foreground" />
+                  <span className="font-sans text-xs font-medium text-muted-foreground uppercase tracking-[0.05em]">
+                    {edition.date}
+                  </span>
+                </div>
+              )}
 
               <Heading as="h3" variant="feature-title" className="text-foreground mb-1">
                 {edition.title}
               </Heading>
 
-              <p className="font-sans text-sm text-muted-foreground leading-[1.5] mb-3">
-                {edition.subtitle}
-              </p>
+              {edition.subtitle && (
+                <p className="font-sans text-sm text-muted-foreground leading-[1.5] mb-3">
+                  {edition.subtitle}
+                </p>
+              )}
 
-              <a
-                href="#"
-                className="inline-flex items-center gap-2 font-sans text-sm font-medium text-primary no-underline transition-[gap] duration-200 hover:gap-3"
-              >
-                <FaFileLines size={16} />
-                Baixar PDF
-              </a>
+              {edition.pdfDownloadUrl && (
+                <a
+                  href={edition.pdfDownloadUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 font-sans text-sm font-medium text-primary no-underline transition-[gap] duration-200 hover:gap-3"
+                >
+                  <FaFileLines size={16} />
+                  Baixar PDF
+                </a>
+              )}
             </article>
           ))}
         </div>

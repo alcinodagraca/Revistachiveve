@@ -16,12 +16,20 @@ export type Edition = {
   pdfDownloadUrl?: string;
 };
 
-const REST_BASE = "edicoes";
+// Editions are served by the Download Monitor plugin's CPT (`dlm_download`).
+// Each DLM upload becomes an edition; DLM's built-in Featured flag drives the
+// hero block on /edicao-impressa. Subtitle/date/highlights are read via the
+// existing acf/meta fallback chain — if the user later adds an SCF group on
+// dlm_download with `edicao_*` field slugs, the normalizer picks them up
+// without any code change.
+const REST_BASE = "dlm_download";
 const TTL_MS = 5 * 60_000;
 
 type WPEdition = WPPost & {
   meta?: Record<string, unknown>;
   acf?: Record<string, unknown>;
+  // DLM exposes its Featured toggle as a top-level "yes"/"no" string.
+  featured?: string | boolean;
 };
 
 function pickMeta(post: WPEdition, key: string): unknown {
@@ -43,6 +51,15 @@ function pickMetaStringArray(post: WPEdition, key: string): string[] {
   return [];
 }
 
+function isDlmFeatured(post: WPEdition): boolean {
+  if (post.featured === true) return true;
+  if (typeof post.featured === "string") {
+    return post.featured.toLowerCase() === "yes";
+  }
+  // Fallback to an SCF/ACF flag if the user wires one up later.
+  return Boolean(pickMeta(post, "edicao_featured"));
+}
+
 function normalize(post: WPEdition): Edition {
   return {
     id: post.id,
@@ -50,10 +67,12 @@ function normalize(post: WPEdition): Edition {
     title: decodeEntities(post.title.rendered),
     subtitle: pickMetaString(post, "edicao_subtitle") ?? "",
     cover: resolveFeaturedImage(post),
-    date: pickMetaString(post, "edicao_date") ?? post.date_gmt,
-    featured: Boolean(pickMeta(post, "edicao_featured")),
+    date: pickMetaString(post, "edicao_date") ?? "",
+    featured: isDlmFeatured(post),
     highlights: pickMetaStringArray(post, "edicao_highlights"),
-    pdfDownloadUrl: pickMetaString(post, "edicao_pdf_url"),
+    // post.link is the DLM download URL (e.g. /download/<slug>/) — using it
+    // preserves DLM's download-count tracking.
+    pdfDownloadUrl: pickMetaString(post, "edicao_pdf_url") ?? post.link,
   };
 }
 

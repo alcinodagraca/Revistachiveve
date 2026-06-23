@@ -95,30 +95,42 @@ Frontend route: `/eventos`, `/eventos/<slug>`. Falls back to
 The event **body** uses the standard WP editor — rendered as HTML inside
 Prose, same as articles. The **featured image** becomes the hero.
 
-### 2B — Print Editions (`edicao`)
+### 2B — Print Editions (Download Monitor)
 
-Frontend route: `/edicao-impressa`. Falls back to inline mock until live.
+Frontend route: `/edicao-impressa`. Powered by the **Download Monitor** plugin
+— each PDF upload becomes an edition automatically. No second CPT to create,
+no URLs to copy around.
 
-**CPT UI → Add Post Type:**
+**Authoring workflow (per edition):**
 
-- Post Type Slug: `edicao`
-- Plural Label: `Edições Impressas`
-- Singular Label: `Edição`
-- Show in REST: Yes ✓
-- REST API base slug: `edicoes`
-- Supports: `title`, `editor`, `thumbnail`, `custom-fields`
+1. WP admin → **Downloads → Add New**
+2. Title — e.g. `Revista Chiveve — Junho 2026`
+3. **Add file** → upload the PDF (Download Monitor creates the download +
+   tracking record)
+4. **Featured Image** → upload a cover (3:4 portrait, ≥ 800px wide
+   recommended)
+5. Toggle **Featured: Yes** on the edition you want as the current hero
+   (only one at a time — DLM exposes this as a top-level flag the frontend
+   reads directly)
+6. **Publish**
 
-**SCF → Field Group "Edição" (Show in REST ✓):**
+The page picks up the new edition within ~5 min (list TTL). PDF download
+links go through DLM's `/download/<id>/` redirect, so download counts are
+tracked automatically.
+
+**Optional v2 — richer fields.** The frontend normalizer falls back to
+`acf` / `meta` for these slugs if the user wants subtitle/date/highlights:
 
 | Field name (slug) | Type | Notes |
 | --- | --- | --- |
-| `edicao_subtitle` | Text | E.g. "Transformação Digital em Moçambique". |
-| `edicao_date` | Date Picker | Display date. |
-| `edicao_highlights` | Repeater of single text "highlight" — OR — Textarea with one bullet per line | Either works; the normalizer accepts both. |
-| `edicao_pdf_url` | URL or File (return URL) | If present, the "Baixar Edição" button becomes a link. |
-| `edicao_featured` | True / False | Exactly **one** edition flagged featured shows up as the hero block. |
+| `edicao_subtitle` | Text | Shown under the title. |
+| `edicao_date` | Date Picker or text | Display date shown above the title in cards. |
+| `edicao_highlights` | Repeater or newline textarea | Bulleted "Nesta Edição" block on the hero. |
+| `edicao_pdf_url` | URL or File (return URL) | Overrides DLM's `/download/...` link if set. |
 
-The cover comes from the **featured image**.
+Attach the SCF Field Group to Post Type **`dlm_download`** with Show-in-REST
+enabled on the group **and** on each field. The fields surface immediately
+on the next page load — no code change needed.
 
 ### 2C — Public Tenders (`concurso`)
 

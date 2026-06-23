@@ -99,42 +99,44 @@ Para **cada CPT** abaixo, em **Settings** confirmar:
 - Menu Icon (dashicons): `dashicons-calendar-alt`
 - Supports: `title`, `editor`, `thumbnail`, `custom-fields`
 
-### 2.2 Edições Impressas — `edicao`
+### 2.2 Edições Impressas — Download Monitor
 
-- Post Type Slug: `edicao`
-- Plural Label: `Edições Impressas`
-- Singular Label: `Edição`
+A página `/edicao-impressa` é alimentada pelo plugin **Download Monitor**.
+**Não é necessário criar um CPT `edicao` no CPT UI** — cada PDF carregado no
+Download Monitor torna-se uma edição na página automaticamente.
 
-| Campo | Valor |
-| --- | --- |
-| Menu Name | Edições |
-| All Items | Todas as Edições |
-| Add New | Adicionar Nova |
-| Add New Item | Adicionar Nova Edição |
-| Edit Item | Editar Edição |
-| New Item | Nova Edição |
-| View Item | Ver Edição |
-| View Items | Ver Edições |
-| Search Item | Procurar Edições |
-| Not Found | Nenhuma edição encontrada |
-| Not Found in Trash | Nenhuma edição no lixo |
-| Featured Image | Capa da edição |
-| Set Featured Image | Definir capa |
-| Remove Featured Image | Remover capa |
-| Use Featured Image | Usar como capa |
-| Archives | Arquivo de edições |
-| Insert Into Item | Inserir na edição |
-| Uploaded to This Item | Carregado para esta edição |
-| Filter Items List | Filtrar edições |
-| Items List | Lista de edições |
-| Item Published | Edição publicada |
-| Item Updated | Edição actualizada |
+**Pré-requisito:** plugin **Download Monitor** instalado e activo (a opção
+"Show in REST" do CPT `dlm_download` já vem ligada por defeito no plugin).
 
-**Settings:**
-- Show in REST: **True**
-- REST API base slug: `edicoes`
-- Menu Icon: `dashicons-book-alt`
-- Supports: `title`, `editor`, `thumbnail`, `custom-fields`
+**Fluxo de publicação (por edição):**
+
+1. WP admin → **Downloads → Adicionar Novo**
+2. **Título** — ex.: `Revista Chiveve — Junho 2026`
+3. **Adicionar Ficheiro** → carregar o PDF
+4. **Imagem em destaque** → carregar a capa (formato 3:4, ≥ 800px de largura
+   recomendado)
+5. Alternar **Featured: Sim** apenas na edição que deve aparecer como
+   destaque ("Edição Atual") — só uma de cada vez
+6. **Publicar**
+
+A página `/edicao-impressa` mostra a nova edição em ~5 minutos (TTL de
+cache). Os botões "Baixar PDF" apontam para `/download/<id>/`, o link
+oficial do Download Monitor que regista as descargas.
+
+**(Opcional) Campos adicionais via SCF.** Se quiser mostrar subtítulo,
+data formatada ou destaques ("Nesta Edição") na edição actual, criar um
+grupo SCF associado ao tipo de post **`dlm_download`** com Show-in-REST
+ligado:
+
+| Etiqueta | Field Name | Tipo |
+| --- | --- | --- |
+| Subtítulo | `edicao_subtitle` | Text |
+| Data de capa | `edicao_date` | Date Picker ou Text |
+| Destaques | `edicao_highlights` | Repeater ou Textarea (um por linha) |
+| Link PDF alternativo | `edicao_pdf_url` | URL (sobrepõe o link DLM) |
+
+O normalizador no frontend já lê estes campos com fallback — basta criar o
+grupo, sem alterações de código.
 
 ### 2.3 Concursos Públicos — `concurso`
 
@@ -312,18 +314,24 @@ Aceder via **SCF → Field Groups** (ou **ACF → Field Groups**).
 | Organizador | `event_organizer` | Text | Por defeito "Revista Chiveve". |
 | Link de Inscrição | `event_registration_url` | URL | Link de registo. |
 
-### 4.2 Grupo: "Edição"
+### 4.2 Grupo: "Edição" (opcional — para Download Monitor)
 
-- Location: Post Type **is equal to** `edicao`
+Apenas necessário se quiser mostrar subtítulo, data formatada ou destaques
+nas edições. Sem este grupo, as edições mostram apenas título + capa +
+botão de download.
+
+- Location: Post Type **is equal to** `dlm_download`
 - Show in REST: ✓
 
 | Label | Field Name | Tipo | Notas |
 | --- | --- | --- | --- |
 | Subtítulo | `edicao_subtitle` | Text | Ex.: "Transformação Digital em Moçambique". |
-| Data | `edicao_date` | Date Picker | Data de capa. |
+| Data | `edicao_date` | Date Picker ou Text | Data de capa. |
 | Destaques | `edicao_highlights` | Repeater (um campo Text `highlight`) **ou** Textarea (um por linha) | O normalizador aceita ambos. |
-| PDF da Edição | `edicao_pdf_url` | URL **ou** File (return: URL) | Activa o botão "Baixar Edição". |
-| Edição em Destaque | `edicao_featured` | True / False | Apenas **uma** marcada — aparece como hero. |
+| PDF Alternativo | `edicao_pdf_url` | URL **ou** File (return: URL) | Sobrepõe o link DLM se preenchido. |
+
+> A flag "Featured" do próprio Download Monitor controla qual edição aparece
+> como destaque — não precisa de campo SCF para isso.
 
 ### 4.3 Grupo: "Concurso"
 
@@ -368,7 +376,7 @@ Aceder via **SCF → Field Groups** (ou **ACF → Field Groups**).
 Para cada CPT, após registar e publicar **pelo menos um item**:
 
 - [ ] **CPT UI → Edit Post Type → Show in REST = True** confirmado
-- [ ] **REST API base slug** corresponde ao indicado (eventos, edicoes, concurso, contacto-util, team)
+- [ ] **REST API base slug** corresponde ao indicado (eventos, concurso, contacto-util, team). Para edições impressas a fonte é o CPT `dlm_download` do plugin Download Monitor — não há CPT próprio.
 - [ ] **SCF Group → Show in REST = True** marcado no grupo
 - [ ] **Show in REST = True** marcado em **cada campo** individualmente
 - [ ] Pelo menos um item publicado (não rascunho)
