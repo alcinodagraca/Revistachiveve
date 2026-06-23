@@ -11,7 +11,7 @@ import type { Event as MockEvent } from "../../data/events";
 
 export type Event = MockEvent & { id?: number; bodyHtml?: string };
 
-const REST_BASE = "events";
+const REST_BASE = "eventos";
 const LIST_TTL_MS = 60_000;
 const DETAIL_TTL_MS = 5 * 60_000;
 
@@ -41,8 +41,17 @@ function pickMeta(post: WPEvent, key: string): string | undefined {
   return undefined;
 }
 
+function pick(post: WPEvent, ...keys: string[]): string | undefined {
+  for (const k of keys) {
+    const v = pickMeta(post, k);
+    if (v) return v;
+  }
+  return undefined;
+}
+
 function normalizeWPEvent(post: WPEvent): Event {
-  const iso = pickMeta(post, "event_date") ?? post.date_gmt;
+  const iso =
+    pick(post, "data_do_evento", "event_date") ?? post.date_gmt;
   const { displayDate, day, month } = formatDisplayDate(iso);
   return {
     id: post.id,
@@ -50,18 +59,18 @@ function normalizeWPEvent(post: WPEvent): Event {
     title: decodeEntities(post.title.rendered),
     image: resolveFeaturedImage(post),
     date: iso,
-    displayDate: pickMeta(post, "event_display_date") ?? displayDate,
+    displayDate: pick(post, "event_display_date") ?? displayDate,
     day,
     month,
-    location: pickMeta(post, "event_location") ?? "",
-    city: pickMeta(post, "event_city") ?? "",
+    location: pick(post, "local_do_evento", "event_location") ?? "",
+    city: pick(post, "cidade", "event_city") ?? "",
     description: stripTags(post.content.rendered)
       .split(/\n+/)
       .filter(Boolean),
     bodyHtml: post.content.rendered,
-    price: pickMeta(post, "event_price") ?? "Mais informações",
-    organizer: pickMeta(post, "event_organizer") ?? "Revista Chiveve",
-    registrationUrl: pickMeta(post, "event_registration_url") ?? "#",
+    price: pick(post, "preco_do_evento", "event_price") ?? "Mais informações",
+    organizer: pick(post, "organizador", "event_organizer") ?? "Revista Chiveve",
+    registrationUrl: pick(post, "link_do_evento", "event_registration_url") ?? "#",
   };
 }
 

@@ -1,7 +1,7 @@
 # WordPress Setup — Revista Chiveve Headless CMS
 
 This frontend (TanStack Start + React) consumes WordPress at
-`https://alcinodagraca.xyz/wp-json/wp/v2` as a **headless CMS**. All data
+`https://alcinochivangue.me/wp-json/wp/v2` as a **headless CMS**. All data
 fetches happen server-side via TanStack Start `createServerFn`. Every
 section of the site is designed to either:
 
@@ -78,7 +78,7 @@ Frontend route: `/eventos`, `/eventos/<slug>`. Falls back to
 - Plural Label: `Eventos`
 - Singular Label: `Evento`
 - **Show in REST:** Yes ✓
-- **REST API base slug:** `events`
+- **REST API base slug:** `eventos`
 - Supports: `title`, `editor`, `thumbnail`, `custom-fields`
 
 **SCF → Field Group "Detalhes do Evento" (Show in REST ✓):**
@@ -130,7 +130,7 @@ Frontend route: `/concursos-publicos`. Falls back to inline mock until live.
 - Plural Label: `Concursos Públicos`
 - Singular Label: `Concurso`
 - Show in REST: Yes ✓
-- REST API base slug: `concursos`
+- REST API base slug: `concurso`
 - Supports: `title`, `editor`, `custom-fields`
 
 **SCF → Field Group "Concurso" (Show in REST ✓):**
@@ -153,7 +153,7 @@ Frontend route: `/contactos-uteis`. Falls back to inline mock until live.
 - Plural Label: `Contactos Úteis`
 - Singular Label: `Contacto Útil`
 - Show in REST: Yes ✓
-- REST API base slug: `contactos-uteis`
+- REST API base slug: `contacto-util`
 - Supports: `title`, `thumbnail`, `custom-fields`
 
 **CPT UI → Add Taxonomy:**
@@ -236,10 +236,10 @@ route should switch from mock to WP without a code change:
 pnpm dev
 
 # Hit the route
-curl -s http://localhost:3001/eventos | grep -i "<title>"
+curl -s http://localhost:3000/eventos | grep -i "<title>"
 
 # Or check the WP REST directly
-curl -s "https://alcinodagraca.xyz/wp-json/wp/v2/events?per_page=1&_embed=1"
+curl -s "https://alcinochivangue.me/wp-json/wp/v2/eventos?per_page=1&_embed=1"
 ```
 
 If you see the WP-published record on the page, you're done.
@@ -251,7 +251,10 @@ If you see the WP-published record on the page, you're done.
 Required server-side env vars (in `.env`, copy from `.env.example`):
 
 ```
-WP_REST_BASE_URL=https://alcinodagraca.xyz/wp-json/wp/v2
+VITE_WP_REST_BASE_URL=https://alcinochivangue.me/wp-json/wp/v2
+
+# Server-only (do not prefix with VITE)
+WP_REST_BASE_URL=https://alcinochivangue.me/wp-json/wp/v2
 WP_APP_USERNAME=…
 WP_APP_PASSWORD=…   # Application Password, not your login password
 ```

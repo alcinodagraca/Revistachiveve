@@ -17,7 +17,7 @@ export type UsefulContact = {
   description: string;
 };
 
-const REST_BASE = "contactos-uteis";
+const REST_BASE = "contacto-util";
 const TTL_MS = 5 * 60_000;
 
 type WPContact = WPPost & {
@@ -25,10 +25,12 @@ type WPContact = WPPost & {
   acf?: Record<string, unknown>;
 };
 
-function pickMeta(post: WPContact, key: string): string {
-  const v = post.meta?.[key] ?? post.acf?.[key];
-  if (typeof v === "string") return v;
-  if (typeof v === "number") return String(v);
+function pickMeta(post: WPContact, ...keys: string[]): string {
+  for (const k of keys) {
+    const v = post.meta?.[k] ?? post.acf?.[k];
+    if (typeof v === "string" && v) return v;
+    if (typeof v === "number") return String(v);
+  }
   return "";
 }
 
@@ -50,13 +52,14 @@ function normalize(post: WPContact): UsefulContact {
     slug: post.slug,
     category: pickContactCategory(post),
     name: decodeEntities(post.title.rendered),
-    phone: pickMeta(post, "contacto_phone"),
-    email: pickMeta(post, "contacto_email"),
-    address: pickMeta(post, "contacto_address"),
-    website: pickMeta(post, "contacto_website"),
+    phone: pickMeta(post, "telefone", "contacto_phone"),
+    email: pickMeta(post, "email", "contacto_email"),
+    address: pickMeta(post, "morada", "contacto_address"),
+    website: pickMeta(post, "website", "contacto_website"),
     logo: resolveFeaturedImage(post),
     description:
-      pickMeta(post, "contacto_description") || stripTags(post.excerpt.rendered),
+      pickMeta(post, "descricao", "contacto_description") ||
+      stripTags(post.excerpt.rendered),
   };
 }
 

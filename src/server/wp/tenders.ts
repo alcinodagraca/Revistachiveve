@@ -14,7 +14,7 @@ export type Tender = {
   editalUrl?: string;
 };
 
-const REST_BASE = "concursos";
+const REST_BASE = "concurso";
 const TTL_MS = 60_000;
 
 type WPTender = WPPost & {
@@ -22,8 +22,12 @@ type WPTender = WPPost & {
   acf?: Record<string, unknown>;
 };
 
-function pickMeta(post: WPTender, key: string): unknown {
-  return post.meta?.[key] ?? post.acf?.[key];
+function pickMeta(post: WPTender, ...keys: string[]): unknown {
+  for (const k of keys) {
+    const v = post.meta?.[k] ?? post.acf?.[k];
+    if (v !== undefined && v !== null && v !== "") return v;
+  }
+  return undefined;
 }
 
 function asString(v: unknown): string | undefined {
@@ -44,11 +48,11 @@ function normalize(post: WPTender): Tender {
     id: post.id,
     slug: post.slug,
     title: decodeEntities(post.title.rendered),
-    institution: asString(pickMeta(post, "concurso_institution")) ?? "",
-    deadline: asString(pickMeta(post, "concurso_deadline")) ?? "",
-    type: asString(pickMeta(post, "concurso_type")) ?? "Concurso Público",
-    vacancies: asNumber(pickMeta(post, "concurso_vacancies")),
-    editalUrl: asString(pickMeta(post, "concurso_edital_url")),
+    institution: asString(pickMeta(post, "instituicao", "concurso_institution")) ?? "",
+    deadline: asString(pickMeta(post, "data_limite_de_submissao", "concurso_deadline")) ?? "",
+    type: asString(pickMeta(post, "tipo_de_concurso", "concurso_type")) ?? "Concurso Público",
+    vacancies: asNumber(pickMeta(post, "numero_de_vagas", "concurso_vacancies")),
+    editalUrl: asString(pickMeta(post, "link_do_concurso", "concurso_edital_url")),
   };
 }
 
