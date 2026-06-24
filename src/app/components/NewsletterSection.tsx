@@ -1,29 +1,9 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import type { Edition } from "../../server/wp";
 
-const magazineCovers = [
-  {
-    id: 1,
-    image:
-      "https://images.unsplash.com/photo-1588463340632-0dec4c6971dd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG1hZ2F6aW5lJTIwY292ZXIlMjBwb3J0cmFpdHxlbnwxfHx8fDE3NzU2NTA3OTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
-    caption: "Revista Negócios de Chiveve – Abril 2021",
-  },
-  {
-    id: 2,
-    image:
-      "https://images.unsplash.com/photo-1610902422826-548d3472fff5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmb3JiZXMlMjBtYWdhemluZSUyMGNvdmVyJTIwY2VvfGVufDF8fHx8MTc3NTY1MDc5OHww&ixlib=rb-4.1.0&q=80&w=1080",
-    caption: "Revista Negócios de Chiveve – Março 2021",
-  },
-  {
-    id: 3,
-    image:
-      "https://images.unsplash.com/photo-1655249481446-25d575f1c054?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMHBlcnNvbiUyMHBvcnRyYWl0fGVufDF8fHx8MTc3NTYwMjkwNXww&ixlib=rb-4.1.0&q=80&w=1080",
-    caption: "Revista Negócios de Chiveve – Fevereiro 2021",
-  },
-];
-
-export function NewsletterSection() {
+export function NewsletterSection({ editions = [] }: { editions?: Edition[] }) {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
@@ -41,7 +21,11 @@ export function NewsletterSection() {
       className="px-4 md:px-8 bg-background py-24 md:py-32"
     >
       <div className="max-w-[1280px] mx-auto">
-        <div className="grid gap-12 items-center grid-cols-1 md:grid-cols-[5fr_7fr]">
+        <div
+          className={`grid gap-12 items-center grid-cols-1 ${
+            editions.length > 0 ? "md:grid-cols-[5fr_7fr]" : ""
+          }`}
+        >
           {/* Left: Form */}
           <div>
             <h2 className="font-sans font-bold text-xs md:text-sm uppercase tracking-[0.12em] text-primary mb-4">
@@ -82,19 +66,25 @@ export function NewsletterSection() {
             </p>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
-            {magazineCovers.map((cover) => (
-              <div key={cover.id}>
-                <div className="w-full aspect-[3/4] overflow-hidden bg-secondary">
-                  <ImageWithFallback
-                    src={cover.image}
-                    alt={cover.caption}
-                    className="w-full h-full object-cover block"
-                  />
+          {editions.length > 0 && (
+            <Link
+              to="/edicao-impressa"
+              className="grid grid-cols-3 gap-4 no-underline group"
+              aria-label="Ver edições impressas"
+            >
+              {editions.map((edition) => (
+                <div key={edition.id}>
+                  <div className="w-full aspect-[3/4] overflow-hidden bg-secondary shadow-[0_8px_24px_rgba(0,0,0,0.1)] transition-transform duration-300 group-hover:-translate-y-1">
+                    <ImageWithFallback
+                      src={edition.cover}
+                      alt={edition.title}
+                      className="w-full h-full object-cover block"
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </Link>
+          )}
         </div>
       </div>
     </section>

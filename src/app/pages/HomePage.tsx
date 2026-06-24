@@ -7,7 +7,7 @@ import { NewsletterSection } from "../components/NewsletterSection";
 import { Route } from "../../routes/index";
 
 export default function HomePage() {
-  const { recent, opiniao, economia, entrevistas } = Route.useLoaderData();
+  const { recent, opiniao, economia, entrevistas, editions } = Route.useLoaderData();
 
   return (
     <>
@@ -31,7 +31,7 @@ export default function HomePage() {
               ]
         }
       />
-      <NewsletterSection />
+      <NewsletterSection editions={editions.slice(0, 3)} />
     </>
   );
 }
