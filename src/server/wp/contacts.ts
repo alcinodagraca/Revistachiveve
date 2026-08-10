@@ -70,7 +70,7 @@ export async function listContacts(): Promise<UsefulContact[] | null> {
       params: { _embed: 1, per_page: 100, orderby: "title", order: "asc" },
       ttlMs: TTL_MS,
     });
-    return res.items.map(normalize);
+    return res.items.length > 0 ? res.items.map(normalize) : null;
   } catch {
     return null;
   }

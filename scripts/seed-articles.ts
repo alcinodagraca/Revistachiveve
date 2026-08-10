@@ -13,7 +13,7 @@
 
 import { uploadMediaFromUrl, wpFetch } from "./wp-write";
 
-// Live category IDs on alcinochivangue.me (verified against /wp-json/wp/v2/categories).
+// Category IDs from the previous WordPress instance; resolve by slug before reuse.
 const CATEGORIES = {
   economia: 6,
   empreendedorismo: 7,

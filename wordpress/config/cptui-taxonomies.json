@@ -1,0 +1,32 @@
+{
+  "contacto-categoria": {
+    "name": "contacto-categoria",
+    "label": "Categorias de Contactos",
+    "singular_label": "Categoria de Contacto",
+    "description": "Categorias para organizar o directório de contactos úteis.",
+    "public": "true",
+    "publicly_queryable": "true",
+    "hierarchical": "true",
+    "show_ui": "true",
+    "show_in_menu": "true",
+    "show_in_nav_menus": "true",
+    "query_var": "true",
+    "query_var_slug": "",
+    "rewrite": "true",
+    "rewrite_slug": "contacto-categoria",
+    "rewrite_withfront": "false",
+    "rewrite_hierarchical": "true",
+    "show_admin_column": "true",
+    "show_in_rest": "true",
+    "show_tagcloud": "false",
+    "sort": "false",
+    "show_in_quick_edit": "true",
+    "rest_base": "contacto-categorias",
+    "rest_controller_class": "",
+    "rest_namespace": "wp/v2",
+    "labels": [],
+    "meta_box_cb": "",
+    "default_term": "",
+    "object_types": ["contacto-util"]
+  }
+}

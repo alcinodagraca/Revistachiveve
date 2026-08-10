@@ -63,7 +63,7 @@ export async function listTenders(): Promise<Tender[] | null> {
       params: { per_page: 50, orderby: "date", order: "desc" },
       ttlMs: TTL_MS,
     });
-    return res.items.map(normalize);
+    return res.items.length > 0 ? res.items.map(normalize) : null;
   } catch {
     return null;
   }

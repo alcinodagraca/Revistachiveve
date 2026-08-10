@@ -385,7 +385,7 @@ Para cada CPT, após registar e publicar **pelo menos um item**:
 **Teste rápido via REST:**
 
 ```bash
-curl -s "https://alcinochivangue.me/wp-json/wp/v2/eventos?per_page=1&_embed=1" | jq '.[0].acf // .[0].meta'
+curl -s "https://dev.cahubauto.com/wp-json/wp/v2/eventos?per_page=1&_embed=1" | jq '.[0].acf // .[0].meta'
 ```
 
 Os campos personalizados devem aparecer no JSON. Se faltarem, rever
@@ -397,7 +397,7 @@ o **Show in REST** de cada campo individual.
 
 1. **Categorias de artigos** (secção 1) — actualizar slugs e descrições.
 2. **CPT `event`** + grupo SCF + publicar 1 evento de teste.
-3. **CPT `edicao`** + grupo SCF + publicar 1 edição (marcar `edicao_featured`).
+3. **Download Monitor** + grupo SCF opcional + publicar 1 edição (marcar como Featured no Download Monitor).
 4. **CPT `concurso`** + grupo SCF + publicar 1 concurso.
 5. **Taxonomia `contacto-categoria`** + termos.
 6. **CPT `contacto-util`** + grupo SCF + publicar 2–3 contactos com termos atribuídos.

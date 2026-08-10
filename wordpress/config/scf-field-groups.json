@@ -1,0 +1,69 @@
+[
+  {
+    "key": "group_6a77f751e1305",
+    "title": "Concurso",
+    "fields": [
+      {"key":"field_rc_concurso_institution","label":"Instituição","name":"concurso_institution","type":"text","show_in_rest":1},
+      {"key":"field_rc_concurso_deadline","label":"Prazo","name":"concurso_deadline","type":"date_picker","show_in_rest":1,"display_format":"d/m/Y","return_format":"Y-m-d","first_day":1},
+      {"key":"field_rc_concurso_type","label":"Tipo","name":"concurso_type","type":"select","show_in_rest":1,"choices":{"Concurso Público":"Concurso Público","Concurso Limitado":"Concurso Limitado","Outros":"Outros"},"default_value":"Concurso Público","return_format":"value"},
+      {"key":"field_rc_concurso_vacancies","label":"Vagas","name":"concurso_vacancies","type":"number","show_in_rest":1,"min":0,"step":1},
+      {"key":"field_rc_concurso_edital_url","label":"Link do Edital","name":"concurso_edital_url","type":"url","show_in_rest":1}
+    ],
+    "location": [[{"param":"post_type","operator":"==","value":"concurso"}]],
+    "menu_order": 0, "position": "normal", "style": "default", "label_placement": "top",
+    "instruction_placement": "label", "hide_on_screen": "", "active": true, "description": "", "show_in_rest": 1
+  },
+  {
+    "key": "group_6a77f7542646f",
+    "title": "Contacto",
+    "fields": [
+      {"key":"field_rc_contacto_phone","label":"Telefone","name":"contacto_phone","type":"text","show_in_rest":1},
+      {"key":"field_rc_contacto_email","label":"Email","name":"contacto_email","type":"email","show_in_rest":1},
+      {"key":"field_rc_contacto_address","label":"Endereço","name":"contacto_address","type":"textarea","show_in_rest":1,"rows":4},
+      {"key":"field_rc_contacto_website","label":"Website","name":"contacto_website","type":"url","show_in_rest":1},
+      {"key":"field_rc_contacto_description","label":"Descrição","name":"contacto_description","type":"textarea","show_in_rest":1,"rows":3}
+    ],
+    "location": [[{"param":"post_type","operator":"==","value":"contacto-util"}]],
+    "menu_order": 0, "position": "normal", "style": "default", "label_placement": "top",
+    "instruction_placement": "label", "hide_on_screen": "", "active": true, "description": "", "show_in_rest": 1
+  },
+  {
+    "key": "group_6a77f72297f33",
+    "title": "Detalhes do Evento",
+    "fields": [
+      {"key":"field_rc_event_date","label":"Data do Evento","name":"event_date","type":"date_picker","show_in_rest":1,"display_format":"d/m/Y","return_format":"Y-m-d","first_day":1},
+      {"key":"field_rc_event_location","label":"Local","name":"event_location","type":"text","show_in_rest":1},
+      {"key":"field_rc_event_city","label":"Cidade","name":"event_city","type":"text","show_in_rest":1},
+      {"key":"field_rc_event_price","label":"Preço","name":"event_price","type":"text","show_in_rest":1},
+      {"key":"field_rc_event_organizer","label":"Organizador","name":"event_organizer","type":"text","show_in_rest":1},
+      {"key":"field_rc_event_registration_url","label":"Link de Inscrição","name":"event_registration_url","type":"url","show_in_rest":1}
+    ],
+    "location": [[{"param":"post_type","operator":"==","value":"event"}]],
+    "menu_order": 0, "position": "normal", "style": "default", "label_placement": "top",
+    "instruction_placement": "label", "hide_on_screen": "", "active": true, "description": "", "show_in_rest": 1
+  },
+  {
+    "key": "group_6a77f758a2656",
+    "title": "Edição",
+    "fields": [
+      {"key":"field_rc_edicao_subtitle","label":"Subtítulo","name":"edicao_subtitle","type":"text","show_in_rest":1},
+      {"key":"field_rc_edicao_date","label":"Data","name":"edicao_date","type":"date_picker","show_in_rest":1,"display_format":"d/m/Y","return_format":"Y-m-d","first_day":1},
+      {"key":"field_rc_edicao_highlights","label":"Destaques","name":"edicao_highlights","type":"textarea","instructions":"Um destaque por linha.","show_in_rest":1,"rows":6},
+      {"key":"field_rc_edicao_pdf_url","label":"PDF Alternativo","name":"edicao_pdf_url","type":"url","show_in_rest":1}
+    ],
+    "location": [[{"param":"post_type","operator":"==","value":"dlm_download"}]],
+    "menu_order": 0, "position": "normal", "style": "default", "label_placement": "top",
+    "instruction_placement": "label", "hide_on_screen": "", "active": true, "description": "", "show_in_rest": 1
+  },
+  {
+    "key": "group_6a77f75696142",
+    "title": "Equipa",
+    "fields": [
+      {"key":"field_rc_team_role","label":"Cargo","name":"team_role","type":"text","show_in_rest":1},
+      {"key":"field_rc_team_bio","label":"Biografia","name":"team_bio","type":"textarea","show_in_rest":1,"rows":5}
+    ],
+    "location": [[{"param":"post_type","operator":"==","value":"team-member"}]],
+    "menu_order": 0, "position": "normal", "style": "default", "label_placement": "top",
+    "instruction_placement": "label", "hide_on_screen": "", "active": true, "description": "", "show_in_rest": 1
+  }
+]

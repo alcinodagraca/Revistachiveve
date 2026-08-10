@@ -85,7 +85,7 @@ export async function listEvents(): Promise<Event[]> {
         params: { _embed: 1, per_page: 50, orderby: "date", order: "desc" },
         ttlMs: LIST_TTL_MS,
       });
-      return res.items.map(normalizeWPEvent);
+      if (res.items.length > 0) return res.items.map(normalizeWPEvent);
     } catch {
       // fall through to mock
     }
@@ -108,4 +108,3 @@ export async function getEventBySlug(slug: string): Promise<Event | null> {
   const mock = mockGetEventBySlug(slug);
   return mock ? mockToEvent(mock) : null;
 }
-

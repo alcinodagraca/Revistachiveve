@@ -60,6 +60,20 @@ function isDlmFeatured(post: WPEdition): boolean {
   return Boolean(pickMeta(post, "edicao_featured"));
 }
 
+function formatEditionDate(value: string | undefined): string {
+  if (!value) return "";
+  const match = value.match(/^(\d{4})-?(\d{2})-?(\d{2})$/);
+  if (!match) return value;
+
+  const date = new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])));
+  const label = new Intl.DateTimeFormat("pt-MZ", {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(date);
+  return label.charAt(0).toUpperCase() + label.slice(1);
+}
+
 function normalize(post: WPEdition): Edition {
   return {
     id: post.id,
@@ -67,7 +81,7 @@ function normalize(post: WPEdition): Edition {
     title: decodeEntities(post.title.rendered),
     subtitle: pickMetaString(post, "edicao_subtitle") ?? "",
     cover: resolveFeaturedImage(post),
-    date: pickMetaString(post, "edicao_date") ?? "",
+    date: formatEditionDate(pickMetaString(post, "edicao_date")),
     featured: isDlmFeatured(post),
     highlights: pickMetaStringArray(post, "edicao_highlights"),
     // post.link is the DLM download URL (e.g. /download/<slug>/) — using it

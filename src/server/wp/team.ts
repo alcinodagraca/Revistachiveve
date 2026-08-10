@@ -46,7 +46,7 @@ export async function listTeam(): Promise<TeamMember[] | null> {
       params: { _embed: 1, per_page: 50, orderby: "menu_order", order: "asc" },
       ttlMs: TTL_MS,
     });
-    return res.items.map(normalize);
+    return res.items.length > 0 ? res.items.map(normalize) : null;
   } catch {
     return null;
   }

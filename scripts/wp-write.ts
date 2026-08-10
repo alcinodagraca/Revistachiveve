@@ -14,12 +14,13 @@
  * kind = event | tender | contact   (matches REST bases: eventos, concurso, contacto-util)
  *
  * JSON shape per kind (Portuguese ACF field names match the WP setup):
- *   event   { title, content?, status?, data_do_evento, local_do_evento?,
- *             preco_do_evento?, organizador?, link_do_evento? }
- *   tender  { title, content?, status?, instituicao, data_limite_de_submissao,
- *             tipo_de_concurso?, numero_de_vagas?, link_do_concurso? }
- *   contact { title, content?, status?, telefone?, email?, website?,
- *             descricao?, "contacto-categoria"?: number[] }   // term IDs
+ *   event   { title, content?, status?, event_date, event_location?,
+ *             event_city?, event_price?, event_organizer?, event_registration_url? }
+ *   tender  { title, content?, status?, concurso_institution, concurso_deadline,
+ *             concurso_type?, concurso_vacancies?, concurso_edital_url? }
+ *   contact { title, content?, status?, contacto_phone?, contacto_email?,
+ *             contacto_address?, contacto_website?, contacto_description?,
+ *             "contacto-categoria"?: number[] }   // term IDs
  *
  * status defaults to "publish".
  */
@@ -45,6 +46,7 @@ if (!BASE || !USER || !PASS) {
   process.exit(1);
 }
 
+const REST_URL = BASE;
 const AUTH = "Basic " + Buffer.from(`${USER}:${PASS}`).toString("base64");
 
 export const REST_BASE: Record<string, string> = {
@@ -60,6 +62,13 @@ export const REST_BASE: Record<string, string> = {
 // status, slug, featured_media, categories, taxonomies) pass through verbatim.
 const ACF_KEYS: Record<string, ReadonlySet<string>> = {
   event: new Set([
+    "event_date",
+    "event_location",
+    "event_city",
+    "event_price",
+    "event_organizer",
+    "event_registration_url",
+    // Legacy aliases supported by the frontend readers.
     "data_do_evento",
     "local_do_evento",
     "preco_do_evento",
@@ -70,6 +79,11 @@ const ACF_KEYS: Record<string, ReadonlySet<string>> = {
     "event_display_date",
   ]),
   tender: new Set([
+    "concurso_institution",
+    "concurso_deadline",
+    "concurso_type",
+    "concurso_vacancies",
+    "concurso_edital_url",
     "instituicao",
     "data_limite_de_submissao",
     "tipo_de_concurso",
@@ -77,6 +91,11 @@ const ACF_KEYS: Record<string, ReadonlySet<string>> = {
     "link_do_concurso",
   ]),
   contact: new Set([
+    "contacto_phone",
+    "contacto_email",
+    "contacto_address",
+    "contacto_website",
+    "contacto_description",
     "telefone",
     "email",
     "website",
@@ -124,7 +143,22 @@ export async function wpFetch(
   path: string,
   body?: unknown,
 ): Promise<unknown> {
-  const url = BASE + (path.startsWith("/") ? path : "/" + path);
+  const normalizedPath = path.startsWith("/") ? path : "/" + path;
+  const base = new URL(REST_URL);
+  let url: URL;
+  if (base.searchParams.has("rest_route")) {
+    const [pathname, query = ""] = normalizedPath.split("?", 2);
+    base.searchParams.set(
+      "rest_route",
+      `${base.searchParams.get("rest_route")?.replace(/\/$/, "")}${pathname}`,
+    );
+    for (const [key, value] of new URLSearchParams(query)) {
+      base.searchParams.append(key, value);
+    }
+    url = base;
+  } else {
+    url = new URL(BASE + normalizedPath);
+  }
   const res = await fetch(url, {
     method,
     headers: {
@@ -158,7 +192,16 @@ export async function uploadMediaFromUrl(
   const mime = fetched.headers.get("content-type") ?? "image/jpeg";
   const buf = Buffer.from(await fetched.arrayBuffer());
 
-  const res = await fetch(BASE + "/media", {
+  const mediaUrl = new URL(REST_URL);
+  if (mediaUrl.searchParams.has("rest_route")) {
+    mediaUrl.searchParams.set(
+      "rest_route",
+      `${mediaUrl.searchParams.get("rest_route")?.replace(/\/$/, "")}/media`,
+    );
+  } else {
+    mediaUrl.pathname = `${mediaUrl.pathname.replace(/\/$/, "")}/media`;
+  }
+  const res = await fetch(mediaUrl, {
     method: "POST",
     headers: {
       Authorization: AUTH,

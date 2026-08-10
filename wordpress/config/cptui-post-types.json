@@ -1,0 +1,50 @@
+{
+  "event": {
+    "name": "event", "label": "Eventos", "singular_label": "Evento", "description": "",
+    "public": "true", "publicly_queryable": "true", "show_ui": "true", "show_in_nav_menus": "true",
+    "delete_with_user": "false", "show_in_rest": "true", "rest_base": "eventos",
+    "rest_controller_class": "", "rest_namespace": "wp/v2", "has_archive": "true", "has_archive_string": "",
+    "exclude_from_search": "false", "capability_type": "post", "hierarchical": "false", "can_export": "true",
+    "rewrite": "true", "rewrite_slug": "eventos", "rewrite_withfront": "false", "query_var": "true",
+    "query_var_slug": "", "menu_position": "", "show_in_menu": "true", "show_in_menu_string": "",
+    "menu_icon": "dashicons-calendar-alt", "register_meta_box_cb": null,
+    "supports": ["title", "editor", "thumbnail", "custom-fields"], "taxonomies": [], "labels": [],
+    "custom_supports": "", "enter_title_here": ""
+  },
+  "concurso": {
+    "name": "concurso", "label": "Concursos Públicos", "singular_label": "Concurso", "description": "",
+    "public": "true", "publicly_queryable": "true", "show_ui": "true", "show_in_nav_menus": "true",
+    "delete_with_user": "false", "show_in_rest": "true", "rest_base": "concurso",
+    "rest_controller_class": "", "rest_namespace": "wp/v2", "has_archive": "true", "has_archive_string": "",
+    "exclude_from_search": "false", "capability_type": "post", "hierarchical": "false", "can_export": "true",
+    "rewrite": "true", "rewrite_slug": "concurso", "rewrite_withfront": "false", "query_var": "true",
+    "query_var_slug": "", "menu_position": "", "show_in_menu": "true", "show_in_menu_string": "",
+    "menu_icon": "dashicons-megaphone", "register_meta_box_cb": null,
+    "supports": ["title", "editor", "custom-fields"], "taxonomies": [], "labels": [],
+    "custom_supports": "", "enter_title_here": ""
+  },
+  "contacto-util": {
+    "name": "contacto-util", "label": "Contactos Úteis", "singular_label": "Contacto Útil", "description": "",
+    "public": "true", "publicly_queryable": "true", "show_ui": "true", "show_in_nav_menus": "true",
+    "delete_with_user": "false", "show_in_rest": "true", "rest_base": "contacto-util",
+    "rest_controller_class": "", "rest_namespace": "wp/v2", "has_archive": "true", "has_archive_string": "",
+    "exclude_from_search": "false", "capability_type": "post", "hierarchical": "false", "can_export": "true",
+    "rewrite": "true", "rewrite_slug": "contacto-util", "rewrite_withfront": "false", "query_var": "true",
+    "query_var_slug": "", "menu_position": "", "show_in_menu": "true", "show_in_menu_string": "",
+    "menu_icon": "dashicons-phone", "register_meta_box_cb": null,
+    "supports": ["title", "thumbnail", "custom-fields"], "taxonomies": [], "labels": [],
+    "custom_supports": "", "enter_title_here": ""
+  },
+  "team-member": {
+    "name": "team-member", "label": "Equipa", "singular_label": "Membro da Equipa", "description": "",
+    "public": "true", "publicly_queryable": "true", "show_ui": "true", "show_in_nav_menus": "true",
+    "delete_with_user": "false", "show_in_rest": "true", "rest_base": "team",
+    "rest_controller_class": "", "rest_namespace": "wp/v2", "has_archive": "true", "has_archive_string": "",
+    "exclude_from_search": "false", "capability_type": "post", "hierarchical": "false", "can_export": "true",
+    "rewrite": "true", "rewrite_slug": "team", "rewrite_withfront": "false", "query_var": "true",
+    "query_var_slug": "", "menu_position": "", "show_in_menu": "true", "show_in_menu_string": "",
+    "menu_icon": "dashicons-groups", "register_meta_box_cb": null,
+    "supports": ["title", "editor", "thumbnail", "custom-fields", "page-attributes"],
+    "taxonomies": [], "labels": [], "custom_supports": "", "enter_title_here": ""
+  }
+}
