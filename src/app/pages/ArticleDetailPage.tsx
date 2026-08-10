@@ -4,6 +4,7 @@ import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { Breadcrumb } from "../components/Breadcrumb";
 import { NewsletterCTA } from "../components/NewsletterCTA";
 import { Prose } from "../components/Prose";
+import { SidebarAdvertisement } from "../components/SidebarAdvertisement";
 import { Heading, SectionHeader } from "../components/typography";
 import { Route } from "../../routes/artigos.$category.$slug";
 
@@ -155,9 +156,7 @@ export default function ArticleDetailPage() {
               </ol>
             </div>
 
-            <div className="bg-secondary h-[260px] flex items-center justify-center font-sans text-sm text-muted-foreground">
-              Publicidade
-            </div>
+            <SidebarAdvertisement />
           </aside>
         </div>
       </div>

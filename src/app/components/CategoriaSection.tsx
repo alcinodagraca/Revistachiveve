@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { Heading } from "./typography";
+import { SidebarAdvertisement } from "./SidebarAdvertisement";
 import type { Article } from "../../server/wp";
 
 export function CategoriaSection({
@@ -111,7 +112,9 @@ export function CategoriaSection({
             )}
           </div>
 
-          <aside aria-hidden className="bg-secondary min-h-[300px] w-full" />
+          <aside className="w-full">
+            <SidebarAdvertisement tall />
+          </aside>
         </div>
       </div>
     </section>
