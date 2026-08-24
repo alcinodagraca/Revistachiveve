@@ -11,17 +11,17 @@ export type HeadingVariant =
 
 const VARIANT_CLASSES: Record<HeadingVariant, string> = {
   display:
-    "font-serif font-semibold text-4xl md:text-6xl leading-[1.05] tracking-tight",
+    "font-sans font-light text-[2.45rem] md:text-[3.35rem] leading-[0.98] tracking-[-0.035em]",
   "page-title":
-    "font-serif font-semibold text-3xl md:text-5xl leading-tight tracking-tight",
+    "font-sans font-normal text-[1.6rem] md:text-[2rem] leading-[1.04] tracking-[-0.03em]",
   "article-title":
-    "font-serif font-semibold text-2xl md:text-4xl leading-tight tracking-tight",
+    "font-sans font-normal text-[1.5rem] md:text-[1.82rem] leading-[1.08] tracking-[-0.028em]",
   "feature-title":
-    "font-serif font-semibold text-xl md:text-2xl leading-snug",
+    "font-sans font-normal text-[1.06rem] md:text-[1.2rem] leading-[1.22] tracking-[-0.018em]",
   "card-title":
-    "font-serif font-semibold text-base md:text-lg leading-snug",
+    "font-sans font-normal text-[0.95rem] md:text-[1rem] leading-[1.38] tracking-[-0.012em]",
   "card-title-sm":
-    "font-serif font-semibold text-sm md:text-base leading-snug",
+    "font-sans font-normal text-[0.88rem] md:text-[0.94rem] leading-[1.44]",
 };
 
 type HeadingTag = "h1" | "h2" | "h3" | "h4";

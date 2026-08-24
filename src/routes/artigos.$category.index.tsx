@@ -3,14 +3,25 @@ import CategoryPage from '../app/pages/CategoryPage'
 import { fnGetCategoryWithArticles } from '../server/wp/server-fns'
 import { breadcrumbJsonLd, pageSeo } from '../server/seo'
 
+type SearchParams = { page?: number }
+
 export const Route = createFileRoute('/artigos/$category/')({
+  validateSearch: (search: Record<string, unknown>): SearchParams => ({
+    page:
+      typeof search.page === "number"
+        ? Math.max(1, Math.floor(search.page))
+        : typeof search.page === "string" && Number.isFinite(Number(search.page))
+          ? Math.max(1, Math.floor(Number(search.page)))
+          : 1,
+  }),
+  loaderDeps: ({ search }) => ({ page: search.page ?? 1 }),
   component: CategoryPage,
-  loader: async ({ params }) => {
+  loader: async ({ params, deps }) => {
     const data = await fnGetCategoryWithArticles({
-      data: { slug: params.category, perPage: 24 },
+      data: { slug: params.category, page: deps.page, perPage: 12 },
     })
     if (!data) throw notFound()
-    return data
+    return { ...data, currentPage: deps.page }
   },
   head: ({ loaderData }) => {
     if (!loaderData) {

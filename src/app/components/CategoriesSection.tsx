@@ -40,8 +40,8 @@ const categories = [
 
 export function CategoriesSection() {
   return (
-    <section className="px-4 md:px-8 py-8">
-      <div className="max-w-7xl mx-auto">
+    <section className="py-8">
+      <div className="site-shell">
         <SectionHeader>Categorias</SectionHeader>
 
         {/* Grid */}

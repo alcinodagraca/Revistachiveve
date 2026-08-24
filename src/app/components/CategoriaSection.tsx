@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-import { Heading } from "./typography";
+import { Heading, SectionHeader } from "./typography";
 import { SidebarAdvertisement } from "./SidebarAdvertisement";
 import type { Article } from "../../server/wp";
 
@@ -19,21 +19,11 @@ export function CategoriaSection({
   const subItems = rest.slice(0, 4);
 
   return (
-    <section className="px-4 md:px-8 bg-background py-16">
-      <div className="max-w-[1280px] mx-auto">
-        <div className="flex items-center mb-8 border-b border-border">
-          <span className="font-sans font-bold text-xs md:text-sm uppercase tracking-[0.12em] bg-primary text-primary-foreground px-3 py-1.5 rounded-sm -mb-px">
-            {categoryName}
-          </span>
-          <div className="flex-1" />
-          <Link
-            to="/artigos/$category"
-            params={{ category: categorySlug }}
-            className="font-sans font-medium text-xs md:text-sm text-primary no-underline py-2 transition-opacity hover:opacity-80"
-          >
-            Ver tudo
-          </Link>
-        </div>
+    <section className="bg-background py-16">
+      <div className="site-shell">
+        <SectionHeader action={{ label: "Ver tudo", to: `/artigos/${categorySlug}` }}>
+          {categoryName}
+        </SectionHeader>
 
         <style>{`
           .categoria-grid-container {

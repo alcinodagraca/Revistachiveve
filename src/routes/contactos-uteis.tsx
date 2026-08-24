@@ -11,7 +11,7 @@ export const Route = createFileRoute('/contactos-uteis')({
   },
   head: () =>
     pageSeo({
-      title: 'Contactos Úteis',
+      title: 'Directório de Empresas',
       description:
         'Directório de instituições, bancos, associações empresariais e organizações úteis em Moçambique.',
       path: '/contactos-uteis',

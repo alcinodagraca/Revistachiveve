@@ -20,35 +20,49 @@ export function LegalPage({
 }) {
   return (
     <div className="bg-background">
-      <div className="max-w-[1280px] mx-auto px-4 pt-8 pb-12">
+      <div className="site-shell pt-8 pb-12">
         <div className="mb-6">
           <Breadcrumb items={[{ label: "Início", to: "/" }, { label: title }]} />
         </div>
 
-        <header className="max-w-[680px] mx-auto mb-8">
-          <Heading as="h1" variant="page-title" className="text-foreground mb-3">
+        <header className="mb-8 max-w-[1040px] pb-5">
+          <Heading
+            as="h1"
+            variant="page-title"
+            className="mb-2 text-[1.18rem] leading-[1.12] tracking-[-0.024em] text-foreground md:text-[1.34rem]"
+          >
             {title}
           </Heading>
-          <p className="font-sans text-[13px] text-muted-foreground tracking-[0.05em]">
+          <p className="font-sans text-[0.72rem] font-light uppercase tracking-[0.08em] text-muted-foreground">
             Última actualização: {updatedAt}
           </p>
         </header>
 
-        <Prose>
-          {intro && <p className="mb-8">{intro}</p>}
-          {sections.map((section, i) => (
-            <section key={i} className="mb-8">
-              <Heading as="h2" variant="feature-title" className="text-foreground mb-3 leading-tight">
-                {section.heading}
-              </Heading>
-              {section.paragraphs.map((p, j) => (
-                <p key={j} className="mb-4">
-                  {p}
-                </p>
-              ))}
-            </section>
-          ))}
-        </Prose>
+        <div className="max-w-[1040px]">
+          <Prose>
+            {intro && (
+              <p className="mb-5 text-left text-[16px] leading-[1.7]">
+                {intro}
+              </p>
+            )}
+            {sections.map((section, i) => (
+              <section key={i} className="mb-7 pt-1">
+                <Heading
+                  as="h2"
+                  variant="feature-title"
+                  className="mb-3 text-[0.98rem] leading-[1.22] text-foreground md:text-[1rem]"
+                >
+                  {section.heading}
+                </Heading>
+                {section.paragraphs.map((p, j) => (
+                  <p key={j} className="mb-3 text-left text-[16px] leading-[1.7]">
+                    {p}
+                  </p>
+                ))}
+              </section>
+            ))}
+          </Prose>
+        </div>
       </div>
     </div>
   );

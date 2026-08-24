@@ -1,7 +1,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --font-size: 16px;
+  --font-size: 14.5px;
 
   /* Spacing System (8pt grid from Guidelines) */
   --spacing-4: 4px;
@@ -17,11 +17,9 @@
   /* Border width */
   --border-width: 1px;
 
-  /* Type families — sizing lives in Tailwind utilities, not here.
-     DM Sans is used site-wide; --font-serif is kept as an alias so any
-     `font-serif` utility resolves to the same family. */
-  --font-sans: 'DM Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-serif: var(--font-sans);
+  /* Editorial pairing: refined sans for UI, elegant serif for occasional display use. */
+  --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
 
   /* Colors aligned with editorial guidelines */
   --background: rgba(255, 255, 255, 1);
@@ -66,9 +64,9 @@
   --chart-5: rgba(239, 68, 68, 1);
 
   /* Radius */
-  --radius: 6px;
-  --radius-card: 10px; /* slightly more modern */
-  --radius-checkbox: 2px;
+  --radius: 0px;
+  --radius-card: 0px;
+  --radius-checkbox: 0px;
 
   /* Sidebar */
   --sidebar: rgba(255, 255, 255, 1);
@@ -133,21 +131,61 @@
     @apply bg-background text-foreground font-sans;
   }
 
-  /*
-   * Bare h1-h4 use the editorial serif so any MDX-like content reads correctly.
-   * Concrete sizing lives in the Heading / SectionHeader components, which
-   * compose Tailwind utilities. Don't add font-size here.
-   */
-  h1, h2, h3, h4 {
-    font-family: var(--font-serif);
-    font-weight: 600;
-    letter-spacing: -0.01em;
+  button,
+  input,
+  textarea,
+  select,
+  [data-slot="button"],
+  [data-slot="input"],
+  [data-slot="textarea"],
+  [data-slot="card"],
+  [data-slot="dialog-content"],
+  [data-slot="popover-content"],
+  [data-slot="dropdown-menu-content"],
+  [data-slot="select-content"],
+  [data-slot="tooltip-content"] {
+    border-radius: 0 !important;
   }
 
-  h1 { line-height: 1.1; }
-  h2 { line-height: 1.2; }
-  h3 { line-height: 1.3; }
-  h4 { line-height: 1.4; }
+  h1, h2, h3, h4 {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+
+  h1 { line-height: 1.04; }
+  h2 { line-height: 1.12; }
+  h3 { line-height: 1.2; }
+  h4 { line-height: 1.28; }
+
+  ::selection {
+    background: color-mix(in srgb, var(--primary) 88%, white 12%);
+    color: white;
+  }
+}
+
+@layer components {
+  .site-shell {
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: var(--spacing-16);
+    box-sizing: border-box;
+  }
+
+  .site-shell--wide {
+    max-width: 1400px;
+  }
+
+  .site-shell--narrow {
+    max-width: 680px;
+  }
+
+  @media (min-width: 768px) {
+    .site-shell {
+      padding-inline: var(--spacing-32);
+    }
+  }
 }
 
 html {

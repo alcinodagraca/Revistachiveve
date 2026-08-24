@@ -115,7 +115,7 @@ const lancamentos = [
 export function LancamentosSection() {
   return (
     <section className="bg-background py-12">
-      <div className="max-w-[1280px] mx-auto px-4">
+      <div className="site-shell">
         <SectionHeader>Lançamentos</SectionHeader>
 
         <div className="grid grid-cols-3 gap-6">

@@ -3,7 +3,8 @@ import { FaPhone, FaEnvelope, FaLocationDot, FaGlobe, FaMagnifyingGlass, FaBuild
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { PageHeader } from "../components/PageHeader";
 import { EmptyState } from "../components/EmptyState";
-import { Heading } from "../components/typography";
+import { Heading, SectionHeader } from "../components/typography";
+import { Input } from "../components/ui/input";
 import { Route } from "../../routes/contactos-uteis";
 
 const allContacts = [
@@ -121,7 +122,7 @@ const allContacts = [
 
 export default function ContactosUteisPage() {
   const { contacts: wpContacts } = Route.useLoaderData();
-  const items = wpContacts && wpContacts.length > 0 ? wpContacts : allContacts;
+  const items = wpContacts ?? [];
 
   // Derive category list dynamically from the data so WP-added categories show up.
   const categories = [
@@ -142,38 +143,46 @@ export default function ContactosUteisPage() {
     return matchesCategory && matchesSearch;
   });
 
+  const groupedContacts = categories
+    .filter((category) => category !== "Todas as Categorias")
+    .map((category) => ({
+      category,
+      contacts: filteredContacts.filter((contact) => contact.category === category),
+    }))
+    .filter((group) => group.contacts.length > 0);
+
   return (
     <div className="bg-background">
-      <div className="max-w-[1280px] mx-auto px-4 py-12">
+      <div className="site-shell py-12 md:py-14">
         <PageHeader
-          title="Directório de Contactos Úteis"
-          subtitle="Encontre instituições, organizações e empresas essenciais para o seu negócio"
+          title="Directório de Empresas"
+          subtitle="Instituições, associações e organizações de referência para acompanhar, contactar e activar oportunidades de negócio."
           breadcrumbs={[
             { label: "Início", to: "/" },
             { label: "Contactos Úteis" },
           ]}
         />
 
-        <div className="grid grid-cols-[280px_1fr] gap-12 directory-layout">
-          <aside className="sticky top-6 h-fit">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[280px_1fr] lg:gap-12 directory-layout">
+          <aside className="h-fit border border-border bg-card p-5 lg:sticky lg:top-24">
             <div className="mb-8">
-              <label className="block font-sans font-semibold text-sm text-foreground mb-3 uppercase tracking-[0.05em]">
+              <label className="mb-3 block font-sans text-[0.72rem] font-medium uppercase tracking-[0.12em] text-primary">
                 Pesquisar
               </label>
               <div className="relative flex items-center">
                 <FaMagnifyingGlass size={18} className="absolute left-3 text-muted-foreground" />
-                <input
+                <Input
                   type="text"
                   placeholder="Nome ou palavra-chave..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full py-3 pr-3 pl-[42px] rounded-md border border-border bg-[var(--input-background)] font-sans font-normal text-sm text-foreground outline-none transition-colors focus:border-primary"
+                  className="h-11 w-full border-border bg-[var(--input-background)] py-3 pr-3 pl-[42px] text-sm"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block font-sans font-semibold text-sm text-foreground mb-3 uppercase tracking-[0.05em]">
+              <label className="mb-3 block font-sans text-[0.72rem] font-medium uppercase tracking-[0.12em] text-primary">
                 Categorias
               </label>
               <div className="flex flex-col gap-1">
@@ -189,28 +198,23 @@ export default function ContactosUteisPage() {
                       key={category}
                       onClick={() => setSelectedCategory(category)}
                       className={
-                        "flex items-center justify-between px-4 py-3 rounded-md border-none font-sans text-sm cursor-pointer text-left transition-all " +
+                        "flex items-center justify-between border-none px-0 py-2.5 font-sans text-sm cursor-pointer text-left transition-all border-b border-border/70 last:border-b-0 " +
                         (isSelected
-                          ? "bg-primary text-primary-foreground font-medium"
-                          : "bg-transparent text-foreground font-normal hover:bg-secondary")
+                          ? "text-foreground font-medium"
+                          : "bg-transparent text-foreground/72 font-normal hover:text-foreground")
                       }
                     >
                       <span>{category}</span>
-                      <span className="text-xs opacity-80">{count}</span>
+                      <span className="text-[11px] text-muted-foreground">{count}</span>
                     </button>
                   );
                 })}
               </div>
             </div>
 
-            <div className="mt-6 p-4 rounded-md bg-secondary">
-              <p className="font-sans font-medium text-sm text-foreground text-center">
-                {filteredContacts.length} {filteredContacts.length === 1 ? "resultado" : "resultados"}
-              </p>
-            </div>
           </aside>
 
-          <main>
+          <main className="min-w-0">
             {filteredContacts.length === 0 ? (
               <EmptyState
                 icon={FaBuilding}
@@ -218,77 +222,90 @@ export default function ContactosUteisPage() {
                 message="Tente ajustar os filtros ou usar outra palavra-chave na pesquisa."
               />
             ) : (
-              <div className="flex flex-col gap-5">
-                {filteredContacts.map((contact) => (
-                  <article
-                    key={contact.id}
-                    className="grid grid-cols-[120px_1fr] gap-6 p-6 rounded-lg border border-border bg-card transition-all cursor-pointer hover:border-primary hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)]"
-                  >
-                    <div className="w-[120px] h-[120px] rounded-md overflow-hidden bg-secondary flex items-center justify-center">
-                      <ImageWithFallback
-                        src={contact.logo}
-                        alt={`${contact.name} logo`}
-                        className="w-full h-full object-cover"
-                      />
+              <div className="space-y-12">
+                {groupedContacts.map((group) => (
+                  <section key={group.category}>
+                    <SectionHeader>{group.category}</SectionHeader>
+                    <div className="space-y-6">
+                      {group.contacts.map((contact) => (
+                        <article
+                          key={contact.id}
+                          className="grid grid-cols-[72px_1fr] gap-5 border border-border bg-card p-5 md:p-6"
+                        >
+                          <div className="flex h-[72px] w-[72px] items-center justify-center overflow-hidden bg-secondary">
+                            <ImageWithFallback
+                              src={contact.logo}
+                              alt={`${contact.name} logo`}
+                              className="h-full w-full object-cover"
+                            />
+                          </div>
+
+                          <div>
+                            <Heading
+                              as="h3"
+                              variant="feature-title"
+                              className="mb-2 text-foreground"
+                            >
+                              {contact.name}
+                            </Heading>
+
+                            <div className="grid gap-x-6 gap-y-2 md:grid-cols-2">
+                              {contact.phone && (
+                                <div className="flex items-center gap-2">
+                                  <FaPhone size={14} className="shrink-0 text-primary" />
+                                  <a
+                                    href={`tel:${contact.phone}`}
+                                    className="font-sans text-[0.9rem] font-normal text-foreground no-underline transition-colors hover:text-primary"
+                                  >
+                                    {contact.phone}
+                                  </a>
+                                </div>
+                              )}
+
+                              {contact.email && (
+                                <div className="flex items-center gap-2">
+                                  <FaEnvelope size={14} className="shrink-0 text-primary" />
+                                  <a
+                                    href={`mailto:${contact.email}`}
+                                    className="font-sans text-[0.9rem] font-normal text-foreground no-underline transition-colors hover:text-primary"
+                                  >
+                                    {contact.email}
+                                  </a>
+                                </div>
+                              )}
+
+                              {contact.address && (
+                                <div className="flex items-start gap-2">
+                                  <FaLocationDot size={14} className="mt-0.5 shrink-0 text-primary" />
+                                  <span className="font-sans text-[0.9rem] font-normal text-foreground">
+                                    {contact.address}
+                                  </span>
+                                </div>
+                              )}
+
+                              {contact.website && (
+                                <div className="flex items-center gap-2">
+                                  <FaGlobe size={14} className="shrink-0 text-primary" />
+                                  <a
+                                    href={
+                                      contact.website.startsWith("http")
+                                        ? contact.website
+                                        : `https://${contact.website}`
+                                    }
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="font-sans text-[0.9rem] font-normal text-primary no-underline transition-opacity hover:opacity-80"
+                                  >
+                                    {contact.website}
+                                  </a>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </article>
+                      ))}
                     </div>
-
-                    <div>
-                      <div className="mb-2">
-                        <span className="inline-block px-3 py-1 rounded-sm bg-secondary font-sans text-[11px] font-semibold text-primary uppercase tracking-[0.05em]">
-                          {contact.category}
-                        </span>
-                      </div>
-
-                      <Heading as="h3" variant="card-title" className="text-foreground mb-1 leading-tight">
-                        {contact.name}
-                      </Heading>
-
-                      <p className="font-sans font-normal text-sm text-muted-foreground mb-4 leading-relaxed">
-                        {contact.description}
-                      </p>
-
-                      <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-3">
-                        <div className="flex items-center gap-2">
-                          <FaPhone size={16} className="text-primary flex-shrink-0" />
-                          <a
-                            href={`tel:${contact.phone}`}
-                            className="font-sans font-normal text-sm text-foreground no-underline transition-colors hover:text-primary"
-                          >
-                            {contact.phone}
-                          </a>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <FaEnvelope size={16} className="text-primary flex-shrink-0" />
-                          <a
-                            href={`mailto:${contact.email}`}
-                            className="font-sans font-normal text-sm text-foreground no-underline transition-colors hover:text-primary"
-                          >
-                            {contact.email}
-                          </a>
-                        </div>
-
-                        <div className="flex items-start gap-2">
-                          <FaLocationDot size={16} className="text-primary flex-shrink-0 mt-0.5" />
-                          <span className="font-sans font-normal text-sm text-foreground">
-                            {contact.address}
-                          </span>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <FaGlobe size={16} className="text-primary flex-shrink-0" />
-                          <a
-                            href={`https://${contact.website}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="font-sans font-normal text-sm text-primary no-underline transition-opacity hover:opacity-80"
-                          >
-                            {contact.website}
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </article>
+                  </section>
                 ))}
               </div>
             )}

@@ -18,8 +18,8 @@ export function EntrevistaSection({ article }: { article: Article | null }) {
   }).format(new Date(article.publishedAt));
 
   return (
-    <section className="px-4 md:px-8 bg-primary py-24 md:py-32">
-      <div className="max-w-[1280px] mx-auto">
+    <section className="bg-primary py-24 md:py-32">
+      <div className="site-shell">
         <h2 className="font-sans font-bold text-xs md:text-sm uppercase tracking-[0.12em] text-primary-foreground mb-8">
           Entrevista
         </h2>

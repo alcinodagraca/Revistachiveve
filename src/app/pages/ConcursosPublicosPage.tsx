@@ -1,132 +1,238 @@
-import { FaFileLines, FaCalendarDays, FaUpRightFromSquare, FaBriefcase } from "react-icons/fa6";
+import { useState } from "react";
+import {
+  FaFileLines,
+  FaCalendarDays,
+  FaUpRightFromSquare,
+  FaBriefcase,
+  FaMagnifyingGlass,
+} from "react-icons/fa6";
+import { useNavigate } from "@tanstack/react-router";
 import { PageHeader } from "../components/PageHeader";
 import { EmptyState } from "../components/EmptyState";
-import { Heading } from "../components/typography";
+import { ListPagination } from "../components/ListPagination";
+import { Heading, SectionHeader } from "../components/typography";
+import { Input } from "../components/ui/input";
 import { Route } from "../../routes/concursos-publicos";
 import type { Tender } from "../../server/wp";
 
-const concursos = [
+const MOCK_TENDERS: Tender[] = [
   {
     id: 1,
+    slug: "assistente-administrativo-minfin",
     title: "Assistente Administrativo",
     institution: "Ministério das Finanças",
-    deadline: "30 Abril 2026",
+    deadline: "30 Setembro 2026",
     type: "Concurso Público",
     vacancies: 5,
   },
   {
     id: 2,
+    slug: "gestor-projectos-banco-mocambique",
     title: "Gestor de Projectos",
     institution: "Banco de Moçambique",
-    deadline: "15 Maio 2026",
+    deadline: "15 Outubro 2026",
     type: "Concurso Limitado",
     vacancies: 2,
   },
   {
     id: 3,
+    slug: "analista-sistemas-ine",
     title: "Analista de Sistemas",
     institution: "Instituto Nacional de Estatística",
-    deadline: "25 Maio 2026",
+    deadline: "25 Outubro 2026",
     type: "Concurso Público",
     vacancies: 3,
   },
   {
     id: 4,
+    slug: "economista-senior-at",
     title: "Economista Sénior",
     institution: "Autoridade Tributária de Moçambique",
-    deadline: "10 Junho 2026",
+    deadline: "10 Novembro 2026",
     type: "Concurso Público",
     vacancies: 4,
   },
 ];
 
-const MOCK_TENDERS: Tender[] = concursos.map((c) => ({
-  id: c.id,
-  slug: `concurso-${c.id}`,
-  title: c.title,
-  institution: c.institution,
-  deadline: c.deadline,
-  type: c.type,
-  vacancies: c.vacancies,
-}));
-
 export default function ConcursosPublicosPage() {
-  const { tenders } = Route.useLoaderData();
-  const items = tenders ?? MOCK_TENDERS;
+  const { tenders, currentPage, totalPages, total } = Route.useLoaderData();
+  const navigate = useNavigate();
+  const items = tenders ?? [];
+  const effectiveTotalPages = totalPages || 1;
+  const typeOptions = [
+    "Todos os tipos",
+    ...Array.from(new Set(items.map((item) => item.type).filter(Boolean))),
+  ];
+  const [selectedType, setSelectedType] = useState("Todos os tipos");
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredItems = items.filter((item) => {
+    const matchesType =
+      selectedType === "Todos os tipos" || item.type === selectedType;
+    const normalizedQuery = searchTerm.trim().toLowerCase();
+    const matchesSearch =
+      normalizedQuery === "" ||
+      item.title.toLowerCase().includes(normalizedQuery) ||
+      item.institution.toLowerCase().includes(normalizedQuery);
+
+    return matchesType && matchesSearch;
+  });
+
+  function handlePageChange(page: number) {
+    navigate({ to: "/concursos-publicos", search: { page } });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
   return (
-    <div className="max-w-[1280px] mx-auto px-4 py-12">
-      <PageHeader
-        title="Concursos Públicos"
-        subtitle="Oportunidades no sector público"
-        breadcrumbs={[{ label: "Início", to: "/" }, { label: "Concursos Públicos" }]}
-      />
-
-      {items.length === 0 ? (
-        <EmptyState
-          icon={FaBriefcase}
-          title="Sem concursos abertos"
-          message="De momento não há concursos públicos publicados. Esta página actualiza assim que novos editais forem abertos."
-          cta={{ label: "Ver edições recentes", to: "/edicao-impressa" }}
+    <div className="bg-background">
+      <div className="site-shell py-12 md:py-14">
+        <PageHeader
+          title="Concursos Públicos"
+          subtitle="Oportunidades no sector público reunidas para consulta rápida, com o essencial de cada edital."
+          breadcrumbs={[{ label: "Início", to: "/" }, { label: "Concursos Públicos" }]}
         />
-      ) : (
-      <div className="grid gap-6">
-        {items.map((concurso) => (
-          <div
-            key={concurso.id}
-            className="p-6 rounded-lg border border-border bg-card transition-all hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
-          >
-            <div className="flex justify-between items-start gap-4 flex-wrap">
-              <div className="flex-1 min-w-[250px]">
-                <div className="inline-block px-3 py-1 rounded bg-secondary mb-3">
-                  <span className="font-sans text-[11px] font-semibold text-primary uppercase tracking-[0.05em]">
-                    {concurso.type}
-                  </span>
-                </div>
-                <Heading as="h2" variant="feature-title" className="text-foreground mb-2">
-                  {concurso.title}
-                </Heading>
-                <p className="font-sans font-medium text-base text-muted-foreground mb-4">
-                  {concurso.institution}
-                </p>
-                <div className="flex items-center gap-4 flex-wrap">
-                  <div className="flex items-center gap-1.5">
-                    <FaCalendarDays size={16} className="text-muted-foreground" />
-                    <span className="font-sans font-normal text-sm text-muted-foreground">
-                      Prazo: {concurso.deadline}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <FaFileLines size={16} className="text-muted-foreground" />
-                    <span className="font-sans font-normal text-sm text-muted-foreground">
-                      {concurso.vacancies} {concurso.vacancies === 1 ? "vaga" : "vagas"}
-                    </span>
-                  </div>
+
+        {items.length === 0 ? (
+          <EmptyState
+            icon={FaBriefcase}
+            title="Sem concursos publicados"
+            message="Ainda não existem editais disponíveis nesta secção. Assim que novos concursos forem publicados, passam a aparecer aqui."
+            cta={{ label: "Ver edições recentes", to: "/edicao-impressa" }}
+          />
+        ) : (
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-[280px_1fr] lg:gap-12">
+            <aside className="h-fit border border-border bg-card p-5 lg:sticky lg:top-24">
+              <div className="mb-8">
+                <label className="mb-3 block font-sans text-[0.72rem] font-medium uppercase tracking-[0.12em] text-primary">
+                  Pesquisar
+                </label>
+                <div className="relative flex items-center">
+                  <FaMagnifyingGlass size={18} className="absolute left-3 text-muted-foreground" />
+                  <Input
+                    type="text"
+                    placeholder="Cargo ou instituição..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="h-11 w-full border-border bg-[var(--input-background)] py-3 pr-3 pl-[42px] text-sm"
+                  />
                 </div>
               </div>
-              {concurso.editalUrl ? (
-                <a
-                  href={concurso.editalUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-6 py-3 rounded-md bg-primary text-primary-foreground border-none font-sans font-medium text-sm cursor-pointer transition-opacity whitespace-nowrap hover:opacity-90 no-underline"
-                >
-                  Ver Edital
-                  <FaUpRightFromSquare size={16} />
-                </a>
+
+              <div>
+                <label className="mb-3 block font-sans text-[0.72rem] font-medium uppercase tracking-[0.12em] text-primary">
+                  Tipo de concurso
+                </label>
+                <div className="flex flex-col gap-1">
+                  {typeOptions.map((type) => {
+                    const isSelected = selectedType === type;
+                    const count =
+                      type === "Todos os tipos"
+                        ? items.length
+                        : items.filter((item) => item.type === type).length;
+
+                    return (
+                      <button
+                        key={type}
+                        type="button"
+                        onClick={() => setSelectedType(type)}
+                        className={
+                          "flex items-center justify-between border-none px-0 py-2.5 font-sans text-sm cursor-pointer text-left transition-all border-b border-border/70 last:border-b-0 " +
+                          (isSelected
+                            ? "text-foreground font-medium"
+                            : "bg-transparent text-foreground/72 font-normal hover:text-foreground")
+                        }
+                      >
+                        <span>{type}</span>
+                        <span className="text-[11px] text-muted-foreground">{count}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+            </aside>
+
+            <main className="min-w-0">
+              <SectionHeader>Concursos em Destaque</SectionHeader>
+
+              {filteredItems.length === 0 ? (
+                <EmptyState
+                  icon={FaBriefcase}
+                  title="Nenhum concurso encontrado"
+                  message="Tente ajustar os filtros ou usar outra palavra-chave na pesquisa."
+                />
               ) : (
-                <button
-                  className="flex items-center gap-2 px-6 py-3 rounded-md bg-primary text-primary-foreground border-none font-sans font-medium text-sm cursor-pointer transition-opacity whitespace-nowrap hover:opacity-90"
-                >
-                  Ver Edital
-                  <FaUpRightFromSquare size={16} />
-                </button>
+                <div className="space-y-6">
+                  {filteredItems.map((concurso) => (
+                    <article
+                      key={concurso.id}
+                      className="border border-border bg-card p-5 md:p-6"
+                    >
+                      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_180px] lg:items-start">
+                        <div className="min-w-0">
+                          <Heading as="h2" variant="feature-title" className="mb-2 max-w-[34ch] text-foreground">
+                            {concurso.title}
+                          </Heading>
+
+                          <p className="mb-4 font-sans text-[0.96rem] font-light leading-[1.68] text-foreground/78">
+                            {concurso.institution}
+                          </p>
+
+                          <div className="grid gap-x-6 gap-y-2 md:grid-cols-2">
+                            <div className="flex items-center gap-2">
+                              <FaCalendarDays size={14} className="shrink-0 text-primary" />
+                              <span className="font-sans text-[0.9rem] font-normal text-foreground">
+                                Prazo: {concurso.deadline || "Por confirmar"}
+                              </span>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                              <FaFileLines size={14} className="shrink-0 text-primary" />
+                              <span className="font-sans text-[0.9rem] font-normal text-foreground">
+                                {concurso.vacancies} {concurso.vacancies === 1 ? "vaga" : "vagas"}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex lg:justify-end">
+                          {concurso.editalUrl ? (
+                            <a
+                              href={concurso.editalUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 whitespace-nowrap border-none bg-primary px-6 py-3 font-sans text-[0.9rem] font-medium text-primary-foreground no-underline transition-opacity hover:opacity-90"
+                            >
+                              Ver Edital
+                              <FaUpRightFromSquare size={15} />
+                            </a>
+                          ) : (
+                            <button
+                              type="button"
+                              className="inline-flex items-center gap-2 whitespace-nowrap border-none bg-primary px-6 py-3 font-sans text-[0.9rem] font-medium text-primary-foreground transition-opacity hover:opacity-90"
+                            >
+                              Ver Edital
+                              <FaUpRightFromSquare size={15} />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
               )}
-            </div>
+            </main>
           </div>
-        ))}
+        )}
+
+        {items.length > 0 && (
+          <ListPagination
+            currentPage={currentPage}
+            totalPages={effectiveTotalPages}
+            onPageChange={handlePageChange}
+          />
+        )}
       </div>
-      )}
     </div>
   );
 }

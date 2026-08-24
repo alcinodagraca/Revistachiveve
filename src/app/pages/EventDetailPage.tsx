@@ -1,14 +1,41 @@
 import { Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { motion } from "motion/react";
-import { FaCalendarDays, FaLocationDot, FaTicket, FaUsers } from "react-icons/fa6";
+import {
+  FaCalendarDays,
+  FaFacebookF,
+  FaLink,
+  FaLinkedinIn,
+  FaLocationDot,
+  FaTicket,
+  FaUsers,
+  FaWhatsapp,
+} from "react-icons/fa6";
+import { SiX } from "react-icons/si";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { Breadcrumb } from "../components/Breadcrumb";
 import { Prose } from "../components/Prose";
-import { Heading, SectionHeader } from "../components/typography";
+import { Eyebrow, Heading, SectionHeader } from "../components/typography";
 import { Route } from "../../routes/eventos.$slug";
 
 export default function EventDetailPage() {
   const { event, related } = Route.useLoaderData();
+  const [copied, setCopied] = useState(false);
+  const eventUrl =
+    typeof window !== "undefined"
+      ? window.location.href
+      : `https://revistachiveve.co.mz/eventos/${event.slug}`;
+  const shareText = `${event.title} | Revista Chiveve`;
+
+  async function copyEventLink() {
+    try {
+      await navigator.clipboard.writeText(eventUrl);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1800);
+    } catch {
+      setCopied(false);
+    }
+  }
 
   return (
     <div className="bg-background">
@@ -25,7 +52,7 @@ export default function EventDetailPage() {
         />
       </motion.div>
 
-      <div className="max-w-[1280px] mx-auto pt-8 px-4 pb-12">
+      <div className="site-shell pt-8 pb-12">
         <div className="mb-6">
           <Breadcrumb
             items={[
@@ -37,29 +64,121 @@ export default function EventDetailPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-          {/* Main */}
           <div className="lg:col-span-2">
-            <Heading as="h1" variant="article-title" className="text-foreground mb-6">
+            {event.city && (
+              <Eyebrow className="mb-3 inline-block">{event.city}</Eyebrow>
+            )}
+
+            <Heading
+              as="h1"
+              variant="article-title"
+              className="mb-4 max-w-[760px] text-foreground"
+            >
               {event.title}
             </Heading>
+
+            <div className="mb-7 flex flex-wrap items-center gap-x-4 gap-y-2 font-sans text-[0.82rem] text-muted-foreground">
+              <span>{event.displayDate}</span>
+              {event.location && (
+                <>
+                  <span>·</span>
+                  <span>{event.location}</span>
+                </>
+              )}
+              {event.organizer && (
+                <>
+                  <span>·</span>
+                  <span>{event.organizer}</span>
+                </>
+              )}
+            </div>
+
+            {event.description?.[0] && (
+              <p className="mb-8 max-w-[760px] font-sans text-[1.02rem] font-light leading-[1.8] text-foreground/72 md:text-[1.08rem]">
+                {event.description[0]}
+              </p>
+            )}
 
             <Prose>
               {event.bodyHtml ? (
                 <div dangerouslySetInnerHTML={{ __html: event.bodyHtml }} />
               ) : (
-                event.description.map((p, i) => (
+                event.description.slice(1).map((p, i) => (
                   <p key={i} className="mb-6">
                     {p}
                   </p>
                 ))
               )}
             </Prose>
+
+            <div className="mt-10 max-w-[760px] border-t border-border pt-5">
+              <div className="mb-3 flex flex-wrap items-center gap-3">
+                <p className="font-sans text-[0.78rem] font-medium uppercase tracking-[0.12em] text-primary">
+                  Partilhar este evento
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-3">
+                <a
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(eventUrl)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-9 w-9 items-center justify-center border border-border bg-background text-foreground no-underline transition-colors hover:border-primary hover:text-primary"
+                  aria-label="Partilhar no Facebook"
+                >
+                  <FaFacebookF size={14} />
+                </a>
+
+                <a
+                  href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(eventUrl)}&text=${encodeURIComponent(shareText)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-9 w-9 items-center justify-center border border-border bg-background text-foreground no-underline transition-colors hover:border-primary hover:text-primary"
+                  aria-label="Partilhar no X"
+                >
+                  <SiX size={13} />
+                </a>
+
+                <a
+                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(eventUrl)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-9 w-9 items-center justify-center border border-border bg-background text-foreground no-underline transition-colors hover:border-primary hover:text-primary"
+                  aria-label="Partilhar no LinkedIn"
+                >
+                  <FaLinkedinIn size={14} />
+                </a>
+
+                <a
+                  href={`https://wa.me/?text=${encodeURIComponent(`${shareText} ${eventUrl}`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-9 w-9 items-center justify-center border border-border bg-background text-foreground no-underline transition-colors hover:border-primary hover:text-primary"
+                  aria-label="Partilhar no WhatsApp"
+                >
+                  <FaWhatsapp size={15} />
+                </a>
+
+                <button
+                  type="button"
+                  onClick={copyEventLink}
+                  className="inline-flex items-center gap-2 border border-border bg-background px-3 py-2 font-sans text-[0.82rem] font-medium text-foreground transition-colors hover:border-primary hover:text-primary"
+                >
+                  <FaLink size={13} />
+                  {copied ? "Link copiado" : "Copiar link"}
+                </button>
+              </div>
+            </div>
           </div>
 
           <aside>
-            <div className="bg-secondary rounded-lg p-6 sticky top-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="bg-primary text-white rounded-md py-2 px-3.5 text-center min-w-[62px] font-sans">
+            <div className="sticky top-24 border border-border bg-card p-6">
+              <p className="mb-4 font-sans text-[0.78rem] font-medium uppercase tracking-[0.12em] text-primary">
+                Detalhes do Evento
+              </p>
+
+              <div className="mb-6 flex items-center gap-3">
+                <div className="min-w-[62px] bg-primary px-3.5 py-2 text-center font-sans text-white">
                   <div className="text-[22px] font-bold leading-none">
                     {event.day}
                   </div>
@@ -71,7 +190,7 @@ export default function EventDetailPage() {
                   <div className="font-sans text-[13px] text-muted-foreground tracking-[0.08em] uppercase">
                     Data
                   </div>
-                  <div className="font-sans text-base font-semibold text-foreground">
+                  <div className="font-sans text-[0.96rem] font-normal text-foreground">
                     {event.displayDate}
                   </div>
                 </div>
@@ -81,40 +200,58 @@ export default function EventDetailPage() {
               <MetaRow icon={FaTicket} label="Preço" value={event.price} />
               <MetaRow icon={FaUsers} label="Organização" value={event.organizer} />
 
-              <a
-                href={event.registrationUrl}
-                className="block text-center transition-opacity hover:opacity-90 mt-6 py-3 px-5 bg-primary text-white rounded-md font-sans text-sm font-semibold tracking-[0.05em] uppercase no-underline"
-              >
-                Inscrever-se
-              </a>
+              <div className="mt-6 border-t border-border pt-5">
+                <p className="mb-4 font-sans text-[0.84rem] font-light leading-[1.7] text-muted-foreground">
+                  Confirme os detalhes directamente com a organização e acompanhe eventuais actualizações do evento.
+                </p>
+
+                {event.registrationUrl && event.registrationUrl !== "#" ? (
+                  <a
+                    href={event.registrationUrl}
+                    className="block bg-primary px-5 py-3 text-center font-sans text-[0.9rem] font-medium uppercase tracking-[0.05em] text-white no-underline transition-opacity hover:opacity-90"
+                  >
+                    Inscrever-se
+                  </a>
+                ) : (
+                  <button
+                    type="button"
+                    className="block w-full bg-primary px-5 py-3 text-center font-sans text-[0.9rem] font-medium uppercase tracking-[0.05em] text-white transition-opacity hover:opacity-90"
+                  >
+                    Pedir Informações
+                  </button>
+                )}
+              </div>
             </div>
           </aside>
         </div>
 
         {related.length > 0 && (
           <section className="mt-16">
-            <SectionHeader>Outros eventos</SectionHeader>
+            <SectionHeader>Outros Eventos</SectionHeader>
             <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-6">
               {related.map((e) => (
                 <Link
                   key={e.slug}
                   to="/eventos/$slug"
                   params={{ slug: e.slug }}
-                  className="group block no-underline"
+                  className="group block border-t border-border/80 pt-4 no-underline"
                 >
-                  <div className="overflow-hidden rounded-lg mb-3">
+                  <div className="mb-3 overflow-hidden">
                     <ImageWithFallback
                       src={e.image}
                       alt={e.title}
                       className="w-full h-[180px] object-cover block transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
-                  <div className="font-sans text-xs text-primary tracking-[0.1em] uppercase font-semibold mb-1">
-                    {e.displayDate}
-                  </div>
-                  <Heading as="h3" variant="card-title" className="text-foreground">
+                  {e.city && (
+                    <Eyebrow className="mb-2 inline-block">{e.city}</Eyebrow>
+                  )}
+                  <Heading as="h3" variant="card-title" className="mb-2 text-foreground">
                     {e.title}
                   </Heading>
+                  <p className="font-sans text-[0.84rem] font-normal uppercase tracking-[0.08em] text-muted-foreground">
+                    {e.displayDate}
+                  </p>
                 </Link>
               ))}
             </div>
@@ -134,14 +271,16 @@ function MetaRow({
   label: string;
   value: string;
 }) {
+  if (!value) return null;
+
   return (
     <div className="flex items-start gap-3 mb-4">
-      <Icon size={16} className="text-muted-foreground mt-[3px]" />
+      <Icon size={15} className="text-primary mt-[3px]" />
       <div>
         <div className="font-sans text-[11px] text-muted-foreground tracking-[0.1em] uppercase mb-0.5">
           {label}
         </div>
-        <div className="font-sans text-sm text-foreground">
+        <div className="font-sans text-[0.92rem] font-normal leading-[1.55] text-foreground">
           {value}
         </div>
       </div>

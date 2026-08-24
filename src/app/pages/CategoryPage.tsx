@@ -1,9 +1,10 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { FaClock, FaNewspaper } from "react-icons/fa6";
 import { PageHeader } from "../components/PageHeader";
 import { EmptyState } from "../components/EmptyState";
+import { ListPagination } from "../components/ListPagination";
 import { Heading, SectionHeader, Eyebrow } from "../components/typography";
 import { ArticleCard, articleCardGridVariants } from "../components/ArticleCard";
 import { Route } from "../../routes/artigos.$category.index";
@@ -18,21 +19,28 @@ function formatDateLong(iso: string): string {
 }
 
 export default function CategoryPage() {
-  const { category, articles } = Route.useLoaderData();
+  const { category, articles, totalPages, currentPage } = Route.useLoaderData();
+  const navigate = useNavigate();
   const color = CATEGORY_COLORS[category.slug] ?? "var(--primary)";
 
   const featured = articles.slice(0, 2);
   const rest = articles.slice(2);
 
+  function handlePageChange(page: number) {
+    navigate({
+      to: "/artigos/$category",
+      params: { category: category.slug },
+      search: { page },
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   return (
     <div className="bg-background">
-      <div className="max-w-[1280px] mx-auto px-4 py-12">
+      <div className="site-shell py-12">
         <PageHeader
           title={category.name}
-          subtitle={
-            category.description ||
-            `${category.count} ${category.count === 1 ? "artigo" : "artigos"}`
-          }
+          subtitle={category.description || undefined}
           breadcrumbs={[
             { label: "Início", to: "/" },
             { label: "Artigos", to: "/artigos" },
@@ -60,7 +68,7 @@ export default function CategoryPage() {
                       params={{ category: article.category, slug: article.slug }}
                       className="block no-underline group"
                     >
-                      <div className="relative overflow-hidden rounded-md mb-4">
+                      <div className="relative mb-4 overflow-hidden">
                         <ImageWithFallback
                           src={article.heroImage}
                           alt={article.heroAlt}
@@ -80,7 +88,7 @@ export default function CategoryPage() {
                         {article.title}
                       </Heading>
 
-                      <p className="font-sans text-sm text-muted-foreground leading-[1.6] mb-3">
+                      <p className="mb-3 font-sans text-[0.98rem] font-light leading-[1.65] text-muted-foreground">
                         {article.excerpt}
                       </p>
 
@@ -106,7 +114,7 @@ export default function CategoryPage() {
               </div>
             )}
 
-            {rest.length > 0 && (
+            {rest.length > 0 ? (
               <div>
                 <SectionHeader>Todos os Artigos</SectionHeader>
                 <motion.div
@@ -119,8 +127,19 @@ export default function CategoryPage() {
                     <ArticleCard key={article.id} article={article} />
                   ))}
                 </motion.div>
+                <ListPagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
               </div>
-            )}
+            ) : totalPages > 1 ? (
+              <ListPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            ) : null}
           </>
         )}
       </div>

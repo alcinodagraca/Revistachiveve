@@ -8,7 +8,7 @@ export function SidebarAdvertisement({ tall = false }: { tall?: boolean }) {
       to="/anuncios"
       aria-label="Conheça os formatos de publicidade da Revista Chiveve"
       className={`group relative isolate flex overflow-hidden border-t-4 border-primary bg-[#111] p-6 text-white no-underline ${
-        tall ? "min-h-[360px] md:h-full" : "min-h-[260px]"
+        tall ? "min-h-[280px] md:min-h-[300px]" : "min-h-[220px]"
       }`}
     >
       <img
@@ -32,13 +32,13 @@ export function SidebarAdvertisement({ tall = false }: { tall?: boolean }) {
         <span className="font-sans text-[10px] font-semibold uppercase tracking-[0.18em] text-white/50">
           Publicidade
         </span>
-        <span className="mt-6 max-w-[230px] font-serif text-[28px] font-bold leading-[1.05]">
+        <span className="mt-4 max-w-[210px] font-serif text-[22px] font-bold leading-[1.08]">
           A sua marca merece ser vista.
         </span>
-        <span className="mt-3 max-w-[240px] font-sans text-sm leading-[1.5] text-white/65">
+        <span className="mt-2 max-w-[220px] font-sans text-[12px] leading-[1.45] text-white/65">
           Fale com líderes, empreendedores e decisores em Moçambique.
         </span>
-        <span className="mt-auto inline-flex items-center gap-2 pt-6 font-sans text-xs font-semibold uppercase tracking-[0.1em] text-primary">
+        <span className="mt-auto inline-flex items-center gap-2 pt-4 font-sans text-[11px] font-semibold uppercase tracking-[0.1em] text-primary">
           Anuncie na Chiveve
           <FaArrowRight
             aria-hidden

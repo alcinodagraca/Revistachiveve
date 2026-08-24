@@ -19,7 +19,7 @@ export function ArticleCard({
   article: Article;
   variant?: "default" | "compact";
 }) {
-  const imageHeight = variant === "compact" ? "180px" : "260px";
+  const imageHeight = variant === "compact" ? "160px" : "220px";
 
   return (
     <motion.article
@@ -34,7 +34,7 @@ export function ArticleCard({
         params={{ category: article.category, slug: article.slug }}
         className="group block no-underline"
       >
-        <div className="overflow-hidden mb-4 rounded-md">
+        <div className="mb-4 overflow-hidden">
           <ImageWithFallback
             src={article.heroImage}
             alt={article.title}
@@ -60,7 +60,7 @@ export function ArticleCard({
         </p>
 
         {variant !== "compact" && (
-          <p className="font-sans text-sm font-normal text-foreground leading-[1.5]">
+          <p className="font-sans text-[0.92rem] font-light text-foreground/78 leading-[1.68] line-clamp-3">
             {article.excerpt}
           </p>
         )}

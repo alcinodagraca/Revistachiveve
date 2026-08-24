@@ -1,65 +1,58 @@
-import { FaFacebook, FaInstagram, FaTwitter, FaWhatsapp, FaYoutube, FaLinkedin } from "react-icons/fa6";
+import { FaFacebook, FaLinkedin, FaYoutube } from "react-icons/fa6";
 import { Link } from "@tanstack/react-router";
 import logoAlt from "../../assets/logo-alt.png";
 
-const footerCategoryLinks: { label: string; to: string; params?: { category: string } }[] = [
-  { label: "Desenvolvimento Pessoal", to: "/artigos/$category", params: { category: "desenvolvimento-pessoal" } },
-  { label: "Tecnologia e Inovação", to: "/artigos/$category", params: { category: "inovacao-tecnologia" } },
-  { label: "Empreendedorismo", to: "/artigos/$category", params: { category: "empreendedorismo" } },
-  { label: "Economia", to: "/artigos/$category", params: { category: "economia" } },
-  { label: "Negócios", to: "/artigos/$category", params: { category: "negocios" } },
-  { label: "Empresas", to: "/artigos/$category", params: { category: "empresas" } },
-  { label: "Liderança", to: "/artigos/$category", params: { category: "lideranca" } },
-  { label: "Administração", to: "/artigos/$category", params: { category: "administracao" } },
-];
+const YOUTUBE_CHANNEL_URL = "https://www.youtube.com/@RevistaChiveve";
+const FACEBOOK_URL = "https://facebook.com/Revistachiveve/";
+const LINKEDIN_URL =
+  "https://www.linkedin.com/company/neg%C3%B3cios-no-chiveve/";
 
 const mainLinks: { label: string; to: string }[] = [
+  { label: "Página Inicial", to: "/" },
   { label: "Artigos", to: "/artigos" },
   { label: "Edição Impressa", to: "/edicao-impressa" },
   { label: "Eventos", to: "/eventos" },
   { label: "Concursos Públicos", to: "/concursos-publicos" },
-  { label: "Sobre Nós", to: "/sobre-nos" },
 ];
 
-const usefulLinks: { label: string; to: string }[] = [
+const supportLinks: { label: string; to: string }[] = [
+  { label: "Contactos Úteis", to: "/contactos-uteis" },
+  { label: "Sobre Nós", to: "/sobre-nos" },
   { label: "Anunciar Aqui", to: "/anuncios" },
+  { label: "Privacidade", to: "/privacidade" },
 ];
 
 const socials = [
-  { Icon: FaFacebook, href: "#", label: "Facebook" },
-  { Icon: FaInstagram, href: "#", label: "Instagram" },
-  { Icon: FaTwitter, href: "#", label: "Twitter" },
-  { Icon: FaWhatsapp, href: "#", label: "WhatsApp" },
-  { Icon: FaYoutube, href: "#", label: "YouTube" },
-  { Icon: FaLinkedin, href: "#", label: "LinkedIn" },
+  { Icon: FaFacebook, href: FACEBOOK_URL, label: "Facebook" },
+  { Icon: FaYoutube, href: YOUTUBE_CHANNEL_URL, label: "YouTube" },
+  { Icon: FaLinkedin, href: LINKEDIN_URL, label: "LinkedIn" },
 ];
 
 const linkClass =
   "font-sans text-sm font-normal text-primary-foreground block no-underline";
 
 const headingClass =
-  "font-sans font-bold text-xs md:text-sm uppercase tracking-[0.12em] text-primary-foreground mb-4";
+  "mb-4 font-sans text-xs font-medium uppercase tracking-[0.12em] text-primary-foreground md:text-sm";
 
 export function Footer() {
   return (
     <footer className="bg-primary text-primary-foreground">
-      <div className="px-4 md:px-8 pt-12 pb-8">
-        <div className="max-w-[1280px] mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {/* Brand Column */}
-            <div>
+      <div className="pt-18 pb-14">
+        <div className="site-shell">
+          <div className="grid grid-cols-1 gap-y-10 md:grid-cols-[1.1fr_0.7fr_0.7fr_0.8fr] md:gap-x-8">
+            <div className="max-w-[420px] text-center md:text-left">
               <img
                 src={logoAlt}
                 alt="Negócios no Chiveve — Revista"
-                className="h-12 w-auto block mb-4"
+                className="mx-auto mb-4 block h-12 w-auto md:mx-0"
               />
 
-              <p className="mb-5 font-sans text-sm font-normal text-primary-foreground leading-[1.7]">
-                A sua revista de referência para negócios, empreendedorismo,
-                liderança e inovação em Moçambique e África.
+              <p className="mb-6 font-sans text-sm font-normal leading-[1.7] text-primary-foreground">
+                Leitura de referência para acompanhar negócios, liderança e
+                inovação em Moçambique e no continente africano.
               </p>
 
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center justify-center gap-2 md:justify-start">
                 {socials.map(({ Icon, href, label }) => (
                   <a
                     key={label}
@@ -73,10 +66,9 @@ export function Footer() {
               </div>
             </div>
 
-            {/* Links */}
             <div>
-              <h4 className={headingClass}>Links</h4>
-              <ul className="space-y-2">
+              <h4 className={headingClass}>Navegação</h4>
+              <ul className="grid gap-2">
                 {mainLinks.map((link) => (
                   <li key={link.label}>
                     <Link to={link.to} className={`${linkClass} transition-opacity hover:opacity-80`}>
@@ -87,22 +79,24 @@ export function Footer() {
               </ul>
             </div>
 
-            {/* Contactos */}
+            <div>
+              <h4 className={headingClass}>Informações</h4>
+              <ul className="grid gap-2">
+                {supportLinks.map((link) => (
+                  <li key={link.label}>
+                    <Link to={link.to} className={`${linkClass} transition-opacity hover:opacity-80`}>
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
             <div>
               <h4 className={headingClass}>Contactos</h4>
-              <ul className="space-y-3">
+              <ul className="grid gap-3">
                 <li>
                   <span className={`${linkClass} cursor-default`}>Maputo, Moçambique</span>
-                </li>
-                <li>
-                  <a href="tel:+25887XXXXXXX" className={`${linkClass} transition-opacity hover:opacity-80`}>
-                    +258 87 000 0000
-                  </a>
-                </li>
-                <li>
-                  <a href="tel:+25882XXXXXXX" className={`${linkClass} transition-opacity hover:opacity-80`}>
-                    +258 82 000 0000
-                  </a>
                 </li>
                 <li>
                   <a
@@ -114,50 +108,15 @@ export function Footer() {
                 </li>
               </ul>
             </div>
-
-            {/* Links Úteis */}
-            <div>
-              <h4 className={headingClass}>Links Úteis</h4>
-              <ul className="space-y-2">
-                {usefulLinks.map((link) => (
-                  <li key={link.label}>
-                    <Link to={link.to} className={`${linkClass} transition-opacity hover:opacity-80`}>
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div className="mt-10 pt-6 border-t border-white/25">
-            <div className="flex flex-wrap gap-x-8 gap-y-3 justify-between">
-              {footerCategoryLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  to={link.to}
-                  params={link.params}
-                  className="font-sans text-[11px] font-semibold text-primary-foreground tracking-[0.1em] uppercase no-underline transition-opacity hover:opacity-80"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
           </div>
         </div>
       </div>
 
-      <div className="px-4 md:px-8 py-4 border-t border-white/25">
-        <div className="max-w-[1280px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div className="border-t border-white/25 py-4">
+        <div className="site-shell flex items-center justify-center">
           <span className="font-sans text-xs font-normal text-primary-foreground">
             Revista Chiveve — Todos os direitos reservados © 2026
           </span>
-          <Link
-            to="/privacidade"
-            className="font-sans text-xs font-normal text-primary-foreground no-underline transition-opacity hover:opacity-80"
-          >
-            Políticas de Privacidade
-          </Link>
         </div>
       </div>
     </footer>

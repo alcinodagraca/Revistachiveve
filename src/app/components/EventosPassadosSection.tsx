@@ -47,7 +47,7 @@ const eventos = [
 export function EventosPassadosSection() {
   return (
     <section className="bg-[#F5F5F5] py-12">
-      <div className="max-w-[1280px] mx-auto px-4">
+      <div className="site-shell">
         <SectionHeader action={{ label: "Ver todos →", to: "/eventos" }}>
           Eventos Passados
         </SectionHeader>

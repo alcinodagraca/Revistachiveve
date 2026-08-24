@@ -3,7 +3,7 @@ import { FaUsers } from "react-icons/fa6";
 export function CommunityCTA() {
   return (
     <section className="bg-secondary py-12">
-      <div className="max-w-[1280px] mx-auto px-4 flex items-center justify-between gap-8">
+      <div className="site-shell flex items-center justify-between gap-8">
         <div className="flex items-start gap-4">
           <div className="flex-shrink-0 w-14 h-14 rounded-full bg-primary flex items-center justify-center">
             <FaUsers size={28} color="#FFFFFF" />

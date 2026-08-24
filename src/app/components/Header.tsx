@@ -3,14 +3,12 @@ import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import {
   FaBars,
+  FaFacebook,
   FaXmark,
   FaMagnifyingGlass,
-  FaFacebook,
-  FaInstagram,
   FaLinkedin,
   FaYoutube,
   FaChevronDown,
-  FaXTwitter,
 } from "react-icons/fa6";
 import { cn } from "./ui/utils";
 import logoAlt from "../../assets/logo-alt.png";
@@ -66,12 +64,21 @@ function WhatsAppIcon({ size = 14 }: { size?: number }) {
 }
 
 const socials = [
-  { Icon: FaFacebook, href: "#", label: "Facebook" },
-  { Icon: FaInstagram, href: "#", label: "Instagram" },
-  { Icon: FaXTwitter, href: "#", label: "X" },
-  { Icon: WhatsAppIcon, href: "#", label: "WhatsApp" },
-  { Icon: FaYoutube, href: "#", label: "YouTube" },
-  { Icon: FaLinkedin, href: "#", label: "LinkedIn" },
+  {
+    Icon: FaFacebook,
+    href: "https://facebook.com/Revistachiveve/",
+    label: "Facebook",
+  },
+  {
+    Icon: FaYoutube,
+    href: "https://www.youtube.com/@RevistaChiveve",
+    label: "YouTube",
+  },
+  {
+    Icon: FaLinkedin,
+    href: "https://www.linkedin.com/company/neg%C3%B3cios-no-chiveve/",
+    label: "LinkedIn",
+  },
 ];
 
 type HeaderCategory = { name: string; slug: string };
@@ -128,8 +135,8 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
 
   return (
     <header className="bg-background">
-      <div className="bg-primary px-4 md:px-8 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      <div className="bg-primary py-5">
+        <div className="site-shell relative flex items-center justify-between gap-4">
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="p-1 transition-opacity hover:opacity-80 text-white"
@@ -140,7 +147,7 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
 
           <Link
             to="/"
-            className="flex items-center flex-shrink-0 no-underline"
+            className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center no-underline"
             aria-label="Negócios no Chiveve — Revista"
           >
             <img
@@ -150,23 +157,23 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
             />
           </Link>
 
-          <div className="hidden md:flex items-center gap-2">
+          <div className="ml-auto hidden items-center gap-2.5 md:flex">
             {socials.map(({ Icon, href, label }) => (
               <a
                 key={label}
                 href={href}
                 aria-label={label}
-                className="w-8 h-8 rounded-full flex items-center justify-center transition-opacity hover:opacity-85 bg-white text-primary"
+                className="flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-white/88 text-primary transition-all hover:bg-white hover:opacity-100"
               >
-                <Icon size={15} />
+                <Icon size={13} />
               </a>
             ))}
           </div>
         </div>
       </div>
 
-      <nav className="hidden md:block px-4 md:px-8 relative bg-background border-b border-border">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <nav className="sticky top-0 z-[80] relative hidden border-b border-border/90 bg-background/96 shadow-[0_1px_0_rgba(15,23,42,0.05)] backdrop-blur-sm md:block">
+        <div className="site-shell flex items-center justify-between">
           <ul className="flex items-center -ml-3">
             {navItems.map((item) => (
               <li
@@ -182,24 +189,24 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
                 <Link
                   to={item.href}
                   className={cn(
-                    "flex items-center gap-0.5 px-3 py-6 uppercase tracking-wide transition-colors font-sans text-xs no-underline border-b-2",
+                    "flex items-center gap-1 px-3 py-5 font-sans text-[0.72rem] uppercase tracking-[0.08em] transition-colors no-underline border-b-2",
                     isActive(item.href)
                       ? "font-semibold text-primary border-primary"
-                      : "font-medium text-foreground border-transparent",
+                      : "font-normal text-foreground/82 border-transparent hover:text-foreground",
                   )}
                 >
                   {item.label}
-                  {item.hasDropdown && <FaChevronDown size={13} />}
+                  {item.hasDropdown && <FaChevronDown size={11} />}
                 </Link>
 
                 {item.hasDropdown && artigosDropdownOpen && (
-                  <div className="absolute top-full left-0 min-w-[220px] bg-card border border-border rounded-md shadow-[0_4px_12px_rgba(0,0,0,0.1)] z-50">
+                  <div className="absolute left-0 top-full z-50 min-w-[240px] border border-border bg-card p-2 shadow-[0_12px_28px_rgba(15,23,42,0.12)]">
                     {artigosCategories.map((category) => (
                       <Link
                         key={category.slug}
                         to="/artigos/$category"
                         params={{ category: category.slug }}
-                        className="block py-3 px-4 font-sans text-sm font-normal text-foreground no-underline border-b border-border transition-colors hover:bg-secondary"
+                        className="block px-3 py-2.5 font-sans text-[13px] font-normal text-foreground no-underline transition-colors hover:bg-secondary"
                       >
                         {category.name}
                       </Link>
@@ -227,14 +234,14 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
               className="overflow-hidden"
             >
-              <div className="max-w-7xl mx-auto pb-5">
+              <div className="site-shell pb-4">
                 <form
                   onSubmit={handleSearchSubmit}
-                  className="group flex items-center bg-background border-b-2 border-border transition-colors focus-within:border-primary"
+                  className="group flex items-center border-b border-border bg-background transition-colors focus-within:border-primary"
                 >
                   <FaMagnifyingGlass
-                    size={20}
-                    className="text-muted-foreground mr-3 flex-shrink-0"
+                    size={18}
+                    className="mr-3 shrink-0 text-muted-foreground"
                   />
                   <input
                     autoFocus
@@ -242,7 +249,7 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
                     placeholder="Pesquisar artigos, eventos, tags…"
-                    className="flex-1 bg-transparent outline-none font-serif font-medium text-foreground py-3 text-[clamp(20px,2.4vw,28px)]"
+                    className="flex-1 bg-transparent py-3 font-sans text-[clamp(15px,1.5vw,18px)] font-light text-foreground outline-none"
                   />
                   {searchInput && (
                     <button
@@ -258,13 +265,13 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
                     type="button"
                     onClick={() => setSearchOpen(false)}
                     aria-label="Fechar"
-                    className="ml-2 px-3 py-1.5 transition-opacity hover:opacity-80 font-sans text-xs font-semibold tracking-[0.06em] uppercase text-muted-foreground border border-border rounded-md bg-background cursor-pointer"
+                    className="ml-2 cursor-pointer border border-border bg-background px-3 py-1.5 font-sans text-[0.68rem] font-medium uppercase tracking-[0.06em] text-muted-foreground transition-opacity hover:opacity-80"
                   >
                     Esc
                   </button>
                 </form>
-                <p className="font-sans text-xs text-muted-foreground mt-2 tracking-[0.03em]">
-                  Carregue em <strong className="text-foreground font-semibold">Enter</strong> para procurar
+                <p className="mt-2 font-sans text-[0.72rem] tracking-[0.03em] text-muted-foreground">
+                  Carregue em <strong className="font-medium text-foreground">Enter</strong> para procurar
                 </p>
               </div>
             </motion.div>
@@ -361,7 +368,7 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
                       key={label}
                       href={href}
                       aria-label={label}
-                      className="w-9 h-9 rounded-full flex items-center justify-center transition-opacity hover:opacity-85 bg-white text-primary"
+                      className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white text-primary transition-opacity hover:opacity-85"
                     >
                       <Icon size={15} />
                     </a>
@@ -374,9 +381,9 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
                   to="/"
                   hash="newsletter"
                   onClick={() => setMobileOpen(false)}
-                  className="block w-full p-4 bg-white text-primary font-sans text-base font-semibold text-center no-underline rounded-md tracking-[0.02em] transition-opacity hover:opacity-90"
+                  className="block w-full bg-white p-4 text-center font-sans text-base font-semibold tracking-[0.02em] text-primary no-underline transition-opacity hover:opacity-90"
                 >
-                  Assine Agora
+                  Subscrever
                 </Link>
               </div>
             </motion.aside>

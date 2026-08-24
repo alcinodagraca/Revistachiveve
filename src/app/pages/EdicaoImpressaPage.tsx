@@ -11,7 +11,7 @@ export default function EdicaoImpressaPage() {
   if (!editions || editions.length === 0) {
     return (
       <div className="bg-background">
-        <div className="max-w-[1280px] mx-auto pt-8 px-4 pb-16">
+        <div className="site-shell pt-8 pb-16">
           <PageHeader
             title="Edição Impressa"
             subtitle="Edições anteriores e a edição actual em formato digital"
@@ -37,10 +37,10 @@ export default function EdicaoImpressaPage() {
 
   return (
     <div className="bg-background">
-      <div className="max-w-[1280px] mx-auto pt-8 px-4">
+      <div className="site-shell pt-8">
         <PageHeader
           title="Edição Impressa"
-          subtitle="Edições anteriores e a edição actual em formato digital"
+          subtitle="A edição actual e o arquivo recente da revista, com leituras de referência sobre negócios, liderança e transformação económica."
           breadcrumbs={[
             { label: "Início", to: "/" },
             { label: "Edição Impressa" },
@@ -48,9 +48,9 @@ export default function EdicaoImpressaPage() {
         />
       </div>
 
-      <section className="bg-secondary border-b border-border">
-        <div className="max-w-[1280px] mx-auto py-16 px-4">
-          <div className="grid grid-cols-1 md:grid-cols-[minmax(0,420px)_1fr] gap-8 md:gap-16 items-center">
+      <section className="border-b border-border bg-secondary">
+        <div className="site-shell py-16">
+          <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-[minmax(0,400px)_1fr] md:gap-16">
             <div className="w-full shadow-[0_20px_60px_rgba(0,0,0,0.15)] transition-transform duration-300 hover:scale-[1.02]">
               <ImageWithFallback
                 src={current.cover}
@@ -60,28 +60,46 @@ export default function EdicaoImpressaPage() {
             </div>
 
             <div>
-              <div className="inline-block py-1 px-4 bg-primary rounded-sm mb-4">
-                <Eyebrow className="text-primary-foreground">Edição Atual</Eyebrow>
-              </div>
+              <Eyebrow className="mb-3 inline-block">Edição Actual</Eyebrow>
 
-              <Heading as="h1" variant="display" className="text-foreground mb-3">
+              <Heading as="h1" variant="article-title" className="mb-2 text-foreground">
                 {current.title}
               </Heading>
 
-              {current.subtitle && (
-                <Heading as="h2" variant="feature-title" className="text-foreground mb-6">
-                  {current.subtitle}
-                </Heading>
+              {current.date && (
+                <p className="mb-5 font-sans text-[0.84rem] font-medium uppercase tracking-[0.12em] text-primary">
+                  {current.date}
+                </p>
               )}
 
+              {current.subtitle && (
+                <p className="mb-5 max-w-2xl font-sans text-[1.02rem] font-light leading-[1.72] text-foreground/78">
+                  {current.subtitle}
+                </p>
+              )}
+
+              <div className="mb-8 max-w-3xl space-y-4 font-sans text-[0.96rem] font-light leading-[1.76] text-foreground/76">
+                <p>
+                  Esta edição reúne temas, protagonistas e sinais que ajudam a
+                  compreender o momento dos negócios em Moçambique e no espaço
+                  africano mais amplo.
+                </p>
+                <p>
+                  É uma leitura pensada para quem prefere contexto, critério e
+                  selecção editorial a informação dispersa.
+                </p>
+              </div>
+
               {current.highlights.length > 0 && (
-                <div className="mb-8">
-                  <SectionHeader as="h3">Nesta Edição</SectionHeader>
-                  <ul className="list-none p-0 m-0 flex flex-col gap-3">
+                <div className="mb-8 border-t border-primary/25 pt-5">
+                  <p className="mb-4 font-sans text-[0.78rem] font-medium uppercase tracking-[0.12em] text-primary">
+                    Leituras em destaque nesta edição
+                  </p>
+                  <ul className="m-0 flex list-none flex-col gap-3 p-0">
                     {current.highlights.map((highlight, index) => (
                       <li key={index} className="flex items-start gap-3">
                         <div className="w-1 h-1 rounded-full bg-primary mt-2 shrink-0" />
-                        <span className="font-sans text-base text-foreground leading-[1.6]">
+                        <span className="font-sans text-[0.95rem] font-light leading-[1.68] text-foreground">
                           {highlight}
                         </span>
                       </li>
@@ -90,32 +108,38 @@ export default function EdicaoImpressaPage() {
                 </div>
               )}
 
-              {current.pdfDownloadUrl ? (
-                <a
-                  href={current.pdfDownloadUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 py-4 px-8 bg-primary text-primary-foreground border-none rounded-md font-sans text-base font-medium cursor-pointer transition-all duration-200 hover:bg-foreground hover:-translate-y-0.5 no-underline"
-                >
-                  <FaDownload size={20} />
-                  Baixar Edição Atual
-                </a>
-              ) : (
-                <button className="inline-flex items-center gap-2 py-4 px-8 bg-primary text-primary-foreground border-none rounded-md font-sans text-base font-medium cursor-pointer transition-all duration-200 hover:bg-foreground hover:-translate-y-0.5">
-                  <FaDownload size={20} />
-                  Baixar Edição Atual
-                </button>
-              )}
+              <div className="flex flex-col gap-4 border-t border-border pt-5 sm:flex-row sm:items-center sm:justify-between">
+                <p className="max-w-xl font-sans text-[0.84rem] font-light leading-[1.7] text-muted-foreground">
+                  Disponível em formato digital para leitura, consulta e download.
+                </p>
+
+                {current.pdfDownloadUrl ? (
+                  <a
+                    href={current.pdfDownloadUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 border-none bg-primary px-7 py-3.5 font-sans text-[0.94rem] font-medium text-primary-foreground no-underline transition-all duration-200 hover:bg-foreground hover:-translate-y-0.5"
+                  >
+                    <FaDownload size={18} />
+                    Abrir Edição
+                  </a>
+                ) : (
+                  <button className="inline-flex items-center gap-2 border-none bg-primary px-7 py-3.5 font-sans text-[0.94rem] font-medium text-primary-foreground transition-all duration-200 hover:bg-foreground hover:-translate-y-0.5">
+                    <FaDownload size={18} />
+                    Abrir Edição
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="max-w-[1280px] mx-auto py-16 px-4">
+      <section className="site-shell py-16">
         <div className="mb-12">
           <SectionHeader>Edições Anteriores</SectionHeader>
-          <p className="font-sans text-base text-muted-foreground leading-[1.6]">
-            Aceda ao arquivo completo das nossas publicações
+          <p className="font-sans text-[0.95rem] font-light text-muted-foreground leading-[1.7]">
+            Consulte o arquivo recente da revista e revisite temas, perfis e análises das edições anteriores.
           </p>
         </div>
 

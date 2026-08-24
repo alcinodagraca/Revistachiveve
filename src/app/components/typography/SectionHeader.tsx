@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { cn } from "../ui/utils";
 
 const TITLE_CLASSES =
-  "font-sans font-bold text-xs md:text-sm uppercase tracking-[0.12em] text-foreground";
+  "font-sans text-[1.18rem] font-medium uppercase leading-none tracking-[0.01em] text-primary md:text-[1.28rem]";
 
 type HeadingTag = "h2" | "h3" | "h4";
 
@@ -22,7 +22,7 @@ export function SectionHeader({
   return (
     <div
       className={cn(
-        "flex items-baseline justify-between gap-4 mb-6 pb-3 border-b border-border",
+        "mb-6 flex items-end justify-between gap-4 border-b border-primary/28 pb-2.5",
         className,
       )}
     >
@@ -30,7 +30,7 @@ export function SectionHeader({
       {action && (
         <Link
           to={action.to}
-          className="font-sans font-medium text-xs md:text-sm text-primary hover:underline whitespace-nowrap"
+          className="whitespace-nowrap font-sans text-[0.78rem] font-medium uppercase tracking-[0.08em] text-primary hover:underline md:text-[0.82rem]"
         >
           {action.label}
         </Link>

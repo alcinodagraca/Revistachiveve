@@ -77,10 +77,10 @@ export function EventosSection() {
   };
 
   return (
-    <section className="px-4 md:px-8 py-8 bg-secondary">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-6 flex items-baseline justify-between gap-4 pb-3 border-b border-border">
-          <h2 className="font-sans font-bold text-xs md:text-sm uppercase tracking-[0.12em] text-foreground">
+    <section className="bg-secondary py-8">
+      <div className="site-shell">
+        <div className="mb-8 flex items-end justify-between gap-4 border-b border-primary/30 pb-4">
+          <h2 className="font-sans text-[1.55rem] font-semibold uppercase leading-none tracking-[-0.03em] text-primary md:text-[2rem]">
             Eventos
           </h2>
           <div className="flex items-center gap-2 ml-6">

@@ -41,6 +41,10 @@ export const fnGetArticleBundle = createServerFn({ method: "GET" })
     return { article, related, maisLidos };
   });
 
+export const fnGetMaisLidos = createServerFn({ method: "GET" })
+  .inputValidator((input?: { excludeId?: number; limit?: number }) => input ?? {})
+  .handler(({ data }) => getMaisLidos(data.excludeId ?? 0, data.limit ?? 5));
+
 export const fnListCategories = createServerFn({ method: "GET" }).handler(() =>
   listCategories(),
 );

@@ -1,14 +1,15 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { FaNewspaper } from "react-icons/fa6";
-import { Breadcrumb } from "../components/Breadcrumb";
 import { EmptyState } from "../components/EmptyState";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
+import { ListPagination } from "../components/ListPagination";
+import { PageHeader } from "../components/PageHeader";
 import {
   ArticleCard,
   articleCardGridVariants,
 } from "../components/ArticleCard";
-import { Heading, Eyebrow } from "../components/typography";
+import { Heading, Eyebrow, SectionHeader } from "../components/typography";
 import { Route } from "../../routes/artigos.index";
 import type { Article } from "../../server/wp";
 
@@ -34,11 +35,11 @@ function FeaturedCard({ article }: { article: Article }) {
         params={{ category: article.category, slug: article.slug }}
         className="group block no-underline"
       >
-        <div className="overflow-hidden mb-5 rounded-md">
+        <div className="mb-5 overflow-hidden">
           <ImageWithFallback
             src={article.heroImage}
             alt={article.title}
-            className="w-full object-cover block transition-transform duration-500 group-hover:scale-105 h-[280px] md:h-[420px]"
+            className="block h-[240px] w-full object-cover transition-transform duration-500 group-hover:scale-105 md:h-[340px]"
           />
         </div>
 
@@ -49,16 +50,16 @@ function FeaturedCard({ article }: { article: Article }) {
         <Heading
           as="h2"
           variant="feature-title"
-          className="text-foreground mb-3 transition-opacity group-hover:opacity-80"
+          className="mb-3 text-foreground transition-opacity group-hover:opacity-80 md:max-w-[28ch]"
         >
           {article.title}
         </Heading>
 
-        <p className="font-sans text-sm font-normal text-muted-foreground mb-3">
+        <p className="mb-3 font-sans text-[0.88rem] font-normal text-muted-foreground">
           {formatDate(article.publishedAt)} · {article.readTime} min de leitura
         </p>
 
-        <p className="font-sans text-base font-normal text-foreground leading-[1.55]">
+        <p className="max-w-[56ch] font-sans text-[0.96rem] font-light leading-[1.72] text-foreground/78">
           {article.excerpt}
         </p>
       </Link>
@@ -67,14 +68,22 @@ function FeaturedCard({ article }: { article: Article }) {
 }
 
 export default function ArtigosPage() {
-  const { list } = Route.useLoaderData();
+  const { list, currentPage } = Route.useLoaderData();
+  const navigate = useNavigate();
   const [featured, rest] = [list.articles.slice(0, 2), list.articles.slice(2)];
 
+  function handlePageChange(page: number) {
+    navigate({ to: "/artigos", search: { page } });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   return (
-    <div className="max-w-[1280px] mx-auto px-4 py-8">
-      <div className="mb-8">
-        <Breadcrumb items={[{ label: "Início", to: "/" }, { label: "Artigos" }]} />
-      </div>
+    <div className="site-shell py-8">
+      <PageHeader
+        title="Artigos"
+        subtitle="Reportagens, entrevistas e leituras de contexto para acompanhar o momento económico com mais critério."
+        breadcrumbs={[{ label: "Início", to: "/" }, { label: "Artigos" }]}
+      />
 
       {list.articles.length === 0 ? (
         <EmptyState
@@ -86,30 +95,47 @@ export default function ArtigosPage() {
       ) : (
         <>
           {featured.length > 0 && (
-            <motion.div
-              variants={articleCardGridVariants}
-              initial="hidden"
-              animate="show"
-              className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12 mb-16"
-            >
-              {featured.map((article) => (
-                <FeaturedCard key={article.id} article={article} />
-              ))}
-            </motion.div>
+            <section className="mb-16">
+              <SectionHeader>Leituras em Destaque</SectionHeader>
+              <motion.div
+                variants={articleCardGridVariants}
+                initial="hidden"
+                animate="show"
+                className="grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2"
+              >
+                {featured.map((article) => (
+                  <FeaturedCard key={article.id} article={article} />
+                ))}
+              </motion.div>
+            </section>
           )}
 
-          {rest.length > 0 && (
-            <motion.div
-              variants={articleCardGridVariants}
-              initial="hidden"
-              animate="show"
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12"
-            >
-              {rest.map((article) => (
-                <ArticleCard key={article.id} article={article} />
-              ))}
-            </motion.div>
-          )}
+          {rest.length > 0 ? (
+            <>
+              <SectionHeader>Para Continuar a Leitura</SectionHeader>
+              <motion.div
+                variants={articleCardGridVariants}
+                initial="hidden"
+                animate="show"
+                className="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3"
+              >
+                {rest.map((article) => (
+                  <ArticleCard key={article.id} article={article} />
+                ))}
+              </motion.div>
+              <ListPagination
+                currentPage={currentPage}
+                totalPages={list.totalPages}
+                onPageChange={handlePageChange}
+              />
+            </>
+          ) : list.totalPages > 1 ? (
+            <ListPagination
+              currentPage={currentPage}
+              totalPages={list.totalPages}
+              onPageChange={handlePageChange}
+            />
+          ) : null}
         </>
       )}
     </div>

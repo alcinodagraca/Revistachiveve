@@ -13,20 +13,20 @@ export function NewsletterCTA() {
 
   return (
     <section className="py-8 px-4">
-      <div className="max-w-[1200px] mx-auto bg-primary p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="mx-auto flex max-w-[1200px] flex-col items-start justify-between gap-6 bg-primary p-8 md:flex-row md:items-center">
         <div className="max-w-[440px]">
-          <h3 className="font-sans font-bold text-xs md:text-sm uppercase tracking-[0.12em] text-white mb-2">
-            Subscreva a nossa newsletter
+          <h3 className="mb-2 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-white md:text-sm">
+            Receba a selecção editorial
           </h3>
-          <p className="font-sans text-sm leading-[1.6] text-white">
-            Receba o melhor da Negócios no Chiveve directamente no seu e-mail,
-            com notícias de negócios, insights e oportunidades.
+          <p className="font-sans text-sm font-light leading-[1.6] text-white/88">
+            Uma leitura essencial, enviada para o seu e-mail, com negócios,
+            liderança e inovação em perspectiva.
           </p>
         </div>
 
         <form
           onSubmit={onSubmit}
-          className="flex w-full md:w-auto min-w-[min(100%,460px)]"
+          className="flex min-w-[min(100%,460px)] w-full md:w-auto"
         >
           <input
             type="email"
@@ -38,7 +38,7 @@ export function NewsletterCTA() {
           />
           <button
             type="submit"
-            className="px-6 py-3 transition-opacity hover:opacity-90 font-sans text-sm font-semibold bg-white text-primary border-none ml-2 cursor-pointer"
+            className="ml-2 bg-white px-6 py-3 font-sans text-sm font-medium text-primary transition-opacity hover:opacity-90"
           >
             {sent ? "✓ Enviado" : "Subscrever"}
           </button>

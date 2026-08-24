@@ -1,7 +1,42 @@
-import { FaEnvelope, FaPhone, FaLocationDot, FaPaperPlane } from "react-icons/fa6";
 import { useState } from "react";
+import {
+  FaEnvelope,
+  FaLocationDot,
+  FaPaperPlane,
+  FaPhone,
+} from "react-icons/fa6";
 import { PageHeader } from "../components/PageHeader";
 import { Heading, SectionHeader } from "../components/typography";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Textarea } from "../components/ui/textarea";
+
+const contactChannels = [
+  {
+    title: "Redacção",
+    description:
+      "Sugestões editoriais, propostas de entrevista, temas para investigação e contributos relevantes para a agenda da revista.",
+    value: "geral@negociosnochiveve.co.mz",
+    href: "mailto:geral@negociosnochiveve.co.mz",
+    icon: FaEnvelope,
+  },
+  {
+    title: "Telefone",
+    description:
+      "Para contacto directo com a equipa e acompanhamento de pedidos institucionais, editoriais ou comerciais.",
+    value: "+258 84 300 1234",
+    href: "tel:+258843001234",
+    icon: FaPhone,
+  },
+  {
+    title: "Maputo",
+    description:
+      "Estamos disponíveis para reuniões, parcerias e encontros editoriais mediante agendamento prévio.",
+    value: "Av. Julius Nyerere, 1234, Maputo, Moçambique",
+    href: undefined,
+    icon: FaLocationDot,
+  },
+];
 
 export default function ContactosPage() {
   const [formData, setFormData] = useState({
@@ -13,153 +48,161 @@ export default function ContactosPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert("Mensagem enviada! Entraremos em contacto em breve.");
+    alert("Mensagem enviada. Entraremos em contacto em breve.");
     setFormData({ name: "", email: "", subject: "", message: "" });
   };
 
   return (
-    <div className="max-w-[1280px] mx-auto px-4 py-12">
-      <PageHeader
-        title="Contactos"
-        subtitle="Entre em contacto connosco"
-        breadcrumbs={[{ label: "Início", to: "/" }, { label: "Contactos" }]}
-      />
+    <div className="bg-background">
+      <div className="site-shell py-12 md:py-14">
+        <PageHeader
+          title="Contactos"
+          subtitle="Fale com a Revista Chiveve para sugestões editoriais, parcerias, publicidade ou pedidos institucionais."
+          breadcrumbs={[{ label: "Início", to: "/" }, { label: "Contactos" }]}
+        />
 
-      <div className="grid grid-cols-1 gap-12 md:grid-cols-[1fr_1.5fr]">
-        <div>
-          <SectionHeader as="h2">Informações de contacto</SectionHeader>
-          <div className="flex flex-col gap-6">
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
-                <FaEnvelope size={20} className="text-primary" />
-              </div>
-              <div>
-                <Heading as="h3" variant="card-title" className="text-foreground mb-1">
-                  Email
-                </Heading>
-                <a
-                  href="mailto:geral@negociosnochiveve.co.mz"
-                  className="font-sans font-normal text-base text-muted-foreground no-underline"
-                >
-                  geral@negociosnochiveve.co.mz
-                </a>
-              </div>
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.15fr)]">
+          <section>
+            <SectionHeader as="h2">Canais Directos</SectionHeader>
+            <div className="space-y-6">
+              {contactChannels.map(({ title, description, value, href, icon: Icon }) => (
+                <article key={title} className="border-b border-border pb-6 last:border-b-0">
+                  <div className="mb-3 flex items-start gap-4">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center bg-secondary">
+                      <Icon size={16} className="text-primary" />
+                    </div>
+                    <div>
+                      <Heading
+                        as="h3"
+                        variant="feature-title"
+                        className="mb-1 text-foreground"
+                      >
+                        {title}
+                      </Heading>
+                      <p className="max-w-2xl font-sans text-[0.94rem] font-light leading-[1.72] text-foreground/74">
+                        {description}
+                      </p>
+                    </div>
+                  </div>
+
+                  {href ? (
+                    <a
+                      href={href}
+                      className="ml-14 font-sans text-[0.94rem] font-normal text-primary no-underline transition-opacity hover:opacity-80"
+                    >
+                      {value}
+                    </a>
+                  ) : (
+                    <p className="ml-14 font-sans text-[0.94rem] font-normal text-foreground">
+                      {value}
+                    </p>
+                  )}
+                </article>
+              ))}
             </div>
+          </section>
 
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
-                <FaPhone size={20} className="text-primary" />
+          <section className="border border-border bg-card p-7 md:p-8">
+            <SectionHeader as="h2">Envie-nos uma mensagem</SectionHeader>
+            <p className="mb-6 max-w-2xl font-sans text-[0.94rem] font-light leading-[1.72] text-foreground/74">
+              Se preferir, partilhe o seu pedido por aqui. Quanto mais claro for o contexto,
+              mais útil e rápida será a nossa resposta.
+            </p>
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="grid gap-5 md:grid-cols-2">
+                <div>
+                  <label
+                    htmlFor="name"
+                    className="mb-2 block font-sans text-[0.78rem] font-medium uppercase tracking-[0.08em] text-primary"
+                  >
+                    Nome
+                  </label>
+                  <Input
+                    id="name"
+                    type="text"
+                    required
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                    placeholder="O seu nome"
+                    className="h-11 border-border bg-white px-4"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="mb-2 block font-sans text-[0.78rem] font-medium uppercase tracking-[0.08em] text-primary"
+                  >
+                    Email
+                  </label>
+                  <Input
+                    id="email"
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
+                    placeholder="nome@empresa.com"
+                    className="h-11 border-border bg-white px-4"
+                  />
+                </div>
               </div>
+
               <div>
-                <Heading as="h3" variant="card-title" className="text-foreground mb-1">
-                  Telefone
-                </Heading>
-                <a
-                  href="tel:+258843001234"
-                  className="font-sans font-normal text-base text-muted-foreground no-underline"
+                <label
+                  htmlFor="subject"
+                  className="mb-2 block font-sans text-[0.78rem] font-medium uppercase tracking-[0.08em] text-primary"
                 >
-                  +258 84 300 1234
-                </a>
+                  Assunto
+                </label>
+                <Input
+                  id="subject"
+                  type="text"
+                  required
+                  value={formData.subject}
+                  onChange={(e) =>
+                    setFormData({ ...formData, subject: e.target.value })
+                  }
+                  placeholder="Ex.: Sugestão editorial, parceria, publicidade"
+                  className="h-11 border-border bg-white px-4"
+                />
               </div>
-            </div>
 
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
-                <FaLocationDot size={20} className="text-primary" />
-              </div>
               <div>
-                <Heading as="h3" variant="card-title" className="text-foreground mb-1">
-                  Endereço
-                </Heading>
-                <p className="font-sans font-normal text-base text-muted-foreground leading-relaxed">
-                  Av. Julius Nyerere, 1234
-                  <br />
-                  Maputo, Moçambique
+                <label
+                  htmlFor="message"
+                  className="mb-2 block font-sans text-[0.78rem] font-medium uppercase tracking-[0.08em] text-primary"
+                >
+                  Mensagem
+                </label>
+                <Textarea
+                  id="message"
+                  required
+                  rows={7}
+                  value={formData.message}
+                  onChange={(e) =>
+                    setFormData({ ...formData, message: e.target.value })
+                  }
+                  placeholder="Partilhe connosco o contexto do seu pedido."
+                  className="min-h-[180px] border-border bg-white px-4 py-3"
+                />
+              </div>
+
+              <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:items-center sm:justify-between">
+                <p className="font-sans text-[0.82rem] font-light leading-[1.6] text-muted-foreground">
+                  A equipa responde prioritariamente a pedidos com contexto claro e relevância editorial ou institucional.
                 </p>
+                <Button type="submit" size="lg" className="gap-2 px-7">
+                  <FaPaperPlane size={15} />
+                  Enviar Mensagem
+                </Button>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="p-8 rounded-lg border border-border bg-card">
-          <SectionHeader as="h2">Envie-nos uma mensagem</SectionHeader>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-            <div>
-              <label
-                htmlFor="name"
-                className="block font-sans font-medium text-sm text-foreground mb-2"
-              >
-                Nome
-              </label>
-              <input
-                type="text"
-                id="name"
-                required
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-4 py-3 rounded-md border border-border bg-[var(--input-background)] font-sans text-base text-foreground outline-none"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="email"
-                className="block font-sans font-medium text-sm text-foreground mb-2"
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                required
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-4 py-3 rounded-md border border-border bg-[var(--input-background)] font-sans text-base text-foreground outline-none"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="subject"
-                className="block font-sans font-medium text-sm text-foreground mb-2"
-              >
-                Assunto
-              </label>
-              <input
-                type="text"
-                id="subject"
-                required
-                value={formData.subject}
-                onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                className="w-full px-4 py-3 rounded-md border border-border bg-[var(--input-background)] font-sans text-base text-foreground outline-none"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="message"
-                className="block font-sans font-medium text-sm text-foreground mb-2"
-              >
-                Mensagem
-              </label>
-              <textarea
-                id="message"
-                required
-                rows={6}
-                value={formData.message}
-                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                className="w-full px-4 py-3 rounded-md border border-border bg-[var(--input-background)] font-sans text-base text-foreground outline-none resize-y"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="flex items-center justify-center gap-2 px-8 py-3.5 rounded-md bg-primary text-primary-foreground border-none font-sans font-medium text-base cursor-pointer transition-opacity hover:opacity-90"
-            >
-              <FaPaperPlane size={18} />
-              Enviar Mensagem
-            </button>
-          </form>
+            </form>
+          </section>
         </div>
       </div>
     </div>

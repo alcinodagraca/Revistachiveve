@@ -10,9 +10,9 @@ export default function NotFoundPage() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
-        className="text-center max-w-[560px]"
+        className="max-w-[560px] text-center"
       >
-        <div className="font-serif font-semibold text-7xl md:text-9xl text-primary leading-none tracking-[-0.02em] mb-4">
+        <div className="mb-4 font-sans text-[4.5rem] font-light leading-none tracking-[-0.04em] text-primary md:text-[6.5rem]">
           404
         </div>
 
@@ -22,14 +22,14 @@ export default function NotFoundPage() {
           Página não encontrada
         </Heading>
 
-        <p className="font-sans text-base text-muted-foreground leading-[1.6] mb-8">
+        <p className="mb-8 font-sans text-[0.98rem] font-light text-muted-foreground leading-[1.72]">
           A página que procura pode ter sido movida, removida ou nunca ter
           existido. Volte ao início e explore os nossos artigos mais recentes.
         </p>
 
         <Link
           to="/"
-          className="inline-flex items-center gap-2 transition-opacity hover:opacity-90 py-3 px-5 bg-primary text-white rounded-md font-sans text-sm font-semibold tracking-[0.05em] uppercase no-underline"
+          className="inline-flex items-center gap-2 bg-primary px-5 py-3 font-sans text-[0.88rem] font-medium uppercase tracking-[0.05em] text-white no-underline transition-opacity hover:opacity-90"
         >
           <FaArrowLeft size={16} />
           Voltar à página inicial
