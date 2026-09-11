@@ -2,11 +2,20 @@
 
 This frontend (TanStack Start + React) consumes WordPress at
 `https://dev.cahubauto.com/wp-json/wp/v2` as a **headless CMS**. All data
-fetches happen server-side via TanStack Start `createServerFn`. Every
-section of the site is designed to either:
+fetches happen server-side via TanStack Start `createServerFn`. WordPress is the
+only source for articles, categories, events, editions, tenders, contacts, and
+team members in every environment.
 
-- **A — Pull from WP** when the right post type / category / fields exist.
-- **B — Fall back to inline mock data** so the site never goes blank.
+An unregistered or empty CPT produces an honest empty state. WordPress content
+request failures propagate to the application error boundary so monitoring and
+users can see that content is temporarily unavailable. Category-navigation
+discovery degrades to an empty submenu so unrelated static pages remain
+available. Sitemap generation fails when WordPress is unavailable instead of
+replacing live URLs with demo content.
+
+Article and event HTML is sanitized on the server with an explicit allowlist
+before it reaches the page. Scripts, event-handler attributes, unsafe URL
+schemes, and embeds from unapproved hosts are removed.
 
 Cutover for each Phase 2 entity is automatic: the moment the CPT and its
 fields are registered in WP and at least one record is published, the
@@ -54,8 +63,7 @@ Articles use **built-in WP `post`** with **built-in WP categories**.
 2. **Add a Description on each category** (Posts → Categories → Edit).
    The text appears as the category page subtitle.
 
-3. **Featured image on every post.** Without one, the hero falls back to a
-   placeholder.
+3. **Featured image on every post.** Without one, the image area remains empty.
 
 ---
 
@@ -69,8 +77,7 @@ that flag automatically across all field types).
 
 ### 2A — Events (`event`)
 
-Frontend route: `/eventos`, `/eventos/<slug>`. Falls back to
-`src/data/events.ts` until live.
+Frontend route: `/eventos`, `/eventos/<slug>`. Content comes from WordPress only.
 
 **CPT UI → Add Post Type:**
 
@@ -134,7 +141,7 @@ on the next page load — no code change needed.
 
 ### 2C — Public Tenders (`concurso`)
 
-Frontend route: `/concursos-publicos`. Falls back to inline mock until live.
+Frontend route: `/concursos-publicos`. It shows an empty state until the CPT is live.
 
 **CPT UI → Add Post Type:**
 
@@ -157,7 +164,7 @@ Frontend route: `/concursos-publicos`. Falls back to inline mock until live.
 
 ### 2D — Useful Contacts (`contacto-util`)
 
-Frontend route: `/contactos-uteis`. Falls back to inline mock until live.
+Frontend route: `/contactos-uteis`. It shows an empty state until the CPT is live.
 
 **CPT UI → Add Post Type:**
 
@@ -192,7 +199,7 @@ post title.
 
 ### 2E — Team (`team-member`)
 
-Frontend route: `/sobre-nos`. Falls back to inline mock until live.
+Frontend route: `/sobre-nos`. Team members come from WordPress only.
 
 **CPT UI → Add Post Type:**
 
@@ -240,8 +247,8 @@ the `clearWPCache()` export call site, or restart `pnpm dev`.
 
 ## Verification per entity
 
-After you register a CPT and add at least one record, the corresponding
-route should switch from mock to WP without a code change:
+After you register a CPT and add at least one record, the corresponding route
+should display the WordPress content without a code change:
 
 ```bash
 # Restart dev so the CPT-detection cache picks up the new rest_base

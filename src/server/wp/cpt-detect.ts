@@ -14,18 +14,13 @@ export async function getRegisteredRestBases(): Promise<Set<string>> {
   if (typesCache && Date.now() - typesCache.fetchedAt < TYPES_TTL_MS) {
     return typesCache.rest_bases;
   }
-  try {
-    const data = await wpGet<TypesResponse>("/types", { ttlMs: 0 });
-    const rest_bases = new Set<string>();
-    for (const value of Object.values(data)) {
-      if (value?.rest_base) rest_bases.add(value.rest_base);
-    }
-    typesCache = { fetchedAt: Date.now(), rest_bases };
-    return rest_bases;
-  } catch {
-    // If /types is unreachable, return empty so callers fall back gracefully.
-    return new Set();
+  const data = await wpGet<TypesResponse>("/types", { ttlMs: 0 });
+  const rest_bases = new Set<string>();
+  for (const value of Object.values(data)) {
+    if (value?.rest_base) rest_bases.add(value.rest_base);
   }
+  typesCache = { fetchedAt: Date.now(), rest_bases };
+  return rest_bases;
 }
 
 export async function hasRestBase(restBase: string): Promise<boolean> {

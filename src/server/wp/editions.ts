@@ -3,7 +3,6 @@ import type { WPPost } from "./types";
 import { resolveFeaturedImage } from "./media";
 import { decodeEntities } from "./util";
 import { hasRestBase } from "./cpt-detect";
-import { editions as MOCK_EDITIONS } from "../../data/editions";
 
 export type Edition = {
   id: number;
@@ -16,10 +15,6 @@ export type Edition = {
   highlights: string[];
   pdfDownloadUrl?: string;
 };
-
-function getMockEditions(): Edition[] {
-  return MOCK_EDITIONS.map((edition) => ({ ...edition }));
-}
 
 // Editions are served by the Download Monitor plugin's CPT (`dlm_download`).
 // Each DLM upload becomes an edition; DLM's built-in Featured flag drives the
@@ -96,15 +91,10 @@ function normalize(post: WPEdition): Edition {
 }
 
 export async function listEditions(): Promise<Edition[] | null> {
-  if (!(await hasRestBase(REST_BASE))) return getMockEditions();
-  try {
-    const res = await wpList<WPEdition>(`/${REST_BASE}`, {
-      params: { _embed: 1, per_page: 30, orderby: "date", order: "desc" },
-      ttlMs: TTL_MS,
-    });
-    return res.items.map(normalize);
-  } catch (error) {
-    console.error("[wp] listEditions fallback to mock data:", error);
-    return getMockEditions();
-  }
+  if (!(await hasRestBase(REST_BASE))) return [];
+  const res = await wpList<WPEdition>(`/${REST_BASE}`, {
+    params: { _embed: 1, per_page: 30, orderby: "date", order: "desc" },
+    ttlMs: TTL_MS,
+  });
+  return res.items.map(normalize);
 }

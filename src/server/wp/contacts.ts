@@ -65,13 +65,9 @@ function normalize(post: WPContact): UsefulContact {
 
 export async function listContacts(): Promise<UsefulContact[] | null> {
   if (!(await hasRestBase(REST_BASE))) return null;
-  try {
-    const res = await wpList<WPContact>(`/${REST_BASE}`, {
-      params: { _embed: 1, per_page: 100, orderby: "title", order: "asc" },
-      ttlMs: TTL_MS,
-    });
-    return res.items.length > 0 ? res.items.map(normalize) : null;
-  } catch {
-    return null;
-  }
+  const res = await wpList<WPContact>(`/${REST_BASE}`, {
+    params: { _embed: 1, per_page: 100, orderby: "title", order: "asc" },
+    ttlMs: TTL_MS,
+  });
+  return res.items.length > 0 ? res.items.map(normalize) : null;
 }

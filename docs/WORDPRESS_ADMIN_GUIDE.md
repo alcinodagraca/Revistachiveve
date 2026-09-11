@@ -403,6 +403,5 @@ o **Show in REST** de cada campo individual.
 6. **CPT `contacto-util`** + grupo SCF + publicar 2–3 contactos com termos atribuídos.
 7. **CPT `team-member`** + grupo SCF + publicar membros com `menu_order` definido.
 
-Após cada passo, visitar a rota correspondente no frontend para confirmar
-o cutover automático de mock para dados reais (ver `WORDPRESS_SETUP.md`
-para tabela de rotas e TTLs).
+Após cada passo, visitar a rota correspondente no frontend para confirmar os
+dados do WordPress (ver `WORDPRESS_SETUP.md` para tabela de rotas e TTLs).

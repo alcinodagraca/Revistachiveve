@@ -50,7 +50,7 @@ function normalize(post: WPTender): Tender {
     title: decodeEntities(post.title.rendered),
     institution: asString(pickMeta(post, "instituicao", "concurso_institution")) ?? "",
     deadline: asString(pickMeta(post, "data_limite_de_submissao", "concurso_deadline")) ?? "",
-    type: asString(pickMeta(post, "tipo_de_concurso", "concurso_type")) ?? "Concurso Público",
+    type: asString(pickMeta(post, "tipo_de_concurso", "concurso_type")) ?? "",
     vacancies: asNumber(pickMeta(post, "numero_de_vagas", "concurso_vacancies")),
     editalUrl: asString(pickMeta(post, "link_do_concurso", "concurso_edital_url")),
   };
@@ -58,13 +58,9 @@ function normalize(post: WPTender): Tender {
 
 export async function listTenders(): Promise<Tender[] | null> {
   if (!(await hasRestBase(REST_BASE))) return null;
-  try {
-    const res = await wpList<WPTender>(`/${REST_BASE}`, {
-      params: { per_page: 50, orderby: "date", order: "desc" },
-      ttlMs: TTL_MS,
-    });
-    return res.items.length > 0 ? res.items.map(normalize) : null;
-  } catch {
-    return null;
-  }
+  const res = await wpList<WPTender>(`/${REST_BASE}`, {
+    params: { per_page: 50, orderby: "date", order: "desc" },
+    ttlMs: TTL_MS,
+  });
+  return res.items.length > 0 ? res.items.map(normalize) : null;
 }

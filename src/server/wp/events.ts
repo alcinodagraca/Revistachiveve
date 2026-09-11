@@ -3,13 +3,25 @@ import type { WPPost } from "./types";
 import { resolveFeaturedImage } from "./media";
 import { decodeEntities, stripTags } from "./util";
 import { hasRestBase } from "./cpt-detect";
-import {
-  events as MOCK_EVENTS,
-  getEventBySlug as mockGetEventBySlug,
-} from "../../data/events";
-import type { Event as MockEvent } from "../../data/events";
+import { sanitizeWordPressHtml } from "./content";
 
-export type Event = MockEvent & { id?: number; bodyHtml?: string };
+export type Event = {
+  id: number;
+  slug: string;
+  title: string;
+  image: string;
+  date: string;
+  displayDate: string;
+  day: string;
+  month: string;
+  location: string;
+  city: string;
+  description: string[];
+  bodyHtml: string;
+  price: string;
+  organizer: string;
+  registrationUrl: string;
+};
 
 const REST_BASE = "eventos";
 const LIST_TTL_MS = 60_000;
@@ -53,6 +65,7 @@ function normalizeWPEvent(post: WPEvent): Event {
   const iso =
     pick(post, "data_do_evento", "event_date") ?? post.date_gmt;
   const { displayDate, day, month } = formatDisplayDate(iso);
+  const bodyHtml = sanitizeWordPressHtml(post.content.rendered);
   return {
     id: post.id,
     slug: post.slug,
@@ -64,47 +77,30 @@ function normalizeWPEvent(post: WPEvent): Event {
     month,
     location: pick(post, "local_do_evento", "event_location") ?? "",
     city: pick(post, "cidade", "event_city") ?? "",
-    description: stripTags(post.content.rendered)
+    description: stripTags(bodyHtml)
       .split(/\n+/)
       .filter(Boolean),
-    bodyHtml: post.content.rendered,
-    price: pick(post, "preco_do_evento", "event_price") ?? "Mais informações",
-    organizer: pick(post, "organizador", "event_organizer") ?? "Revista Chiveve",
-    registrationUrl: pick(post, "link_do_evento", "event_registration_url") ?? "#",
+    bodyHtml,
+    price: pick(post, "preco_do_evento", "event_price") ?? "",
+    organizer: pick(post, "organizador", "event_organizer") ?? "",
+    registrationUrl: pick(post, "link_do_evento", "event_registration_url") ?? "",
   };
 }
 
-function mockToEvent(e: MockEvent): Event {
-  return { ...e };
-}
-
 export async function listEvents(): Promise<Event[]> {
-  if (await hasRestBase(REST_BASE)) {
-    try {
-      const res = await wpList<WPEvent>(`/${REST_BASE}`, {
-        params: { _embed: 1, per_page: 50, orderby: "date", order: "desc" },
-        ttlMs: LIST_TTL_MS,
-      });
-      if (res.items.length > 0) return res.items.map(normalizeWPEvent);
-    } catch {
-      // fall through to mock
-    }
-  }
-  return MOCK_EVENTS.map(mockToEvent);
+  if (!(await hasRestBase(REST_BASE))) return [];
+  const res = await wpList<WPEvent>(`/${REST_BASE}`, {
+    params: { _embed: 1, per_page: 50, orderby: "date", order: "desc" },
+    ttlMs: LIST_TTL_MS,
+  });
+  return res.items.map(normalizeWPEvent);
 }
 
 export async function getEventBySlug(slug: string): Promise<Event | null> {
-  if (await hasRestBase(REST_BASE)) {
-    try {
-      const res = await wpList<WPEvent>(`/${REST_BASE}`, {
-        params: { slug, _embed: 1, per_page: 1 },
-        ttlMs: DETAIL_TTL_MS,
-      });
-      if (res.items.length > 0) return normalizeWPEvent(res.items[0]);
-    } catch {
-      // fall through
-    }
-  }
-  const mock = mockGetEventBySlug(slug);
-  return mock ? mockToEvent(mock) : null;
+  if (!(await hasRestBase(REST_BASE))) return null;
+  const res = await wpList<WPEvent>(`/${REST_BASE}`, {
+    params: { slug, _embed: 1, per_page: 1 },
+    ttlMs: DETAIL_TTL_MS,
+  });
+  return res.items.length > 0 ? normalizeWPEvent(res.items[0]) : null;
 }

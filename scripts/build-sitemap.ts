@@ -7,7 +7,8 @@
  */
 import { writeFileSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
-import { listArticles, listCategories } from "../src/server/wp";
+import { listArticles } from "../src/server/wp/articles";
+import { listCategories } from "../src/server/wp/categories";
 
 const SITE_URL =
   process.env.SITE_URL ||
@@ -38,22 +39,13 @@ const STATIC_PATHS = [
 ];
 
 async function main() {
-  const categories = await listCategories().catch((e) => {
-    console.error("[sitemap] listCategories failed:", e);
-    return [];
-  });
+  const categories = await listCategories();
 
   // Paginate through articles (WP caps per_page at 100).
   const allArticles: Awaited<ReturnType<typeof listArticles>>["articles"] = [];
   let page = 1;
   for (;;) {
-    let chunk;
-    try {
-      chunk = await listArticles({ perPage: 100, page });
-    } catch (e) {
-      console.error(`[sitemap] listArticles page ${page} failed:`, e);
-      break;
-    }
+    const chunk = await listArticles({ perPage: 100, page });
     allArticles.push(...chunk.articles);
     if (page >= chunk.totalPages || chunk.articles.length === 0) break;
     page++;

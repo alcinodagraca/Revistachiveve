@@ -2,41 +2,6 @@ import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { Heading, SectionHeader, Eyebrow } from "../components/typography";
 import { Route } from "../../routes/sobre-nos";
 
-const teamMembers = [
-  {
-    id: 1,
-    name: "Ricardo Monteiro",
-    role: "Editor-Chefe",
-    image:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
-    bio: "Coordena a linha editorial da revista e acompanha as grandes histórias sobre negócios, liderança e transformação económica.",
-  },
-  {
-    id: 2,
-    name: "Ana Paula Silva",
-    role: "Directora de Conteúdo",
-    image:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
-    bio: "Trabalha o ritmo das edições e garante profundidade, clareza e contexto em cada peça publicada.",
-  },
-  {
-    id: 3,
-    name: "João Matola",
-    role: "Editor de Economia",
-    image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
-    bio: "Foca-se em política económica, mercados, investimento e sinais que ajudam a ler o momento empresarial.",
-  },
-  {
-    id: 4,
-    name: "Mariana Costa",
-    role: "Editora de Empreendedorismo",
-    image:
-      "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
-    bio: "Acompanha empresas emergentes, novos líderes e histórias de construção de negócio em Moçambique.",
-  },
-];
-
 const manifesto = [
   {
     title: "Leitura com contexto",
@@ -54,7 +19,7 @@ const manifesto = [
 
 export default function SobreNosPage() {
   const { team: wpTeam } = Route.useLoaderData();
-  const members = wpTeam && wpTeam.length > 0 ? wpTeam : teamMembers;
+  const members = wpTeam ?? [];
 
   return (
     <div className="bg-background">
@@ -152,28 +117,30 @@ export default function SobreNosPage() {
           </div>
         </section>
 
-        <section>
-          <SectionHeader as="h2">Equipa Editorial</SectionHeader>
-          <div className="grid gap-6 md:gap-8 sm:grid-cols-2 xl:grid-cols-4">
-            {members.slice(0, 4).map((member, idx) => (
-              <article key={member.id ?? idx}>
-                <div className="mb-4 overflow-hidden bg-secondary">
-                  <ImageWithFallback
-                    src={member.image}
-                    alt={member.name}
-                    className="h-[260px] w-full object-cover"
-                  />
-                </div>
-                <Heading as="h3" variant="feature-title" className="mb-1 text-foreground">
-                  {member.name}
-                </Heading>
-                <p className="font-sans text-[0.82rem] font-medium uppercase tracking-[0.08em] text-primary">
-                  {member.role}
-                </p>
-              </article>
-            ))}
-          </div>
-        </section>
+        {members.length > 0 && (
+          <section>
+            <SectionHeader as="h2">Equipa Editorial</SectionHeader>
+            <div className="grid gap-6 md:gap-8 sm:grid-cols-2 xl:grid-cols-4">
+              {members.slice(0, 4).map((member, idx) => (
+                <article key={member.id ?? idx}>
+                  <div className="mb-4 overflow-hidden bg-secondary">
+                    <ImageWithFallback
+                      src={member.image}
+                      alt={member.name}
+                      className="h-[260px] w-full object-cover"
+                    />
+                  </div>
+                  <Heading as="h3" variant="feature-title" className="mb-1 text-foreground">
+                    {member.name}
+                  </Heading>
+                  <p className="font-sans text-[0.82rem] font-medium uppercase tracking-[0.08em] text-primary">
+                    {member.role}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );

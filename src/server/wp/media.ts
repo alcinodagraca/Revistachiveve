@@ -1,8 +1,5 @@
 import type { WPMedia, WPPost } from "./types";
 
-const PLACEHOLDER =
-  "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1200";
-
 /** Pick the URL of a particular size if WP exposed it, else the original. */
 export function pickMediaSize(
   media: WPMedia | undefined,
@@ -27,7 +24,7 @@ export function resolveFeaturedImage(
   preferred?: Parameters<typeof pickMediaSize>[1],
 ): string {
   const media = post._embedded?.["wp:featuredmedia"]?.[0];
-  return pickMediaSize(media, preferred) ?? PLACEHOLDER;
+  return pickMediaSize(media, preferred) ?? "";
 }
 
 export function resolveFeaturedAlt(post: WPPost): string {

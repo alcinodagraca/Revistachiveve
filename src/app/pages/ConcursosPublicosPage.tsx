@@ -13,46 +13,6 @@ import { ListPagination } from "../components/ListPagination";
 import { Heading, SectionHeader } from "../components/typography";
 import { Input } from "../components/ui/input";
 import { Route } from "../../routes/concursos-publicos";
-import type { Tender } from "../../server/wp";
-
-const MOCK_TENDERS: Tender[] = [
-  {
-    id: 1,
-    slug: "assistente-administrativo-minfin",
-    title: "Assistente Administrativo",
-    institution: "Ministério das Finanças",
-    deadline: "30 Setembro 2026",
-    type: "Concurso Público",
-    vacancies: 5,
-  },
-  {
-    id: 2,
-    slug: "gestor-projectos-banco-mocambique",
-    title: "Gestor de Projectos",
-    institution: "Banco de Moçambique",
-    deadline: "15 Outubro 2026",
-    type: "Concurso Limitado",
-    vacancies: 2,
-  },
-  {
-    id: 3,
-    slug: "analista-sistemas-ine",
-    title: "Analista de Sistemas",
-    institution: "Instituto Nacional de Estatística",
-    deadline: "25 Outubro 2026",
-    type: "Concurso Público",
-    vacancies: 3,
-  },
-  {
-    id: 4,
-    slug: "economista-senior-at",
-    title: "Economista Sénior",
-    institution: "Autoridade Tributária de Moçambique",
-    deadline: "10 Novembro 2026",
-    type: "Concurso Público",
-    vacancies: 4,
-  },
-];
 
 export default function ConcursosPublicosPage() {
   const { tenders, currentPage, totalPages, total } = Route.useLoaderData();

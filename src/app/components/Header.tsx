@@ -24,15 +24,6 @@ const navItems = [
   { label: "Contactos", href: "/contactos" },
 ];
 
-const FALLBACK_CATEGORIES = [
-  { name: "Economia", slug: "economia" },
-  { name: "Empreendedorismo", slug: "empreendedorismo" },
-  { name: "Inovação e Tecnologia", slug: "inovacao-tecnologia" },
-  { name: "Liderança", slug: "lideranca" },
-  { name: "Opinião", slug: "opiniao" },
-  { name: "Análise", slug: "analise" },
-];
-
 function XIcon({ size = 14 }: { size?: number }) {
   return (
     <svg
@@ -84,8 +75,7 @@ const socials = [
 type HeaderCategory = { name: string; slug: string };
 
 export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
-  const artigosCategories =
-    categories && categories.length > 0 ? categories : FALLBACK_CATEGORIES;
+  const artigosCategories = categories ?? [];
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
@@ -196,10 +186,10 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
                   )}
                 >
                   {item.label}
-                  {item.hasDropdown && <FaChevronDown size={11} />}
+                  {item.hasDropdown && artigosCategories.length > 0 && <FaChevronDown size={11} />}
                 </Link>
 
-                {item.hasDropdown && artigosDropdownOpen && (
+                {item.hasDropdown && artigosCategories.length > 0 && artigosDropdownOpen && (
                   <div className="absolute left-0 top-full z-50 min-w-[240px] border border-border bg-card p-2 shadow-[0_12px_28px_rgba(15,23,42,0.12)]">
                     {artigosCategories.map((category) => (
                       <Link

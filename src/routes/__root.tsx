@@ -46,11 +46,9 @@ export const Route = createRootRoute({
   }),
   loader: async () => {
     try {
-      const categories = await fnListCategories()
-      return { categories }
-    } catch (err) {
-      // Don't nuke the site if WP is down — Header falls back to static slugs.
-      console.error('[wp] root loader failed:', err)
+      return { categories: await fnListCategories() }
+    } catch (error) {
+      console.error('[wp] category navigation unavailable:', error)
       return { categories: [] }
     }
   },

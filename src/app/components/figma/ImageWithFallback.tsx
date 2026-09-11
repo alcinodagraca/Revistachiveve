@@ -12,6 +12,10 @@ export function ImageWithFallback(props: React.ImgHTMLAttributes<HTMLImageElemen
 
   const { src, alt, style, className, ...rest } = props
 
+  if (!src) {
+    return <div className={`inline-block bg-gray-100 ${className ?? ''}`} style={style} aria-hidden="true" />
+  }
+
   return didError ? (
     <div
       className={`inline-block bg-gray-100 text-center align-middle ${className ?? ''}`}

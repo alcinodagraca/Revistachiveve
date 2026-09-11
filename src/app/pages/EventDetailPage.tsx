@@ -205,20 +205,13 @@ export default function EventDetailPage() {
                   Confirme os detalhes directamente com a organização e acompanhe eventuais actualizações do evento.
                 </p>
 
-                {event.registrationUrl && event.registrationUrl !== "#" ? (
+                {event.registrationUrl && (
                   <a
                     href={event.registrationUrl}
                     className="block bg-primary px-5 py-3 text-center font-sans text-[0.9rem] font-medium uppercase tracking-[0.05em] text-white no-underline transition-opacity hover:opacity-90"
                   >
                     Inscrever-se
                   </a>
-                ) : (
-                  <button
-                    type="button"
-                    className="block w-full bg-primary px-5 py-3 text-center font-sans text-[0.9rem] font-medium uppercase tracking-[0.05em] text-white transition-opacity hover:opacity-90"
-                  >
-                    Pedir Informações
-                  </button>
                 )}
               </div>
             </div>
