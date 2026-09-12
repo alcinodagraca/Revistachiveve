@@ -10,6 +10,7 @@ import { resolve } from "node:path";
 import { config as loadDotenv } from "dotenv";
 import { listArticles } from "../src/server/wp/articles";
 import { listCategories } from "../src/server/wp/categories";
+import { listEvents } from "../src/server/wp/events";
 
 loadDotenv({ path: ".env.local", override: false, quiet: true });
 loadDotenv({ path: ".env", override: false, quiet: true });
@@ -29,6 +30,14 @@ function xmlEscape(s: string): string {
     .replace(/'/g, "&apos;");
 }
 
+function normalizeLastmod(value: string): string | undefined {
+  const normalized = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/.test(value)
+    ? `${value}Z`
+    : value;
+  const date = new Date(normalized);
+  return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
+}
+
 const STATIC_PATHS = [
   "/",
   "/artigos",
@@ -44,7 +53,7 @@ const STATIC_PATHS = [
 ];
 
 async function main() {
-  const categories = await listCategories();
+  const [categories, events] = await Promise.all([listCategories(), listEvents()]);
 
   // Paginate through articles (WP caps per_page at 100).
   const allArticles: Awaited<ReturnType<typeof listArticles>>["articles"] = [];
@@ -59,13 +68,19 @@ async function main() {
 
   const entries: { loc: string; lastmod?: string }[] = [];
   for (const p of STATIC_PATHS) entries.push({ loc: `${SITE_URL}${p}` });
-  for (const c of categories) {
+  for (const c of categories.filter((category) => category.count > 0)) {
     entries.push({ loc: `${SITE_URL}/artigos/${c.slug}` });
   }
   for (const a of list.articles) {
     entries.push({
       loc: `${SITE_URL}/artigos/${a.category}/${a.slug}`,
-      lastmod: a.modifiedAt || a.publishedAt,
+      lastmod: normalizeLastmod(a.modifiedAt || a.publishedAt),
+    });
+  }
+  for (const event of events) {
+    entries.push({
+      loc: `${SITE_URL}/eventos/${event.slug}`,
+      lastmod: normalizeLastmod(event.modifiedAt),
     });
   }
 

@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /pesquisa
 
 Sitemap: https://www.revistachiveve.com/sitemap.xml

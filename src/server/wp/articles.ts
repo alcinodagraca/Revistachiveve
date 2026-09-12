@@ -77,7 +77,7 @@ export function normalizeArticle(post: WPPost): Article {
       role: author?.description ? decodeEntities(author.description) : "Redacção",
     },
     publishedAt: post.date_gmt,
-    modifiedAt: post.modified,
+    modifiedAt: post.modified_gmt ?? post.modified,
     readTime: readTimeFromHtml(bodyHtml),
     tags: pickTags(post).map(decodeEntities),
     link: post.link,

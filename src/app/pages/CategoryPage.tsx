@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { FaClock, FaNewspaper } from "react-icons/fa6";
@@ -20,20 +20,10 @@ function formatDateLong(iso: string): string {
 
 export default function CategoryPage() {
   const { category, articles, totalPages, currentPage } = Route.useLoaderData();
-  const navigate = useNavigate();
   const color = CATEGORY_COLORS[category.slug] ?? "var(--primary)";
 
   const featured = articles.slice(0, 2);
   const rest = articles.slice(2);
-
-  function handlePageChange(page: number) {
-    navigate({
-      to: "/artigos/$category",
-      params: { category: category.slug },
-      search: { page },
-    });
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
 
   return (
     <div className="bg-background">
@@ -130,14 +120,22 @@ export default function CategoryPage() {
                 <ListPagination
                   currentPage={currentPage}
                   totalPages={totalPages}
-                  onPageChange={handlePageChange}
+                  getPageHref={(page) =>
+                    page === 1
+                      ? `/artigos/${category.slug}`
+                      : `/artigos/${category.slug}?page=${page}`
+                  }
                 />
               </div>
             ) : totalPages > 1 ? (
               <ListPagination
                 currentPage={currentPage}
                 totalPages={totalPages}
-                onPageChange={handlePageChange}
+                getPageHref={(page) =>
+                  page === 1
+                    ? `/artigos/${category.slug}`
+                    : `/artigos/${category.slug}?page=${page}`
+                }
               />
             ) : null}
           </>

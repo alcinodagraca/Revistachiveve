@@ -62,7 +62,7 @@ export default function EdicaoImpressaPage() {
             <div>
               <Eyebrow className="mb-3 inline-block">Edição Actual</Eyebrow>
 
-              <Heading as="h1" variant="article-title" className="mb-2 text-foreground">
+              <Heading as="h2" variant="article-title" className="mb-2 text-foreground">
                 {current.title}
               </Heading>
 

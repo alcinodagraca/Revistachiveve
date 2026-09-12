@@ -32,6 +32,9 @@ export default function HomePage() {
 
   return (
     <>
+      <h1 className="sr-only">
+        Revista Chiveve - Negócios, empreendedorismo, liderança e inovação
+      </h1>
       <DestaquesSection articles={recent.articles.slice(0, 3)} />
       <ContinueImpactadoSection />
       <FeaturedInterviewSection

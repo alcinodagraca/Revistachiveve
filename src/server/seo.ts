@@ -40,6 +40,21 @@ function joinTitle(pageTitle: string): string {
   return `${pageTitle} · ${SITE_NAME}`;
 }
 
+function normalizeDate(value: string): string {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+  const normalized = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/.test(value)
+    ? `${value}Z`
+    : value;
+  const date = new Date(normalized);
+  return Number.isNaN(date.getTime()) ? value : date.toISOString();
+}
+
+function normalizeDescription(value: string): string {
+  const description = value.replace(/\s+/g, " ").trim();
+  if (description.length <= 160) return description;
+  return `${description.slice(0, 157).replace(/\s+\S*$/, "")}...`;
+}
+
 export type PageSeoInput = {
   /** Page-specific title — site name is appended automatically. */
   title: string;
@@ -74,17 +89,18 @@ export function pageSeo(input: PageSeoInput) {
   const url = absUrl(input.path);
   const image = absUrl(input.image || DEFAULT_OG_IMAGE);
   const type = input.type ?? "website";
+  const description = normalizeDescription(input.description);
 
   const meta: HeadMeta[] = [
     { title: joinTitle(input.title) },
-    { name: "description", content: input.description },
+    { name: "description", content: description },
 
     // Open Graph
     { property: "og:site_name", content: SITE_NAME },
     { property: "og:locale", content: SITE_LOCALE },
     { property: "og:type", content: type },
     { property: "og:title", content: input.title },
-    { property: "og:description", content: input.description },
+    { property: "og:description", content: description },
     { property: "og:url", content: url },
     { property: "og:image", content: image },
     { property: "og:image:alt", content: input.imageAlt ?? input.title },
@@ -92,8 +108,9 @@ export function pageSeo(input: PageSeoInput) {
     // Twitter
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:title", content: input.title },
-    { name: "twitter:description", content: input.description },
+    { name: "twitter:description", content: description },
     { name: "twitter:image", content: image },
+    { name: "twitter:image:alt", content: input.imageAlt ?? input.title },
   ];
 
   if (input.noindex) {
@@ -103,10 +120,10 @@ export function pageSeo(input: PageSeoInput) {
   if (type === "article" && input.article) {
     const a = input.article;
     if (a.publishedAt) {
-      meta.push({ property: "article:published_time", content: a.publishedAt });
+      meta.push({ property: "article:published_time", content: normalizeDate(a.publishedAt) });
     }
     if (a.modifiedAt) {
-      meta.push({ property: "article:modified_time", content: a.modifiedAt });
+      meta.push({ property: "article:modified_time", content: normalizeDate(a.modifiedAt) });
     }
     if (a.authorName) {
       meta.push({ property: "article:author", content: a.authorName });
@@ -191,9 +208,9 @@ export function articleJsonLd(input: ArticleJsonLdInput) {
     "@type": "NewsArticle",
     headline: input.title,
     description: input.description,
-    image: [absUrl(input.image)],
-    datePublished: input.publishedAt,
-    dateModified: input.modifiedAt ?? input.publishedAt,
+    image: [absUrl(input.image || DEFAULT_OG_IMAGE)],
+    datePublished: normalizeDate(input.publishedAt),
+    dateModified: normalizeDate(input.modifiedAt ?? input.publishedAt),
     mainEntityOfPage: { "@type": "WebPage", "@id": absUrl(input.url) },
     publisher: {
       "@type": "Organization",
@@ -226,8 +243,8 @@ export function eventJsonLd(input: EventJsonLdInput) {
     "@type": "Event",
     name: input.title,
     description: input.description,
-    image: [absUrl(input.image)],
-    startDate: input.startDate,
+    image: [absUrl(input.image || DEFAULT_OG_IMAGE)],
+    startDate: normalizeDate(input.startDate),
     url: absUrl(input.url),
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
@@ -245,15 +262,6 @@ export function eventJsonLd(input: EventJsonLdInput) {
           organizer: {
             "@type": "Organization",
             name: input.organizer,
-          },
-        }
-      : {}),
-    ...(input.registrationUrl && input.registrationUrl !== "#"
-      ? {
-          offers: {
-            "@type": "Offer",
-            url: input.registrationUrl,
-            availability: "https://schema.org/InStock",
           },
         }
       : {}),

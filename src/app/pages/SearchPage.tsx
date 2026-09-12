@@ -21,11 +21,6 @@ export default function SearchPage() {
     navigate({ to: "/pesquisa", search: { q: input.trim(), page: 1 } });
   }
 
-  function handlePageChange(page: number) {
-    navigate({ to: "/pesquisa", search: { q, page } });
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
   return (
     <div className="bg-background min-h-[70vh]">
       <div className="site-shell pt-8 pb-12">
@@ -98,7 +93,11 @@ export default function SearchPage() {
               <ListPagination
                 currentPage={currentPage}
                 totalPages={list.totalPages}
-                onPageChange={handlePageChange}
+                getPageHref={(page) => {
+                  const search = new URLSearchParams({ q });
+                  if (page > 1) search.set("page", String(page));
+                  return `/pesquisa?${search.toString()}`;
+                }}
               />
             </section>
           </>

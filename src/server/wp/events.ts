@@ -21,6 +21,7 @@ export type Event = {
   price: string;
   organizer: string;
   registrationUrl: string;
+  modifiedAt: string;
 };
 
 const REST_BASE = "eventos";
@@ -84,16 +85,26 @@ function normalizeWPEvent(post: WPEvent): Event {
     price: pick(post, "preco_do_evento", "event_price") ?? "",
     organizer: pick(post, "organizador", "event_organizer") ?? "",
     registrationUrl: pick(post, "link_do_evento", "event_registration_url") ?? "",
+    modifiedAt: post.modified_gmt ?? post.modified,
   };
 }
 
 export async function listEvents(): Promise<Event[]> {
   if (!(await hasRestBase(REST_BASE))) return [];
-  const res = await wpList<WPEvent>(`/${REST_BASE}`, {
-    params: { _embed: 1, per_page: 50, orderby: "date", order: "desc" },
-    ttlMs: LIST_TTL_MS,
-  });
-  return res.items.map(normalizeWPEvent);
+  const events: WPEvent[] = [];
+  let page = 1;
+
+  for (;;) {
+    const res = await wpList<WPEvent>(`/${REST_BASE}`, {
+      params: { _embed: 1, per_page: 100, page, orderby: "date", order: "desc" },
+      ttlMs: LIST_TTL_MS,
+    });
+    events.push(...res.items);
+    if (page >= res.totalPages || res.items.length === 0) break;
+    page++;
+  }
+
+  return events.map(normalizeWPEvent);
 }
 
 export async function getEventBySlug(slug: string): Promise<Event | null> {

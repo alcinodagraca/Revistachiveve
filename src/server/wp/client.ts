@@ -109,6 +109,9 @@ export async function wpList<T>(
   const res = await fetch(url, { headers, signal });
   if (!res.ok) {
     const body = await res.text().catch(() => "");
+    if (res.status === 400 && body.includes("rest_post_invalid_page_number")) {
+      return { items: [], total: 0, totalPages: 0 };
+    }
     throw new WPError(
       res.status,
       body,

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 import SearchPage from "../app/pages/SearchPage";
 import { fnListArticles } from "../server/wp/server-fns";
 import { pageSeo } from "../server/seo";
@@ -24,6 +24,7 @@ export const Route = createFileRoute("/pesquisa")({
     const list = await fnListArticles({
       data: { search: deps.q, page: deps.page, perPage: 12 },
     });
+    if (deps.page > Math.max(1, list.totalPages)) throw notFound();
     return { list, q: deps.q, currentPage: deps.page };
   },
   head: ({ loaderData }) =>

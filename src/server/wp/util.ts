@@ -45,7 +45,9 @@ export function decodeEntities(input: string): string {
 
 /** Strip HTML tags. Use for excerpts. Cheap, not security-grade. */
 export function stripTags(html: string): string {
-  return decodeEntities(html.replace(/<[^>]+>/g, "")).trim();
+  return decodeEntities(html.replace(/<[^>]+>/g, " "))
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 /** Words ÷ 230 wpm, rounded up to at least 1 minute. */

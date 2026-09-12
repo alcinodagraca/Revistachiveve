@@ -1,4 +1,4 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import ArticleDetailPage from "../app/pages/ArticleDetailPage";
 import NotFoundPage from "../app/pages/NotFoundPage";
 import { fnGetArticleBundle } from "../server/wp/server-fns";
@@ -10,6 +10,13 @@ export const Route = createFileRoute("/artigos/$category/$slug")({
   loader: async ({ params }) => {
     const data = await fnGetArticleBundle({ data: params.slug });
     if (!data) throw notFound();
+    if (params.category !== data.article.category) {
+      throw redirect({
+        to: "/artigos/$category/$slug",
+        params: { category: data.article.category, slug: data.article.slug },
+        statusCode: 301,
+      });
+    }
     return data;
   },
   head: ({ loaderData }) => {

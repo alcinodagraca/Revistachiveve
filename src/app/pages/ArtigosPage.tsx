@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { FaNewspaper } from "react-icons/fa6";
 import { EmptyState } from "../components/EmptyState";
@@ -69,13 +69,7 @@ function FeaturedCard({ article }: { article: Article }) {
 
 export default function ArtigosPage() {
   const { list, currentPage } = Route.useLoaderData();
-  const navigate = useNavigate();
   const [featured, rest] = [list.articles.slice(0, 2), list.articles.slice(2)];
-
-  function handlePageChange(page: number) {
-    navigate({ to: "/artigos", search: { page } });
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
 
   return (
     <div className="site-shell py-8">
@@ -126,14 +120,18 @@ export default function ArtigosPage() {
               <ListPagination
                 currentPage={currentPage}
                 totalPages={list.totalPages}
-                onPageChange={handlePageChange}
+                getPageHref={(page) =>
+                  page === 1 ? "/artigos" : `/artigos?page=${page}`
+                }
               />
             </>
           ) : list.totalPages > 1 ? (
             <ListPagination
               currentPage={currentPage}
               totalPages={list.totalPages}
-              onPageChange={handlePageChange}
+              getPageHref={(page) =>
+                page === 1 ? "/artigos" : `/artigos?page=${page}`
+              }
             />
           ) : null}
         </>

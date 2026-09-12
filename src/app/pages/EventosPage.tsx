@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { FaCalendarDays, FaLocationDot } from "react-icons/fa6";
 import { PageHeader } from "../components/PageHeader";
@@ -10,12 +10,6 @@ import type { Event } from "../../server/wp";
 
 export default function EventosPage() {
   const { events, currentPage, totalPages } = Route.useLoaderData();
-  const navigate = useNavigate();
-
-  function handlePageChange(page: number) {
-    navigate({ to: "/eventos", search: { page } });
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
 
   if (events.length === 0) {
     return (
@@ -74,7 +68,9 @@ export default function EventosPage() {
         <ListPagination
           currentPage={currentPage}
           totalPages={totalPages}
-          onPageChange={handlePageChange}
+          getPageHref={(page) =>
+            page === 1 ? "/eventos" : `/eventos?page=${page}`
+          }
         />
       </div>
     </div>

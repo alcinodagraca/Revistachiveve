@@ -6,7 +6,6 @@ import {
   FaBriefcase,
   FaMagnifyingGlass,
 } from "react-icons/fa6";
-import { useNavigate } from "@tanstack/react-router";
 import { PageHeader } from "../components/PageHeader";
 import { EmptyState } from "../components/EmptyState";
 import { ListPagination } from "../components/ListPagination";
@@ -16,7 +15,6 @@ import { Route } from "../../routes/concursos-publicos";
 
 export default function ConcursosPublicosPage() {
   const { tenders, currentPage, totalPages, total } = Route.useLoaderData();
-  const navigate = useNavigate();
   const items = tenders ?? [];
   const effectiveTotalPages = totalPages || 1;
   const typeOptions = [
@@ -37,11 +35,6 @@ export default function ConcursosPublicosPage() {
 
     return matchesType && matchesSearch;
   });
-
-  function handlePageChange(page: number) {
-    navigate({ to: "/concursos-publicos", search: { page } });
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
 
   return (
     <div className="bg-background">
@@ -189,7 +182,11 @@ export default function ConcursosPublicosPage() {
           <ListPagination
             currentPage={currentPage}
             totalPages={effectiveTotalPages}
-            onPageChange={handlePageChange}
+            getPageHref={(page) =>
+              page === 1
+                ? "/concursos-publicos"
+                : `/concursos-publicos?page=${page}`
+            }
           />
         )}
       </div>

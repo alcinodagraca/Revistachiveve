@@ -19,11 +19,11 @@ function buildPageItems(currentPage: number, totalPages: number) {
 export function ListPagination({
   currentPage,
   totalPages,
-  onPageChange,
+  getPageHref,
 }: {
   currentPage: number;
   totalPages: number;
-  onPageChange: (page: number) => void;
+  getPageHref: (page: number) => string;
 }) {
   if (totalPages <= 1) return null;
 
@@ -39,15 +39,17 @@ export function ListPagination({
       </span>
 
       <div className="flex flex-wrap items-center justify-center gap-2">
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          disabled={currentPage === 1}
-          onClick={() => onPageChange(currentPage - 1)}
-        >
-          Anterior
-        </Button>
+        {currentPage === 1 ? (
+          <Button type="button" variant="outline" size="sm" disabled>
+            Anterior
+          </Button>
+        ) : (
+          <Button asChild variant="outline" size="sm">
+            <a href={getPageHref(currentPage - 1)} rel="prev">
+              Anterior
+            </a>
+          </Button>
+        )}
 
         {items.map((item, index) =>
           item === "..." ? (
@@ -60,25 +62,31 @@ export function ListPagination({
           ) : (
             <Button
               key={item}
-              type="button"
+              asChild
               variant={item === currentPage ? "default" : "outline"}
               size="sm"
-              onClick={() => onPageChange(item)}
             >
-              {item}
+              <a
+                href={getPageHref(item)}
+                aria-current={item === currentPage ? "page" : undefined}
+              >
+                {item}
+              </a>
             </Button>
           ),
         )}
 
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          disabled={currentPage === totalPages}
-          onClick={() => onPageChange(currentPage + 1)}
-        >
-          Seguinte
-        </Button>
+        {currentPage === totalPages ? (
+          <Button type="button" variant="outline" size="sm" disabled>
+            Seguinte
+          </Button>
+        ) : (
+          <Button asChild variant="outline" size="sm">
+            <a href={getPageHref(currentPage + 1)} rel="next">
+              Seguinte
+            </a>
+          </Button>
+        )}
       </div>
     </nav>
   );
