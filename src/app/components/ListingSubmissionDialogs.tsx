@@ -44,7 +44,11 @@ declare global {
 const TURNSTILE_SCRIPT_ID = "cloudflare-turnstile-script";
 const TURNSTILE_SITE_KEY = "0x4AAAAAAExoS6ttyxnKc9Lt";
 const fieldLabel =
-  "mb-2 block font-sans text-[0.72rem] font-medium uppercase tracking-[0.08em] text-primary";
+  "mb-1.5 block font-sans text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-primary";
+const submissionForm =
+  "space-y-4 px-5 py-5 sm:px-7 [&_[data-slot=input]]:h-10 [&_[data-slot=input]]:border-foreground/15 [&_[data-slot=input]]:bg-secondary/35 [&_[data-slot=input]]:focus-visible:bg-background [&_[data-slot=textarea]]:border-foreground/15 [&_[data-slot=textarea]]:bg-secondary/35 [&_[data-slot=textarea]]:focus-visible:bg-background";
+const selectControl =
+  "h-10 w-full border border-foreground/15 bg-secondary/35 px-3 font-sans text-sm outline-none transition-[color,box-shadow] focus:border-ring focus:bg-background focus:ring-3 focus:ring-ring/50";
 
 function TurnstileWidget({
   action,
@@ -316,20 +320,22 @@ export function UsefulContactSubmissionDialog({
         text="Conhece uma instituição ou serviço que deve constar deste directório? Envie os dados para revisão editorial."
         button="Adicionar contacto"
       >
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
-          <DialogHeader>
-            <DialogTitle className="font-serif text-2xl">
+        <DialogContent className="max-h-[calc(100dvh-2rem)] gap-0 overflow-y-auto rounded-none border-0 p-0 shadow-2xl sm:max-w-2xl">
+          <DialogHeader className="sticky top-0 z-10 border-b border-border bg-background px-5 py-5 pr-14 shadow-sm sm:px-7">
+            <DialogTitle className="font-serif text-2xl leading-tight text-primary sm:text-3xl">
               Adicionar contacto útil
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="leading-6">
               A submissão ficará pendente no WordPress até ser revista e
               aprovada pela equipa.
             </DialogDescription>
           </DialogHeader>
           {state === "success" ? (
-            <SubmissionFeedback state={state} error={error} />
+            <div className="p-6">
+              <SubmissionFeedback state={state} error={error} />
+            </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className={submissionForm}>
               <Honeypot />
               <div className="grid gap-5 md:grid-cols-2">
                 <div className="md:col-span-2">
@@ -353,7 +359,7 @@ export function UsefulContactSubmissionDialog({
                     name="categoryId"
                     required
                     defaultValue=""
-                    className="h-10 w-full border border-input bg-input-background px-3 font-sans text-sm"
+                    className={selectControl}
                   >
                     <option value="" disabled>
                       Seleccione
@@ -549,20 +555,22 @@ export function TenderSubmissionDialog() {
         text="Ajude-nos a divulgar concursos públicos relevantes. Todos os editais são verificados antes de aparecerem nesta página."
         button="Submeter concurso"
       >
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
-          <DialogHeader>
-            <DialogTitle className="font-serif text-2xl">
+        <DialogContent className="max-h-[calc(100dvh-2rem)] gap-0 overflow-y-auto rounded-none border-0 p-0 shadow-2xl sm:max-w-2xl">
+          <DialogHeader className="sticky top-0 z-10 border-b border-border bg-background px-5 py-5 pr-14 shadow-sm sm:px-7">
+            <DialogTitle className="font-serif text-2xl leading-tight text-primary sm:text-3xl">
               Submeter concurso público
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="leading-6">
               Envie os dados essenciais e o link oficial do edital para revisão
               editorial.
             </DialogDescription>
           </DialogHeader>
           {state === "success" ? (
-            <SubmissionFeedback state={state} error={error} />
+            <div className="p-6">
+              <SubmissionFeedback state={state} error={error} />
+            </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className={submissionForm}>
               <Honeypot />
               <div className="grid gap-5 md:grid-cols-2">
                 <div className="md:col-span-2">
@@ -609,7 +617,7 @@ export function TenderSubmissionDialog() {
                     name="type"
                     required
                     defaultValue={TENDER_TYPES[0]}
-                    className="h-10 w-full border border-input bg-input-background px-3 font-sans text-sm"
+                    className={selectControl}
                   >
                     {TENDER_TYPES.map((type) => (
                       <option key={type} value={type}>
