@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /pesquisa
 
-Sitemap: https://revistachiveve.co.mz/sitemap.xml
+Sitemap: https://www.revistachiveve.com/sitemap.xml

@@ -24,7 +24,7 @@ export default function EventDetailPage() {
   const eventUrl =
     typeof window !== "undefined"
       ? window.location.href
-      : `https://revistachiveve.co.mz/eventos/${event.slug}`;
+      : `https://www.revistachiveve.com/eventos/${event.slug}`;
   const shareText = `${event.title} | Revista Chiveve`;
 
   async function copyEventLink() {

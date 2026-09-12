@@ -10,7 +10,7 @@
 export const SITE_URL = (
   process.env.VITE_SITE_URL ||
   process.env.SITE_URL ||
-  "https://revistachiveve.co.mz"
+  "https://www.revistachiveve.com"
 ).replace(/\/$/, "");
 
 export const SITE_NAME = "Revista Chiveve";

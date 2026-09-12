@@ -385,7 +385,7 @@ Para cada CPT, após registar e publicar **pelo menos um item**:
 **Teste rápido via REST:**
 
 ```bash
-curl -s "https://dev.cahubauto.com/wp-json/wp/v2/eventos?per_page=1&_embed=1" | jq '.[0].acf // .[0].meta'
+curl -s "https://admin.revistachiveve.com/wp-json/wp/v2/eventos?per_page=1&_embed=1" | jq '.[0].acf // .[0].meta'
 ```
 
 Os campos personalizados devem aparecer no JSON. Se faltarem, rever

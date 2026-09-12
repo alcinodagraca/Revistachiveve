@@ -31,7 +31,7 @@ export default function ArticleDetailPage() {
   const articleUrl =
     typeof window !== "undefined"
       ? window.location.href
-      : `https://revistachiveve.co.mz/artigos/${article.category}/${article.slug}`;
+      : `https://www.revistachiveve.com/artigos/${article.category}/${article.slug}`;
   const shareText = `${article.title} | Revista Chiveve`;
 
   async function copyArticleLink() {

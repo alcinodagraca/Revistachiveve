@@ -1,7 +1,7 @@
 # WordPress Setup — Revista Chiveve Headless CMS
 
 This frontend (TanStack Start + React) consumes WordPress at
-`https://dev.cahubauto.com/wp-json/wp/v2` as a **headless CMS**. All data
+`https://admin.revistachiveve.com/wp-json/wp/v2` as a **headless CMS**. All data
 fetches happen server-side via TanStack Start `createServerFn`. WordPress is the
 only source for articles, categories, events, editions, tenders, contacts, and
 team members in every environment.
@@ -258,7 +258,7 @@ pnpm dev
 curl -s http://localhost:3000/eventos | grep -i "<title>"
 
 # Or check the WP REST directly
-curl -s "https://dev.cahubauto.com/wp-json/wp/v2/eventos?per_page=1&_embed=1"
+curl -s "https://admin.revistachiveve.com/wp-json/wp/v2/eventos?per_page=1&_embed=1"
 ```
 
 If you see the WP-published record on the page, you're done.
@@ -270,10 +270,10 @@ If you see the WP-published record on the page, you're done.
 Required server-side env vars (in `.env`, copy from `.env.example`):
 
 ```
-VITE_WP_REST_BASE_URL=https://dev.cahubauto.com/wp-json/wp/v2
+VITE_WP_REST_BASE_URL=https://admin.revistachiveve.com/wp-json/wp/v2
 
 # Server-only (do not prefix with VITE)
-WP_REST_BASE_URL=https://dev.cahubauto.com/wp-json/wp/v2
+WP_REST_BASE_URL=https://admin.revistachiveve.com/wp-json/wp/v2
 WP_APP_USERNAME=…
 WP_APP_PASSWORD=…   # Application Password, not your login password
 ```

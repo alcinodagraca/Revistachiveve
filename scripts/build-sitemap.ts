@@ -7,13 +7,18 @@
  */
 import { writeFileSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
+import { config as loadDotenv } from "dotenv";
 import { listArticles } from "../src/server/wp/articles";
 import { listCategories } from "../src/server/wp/categories";
 
-const SITE_URL =
+loadDotenv({ path: ".env.local", override: false, quiet: true });
+loadDotenv({ path: ".env", override: false, quiet: true });
+
+const SITE_URL = (
   process.env.SITE_URL ||
   process.env.VITE_SITE_URL ||
-  "https://revistachiveve.co.mz";
+  "https://www.revistachiveve.com"
+).replace(/\/+$/, "");
 
 function xmlEscape(s: string): string {
   return s
