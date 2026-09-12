@@ -10,6 +10,7 @@ import { Heading, SectionHeader } from "../components/typography";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
+import { sendContactMessage } from "../../server/contact";
 
 const contactChannels = [
   {
@@ -45,11 +46,24 @@ export default function ContactosPage() {
     subject: "",
     message: "",
   });
+  const [website, setWebsite] = useState("");
+  const [submissionState, setSubmissionState] = useState<
+    "idle" | "sending" | "success" | "error"
+  >("idle");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert("Mensagem enviada. Entraremos em contacto em breve.");
-    setFormData({ name: "", email: "", subject: "", message: "" });
+    if (submissionState === "sending") return;
+
+    setSubmissionState("sending");
+    try {
+      await sendContactMessage({ data: { ...formData, website } });
+      setFormData({ name: "", email: "", subject: "", message: "" });
+      setWebsite("");
+      setSubmissionState("success");
+    } catch {
+      setSubmissionState("error");
+    }
   };
 
   return (
@@ -110,6 +124,22 @@ export default function ContactosPage() {
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-5">
+              <div
+                className="absolute -left-[10000px] h-px w-px overflow-hidden"
+                aria-hidden="true"
+              >
+                <label htmlFor="website">Website</label>
+                <input
+                  id="website"
+                  name="website"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={website}
+                  onChange={(e) => setWebsite(e.target.value)}
+                />
+              </div>
+
               <div className="grid gap-5 md:grid-cols-2">
                 <div>
                   <label
@@ -122,6 +152,8 @@ export default function ContactosPage() {
                     id="name"
                     type="text"
                     required
+                    minLength={2}
+                    maxLength={100}
                     value={formData.name}
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
@@ -142,6 +174,7 @@ export default function ContactosPage() {
                     id="email"
                     type="email"
                     required
+                    maxLength={254}
                     value={formData.email}
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
@@ -163,6 +196,8 @@ export default function ContactosPage() {
                   id="subject"
                   type="text"
                   required
+                  minLength={3}
+                  maxLength={150}
                   value={formData.subject}
                   onChange={(e) =>
                     setFormData({ ...formData, subject: e.target.value })
@@ -182,6 +217,8 @@ export default function ContactosPage() {
                 <Textarea
                   id="message"
                   required
+                  minLength={10}
+                  maxLength={5000}
                   rows={7}
                   value={formData.message}
                   onChange={(e) =>
@@ -196,11 +233,27 @@ export default function ContactosPage() {
                 <p className="font-sans text-[0.82rem] font-light leading-[1.6] text-muted-foreground">
                   A equipa responde prioritariamente a pedidos com contexto claro e relevância editorial ou institucional.
                 </p>
-                <Button type="submit" size="lg" className="gap-2 px-7">
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="gap-2 px-7"
+                  disabled={submissionState === "sending"}
+                >
                   <FaPaperPlane size={15} />
-                  Enviar Mensagem
+                  {submissionState === "sending" ? "A enviar..." : "Enviar Mensagem"}
                 </Button>
               </div>
+
+              {submissionState === "success" && (
+                <p role="status" className="font-sans text-sm text-green-700">
+                  Mensagem enviada. Entraremos em contacto em breve.
+                </p>
+              )}
+              {submissionState === "error" && (
+                <p role="alert" className="font-sans text-sm text-destructive">
+                  Não foi possível enviar a mensagem. Tente novamente dentro de alguns instantes.
+                </p>
+              )}
             </form>
           </section>
         </div>
