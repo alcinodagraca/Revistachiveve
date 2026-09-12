@@ -117,7 +117,7 @@ const TOP_LEVEL_KEYS = new Set([
   "categories",
   "tags",
   "menu_order",
-  "contacto-categoria", // taxonomy term IDs on contacts
+  "contacto-categorias", // REST taxonomy term IDs on contacts
 ]);
 
 function buildPayload(kind: string, input: Record<string, unknown>) {

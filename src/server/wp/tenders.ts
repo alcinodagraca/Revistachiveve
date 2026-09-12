@@ -14,6 +14,12 @@ export type Tender = {
   editalUrl?: string;
 };
 
+export type TenderList = {
+  tenders: Tender[];
+  total: number;
+  totalPages: number;
+};
+
 const REST_BASE = "concurso";
 const TTL_MS = 60_000;
 
@@ -48,19 +54,39 @@ function normalize(post: WPTender): Tender {
     id: post.id,
     slug: post.slug,
     title: decodeEntities(post.title.rendered),
-    institution: asString(pickMeta(post, "instituicao", "concurso_institution")) ?? "",
-    deadline: asString(pickMeta(post, "data_limite_de_submissao", "concurso_deadline")) ?? "",
+    institution:
+      asString(pickMeta(post, "instituicao", "concurso_institution")) ?? "",
+    deadline:
+      asString(
+        pickMeta(post, "data_limite_de_submissao", "concurso_deadline"),
+      ) ?? "",
     type: asString(pickMeta(post, "tipo_de_concurso", "concurso_type")) ?? "",
-    vacancies: asNumber(pickMeta(post, "numero_de_vagas", "concurso_vacancies")),
-    editalUrl: asString(pickMeta(post, "link_do_concurso", "concurso_edital_url")),
+    vacancies: asNumber(
+      pickMeta(post, "numero_de_vagas", "concurso_vacancies"),
+    ),
+    editalUrl: asString(
+      pickMeta(post, "link_do_concurso", "concurso_edital_url"),
+    ),
   };
 }
 
-export async function listTenders(): Promise<Tender[] | null> {
-  if (!(await hasRestBase(REST_BASE))) return null;
+export async function listTenders({
+  page = 1,
+  perPage = 8,
+}: {
+  page?: number;
+  perPage?: number;
+} = {}): Promise<TenderList> {
+  if (!(await hasRestBase(REST_BASE))) {
+    return { tenders: [], total: 0, totalPages: 0 };
+  }
   const res = await wpList<WPTender>(`/${REST_BASE}`, {
-    params: { per_page: 50, orderby: "date", order: "desc" },
+    params: { per_page: perPage, page, orderby: "date", order: "desc" },
     ttlMs: TTL_MS,
   });
-  return res.items.length > 0 ? res.items.map(normalize) : null;
+  return {
+    tenders: res.items.map(normalize),
+    total: res.total,
+    totalPages: res.totalPages,
+  };
 }

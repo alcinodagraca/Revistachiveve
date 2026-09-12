@@ -72,20 +72,23 @@ export function PrivacidadePage() {
   return (
     <LegalPage
       title="Política de Privacidade"
-      updatedAt="01 de Junho de 2026"
+      updatedAt="12 de Setembro de 2026"
       intro="A Revista Chiveve respeita a sua privacidade. Esta política descreve que dados recolhemos, porquê, e como pode exercer os seus direitos."
       sections={[
         {
           heading: "Dados que recolhemos",
           paragraphs: [
-            "Recolhemos apenas os dados estritamente necessários para prestar os nossos serviços: nome e endereço de e-mail (quando subscreve a newsletter), e dados de navegação anónimos para fins estatísticos.",
+            "Recolhemos apenas os dados necessários para prestar os nossos serviços: nome e endereço de e-mail, dados enviados nos formulários de contacto e submissão, e dados de navegação anónimos para fins estatísticos.",
+            "Nos formulários de contactos úteis e concursos públicos, os dados identificados como públicos podem ser publicados após revisão editorial. O nome e o e-mail da pessoa que submete são usados apenas para verificação e acompanhamento.",
             "Não vendemos nem partilhamos dados pessoais com terceiros para fins comerciais.",
           ],
         },
         {
           heading: "Finalidade do tratamento",
           paragraphs: [
-            "Usamos os dados recolhidos para enviar a newsletter, melhorar a experiência editorial e responder a contactos enviados através do formulário do site.",
+            "Usamos os dados recolhidos para enviar a newsletter, melhorar a experiência editorial, responder a contactos e rever contribuições submetidas para possível publicação.",
+            "As submissões pendentes são guardadas no WordPress. O nome e o e-mail da pessoa que submete são enviados através do Resend para a caixa de correio da equipa editorial, onde ficam sujeitos às políticas de retenção desses serviços.",
+            "As submissões rejeitadas e as notificações relacionadas são conservadas apenas durante o período necessário para revisão, segurança e resolução de eventuais pedidos, sendo depois eliminadas de acordo com os procedimentos editoriais.",
           ],
         },
         {
@@ -104,7 +107,7 @@ export function TermosPage() {
   return (
     <LegalPage
       title="Termos e Condições"
-      updatedAt="01 de Junho de 2026"
+      updatedAt="12 de Setembro de 2026"
       intro="Ao utilizar a Revista Chiveve, está a concordar com os termos abaixo. Leia com atenção."
       sections={[
         {
@@ -118,6 +121,7 @@ export function TermosPage() {
           heading: "Comentários e contribuições",
           paragraphs: [
             "O leitor é responsável pelo conteúdo que envia através de formulários ou comentários. Reservamo-nos o direito de não publicar ou remover contribuições que violem boas práticas editoriais.",
+            "Ao submeter um contacto útil ou concurso público, confirma que os dados são correctos, que tem autorização para os partilhar e que a equipa pode corrigi-los ou editá-los antes da publicação.",
           ],
         },
         {

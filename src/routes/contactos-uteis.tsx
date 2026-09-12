@@ -1,19 +1,25 @@
-import { createFileRoute } from '@tanstack/react-router'
-import ContactosUteisPage from '../app/pages/ContactosUteisPage'
-import { fnListContacts } from '../server/wp/server-fns'
-import { pageSeo } from '../server/seo'
+import { createFileRoute } from "@tanstack/react-router";
+import ContactosUteisPage from "../app/pages/ContactosUteisPage";
+import {
+  fnListContactCategories,
+  fnListContacts,
+} from "../server/wp/server-fns";
+import { pageSeo } from "../server/seo";
 
-export const Route = createFileRoute('/contactos-uteis')({
+export const Route = createFileRoute("/contactos-uteis")({
   component: ContactosUteisPage,
   loader: async () => {
-    const contacts = await fnListContacts()
-    return { contacts }
+    const [contacts, contactCategories] = await Promise.all([
+      fnListContacts(),
+      fnListContactCategories().catch(() => []),
+    ]);
+    return { contacts, contactCategories };
   },
   head: () =>
     pageSeo({
-      title: 'Directório de Empresas',
+      title: "Directório de Empresas",
       description:
-        'Directório de instituições, bancos, associações empresariais e organizações úteis em Moçambique.',
-      path: '/contactos-uteis',
+        "Directório de instituições, bancos, associações empresariais e organizações úteis em Moçambique.",
+      path: "/contactos-uteis",
     }),
-})
+});

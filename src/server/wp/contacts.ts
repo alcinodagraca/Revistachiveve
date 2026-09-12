@@ -17,8 +17,15 @@ export type UsefulContact = {
   description: string;
 };
 
+export type ContactCategory = {
+  id: number;
+  name: string;
+  slug: string;
+};
+
 const REST_BASE = "contacto-util";
 const TTL_MS = 5 * 60_000;
+const MAX_PAGES = 10;
 
 type WPContact = WPPost & {
   meta?: Record<string, unknown>;
@@ -65,9 +72,67 @@ function normalize(post: WPContact): UsefulContact {
 
 export async function listContacts(): Promise<UsefulContact[] | null> {
   if (!(await hasRestBase(REST_BASE))) return null;
-  const res = await wpList<WPContact>(`/${REST_BASE}`, {
-    params: { _embed: 1, per_page: 100, orderby: "title", order: "asc" },
+  const first = await wpList<WPContact>(`/${REST_BASE}`, {
+    params: {
+      _embed: 1,
+      per_page: 100,
+      page: 1,
+      orderby: "title",
+      order: "asc",
+    },
     ttlMs: TTL_MS,
   });
-  return res.items.length > 0 ? res.items.map(normalize) : null;
+  const pageCount = Math.min(first.totalPages, MAX_PAGES);
+  const remaining = await Promise.all(
+    Array.from(
+      { length: Math.max(0, pageCount - 1) },
+      (_, index) => index + 2,
+    ).map((page) =>
+      wpList<WPContact>(`/${REST_BASE}`, {
+        params: {
+          _embed: 1,
+          per_page: 100,
+          page,
+          orderby: "title",
+          order: "asc",
+        },
+        ttlMs: TTL_MS,
+      }),
+    ),
+  );
+  const contacts = [first, ...remaining].flatMap((response) => response.items);
+
+  return contacts.length > 0 ? contacts.map(normalize) : null;
+}
+
+export async function listContactCategories(): Promise<ContactCategory[]> {
+  const params = {
+    per_page: 100,
+    hide_empty: false,
+    orderby: "name",
+    order: "asc",
+  };
+  const first = await wpList<WPTerm>("/contacto-categorias", {
+    params: { ...params, page: 1 },
+    ttlMs: TTL_MS,
+  });
+  const pageCount = Math.min(first.totalPages, MAX_PAGES);
+  const remaining = await Promise.all(
+    Array.from(
+      { length: Math.max(0, pageCount - 1) },
+      (_, index) => index + 2,
+    ).map((page) =>
+      wpList<WPTerm>("/contacto-categorias", {
+        params: { ...params, page },
+        ttlMs: TTL_MS,
+      }),
+    ),
+  );
+  const terms = [first, ...remaining].flatMap((response) => response.items);
+
+  return terms.map(({ id, name, slug }) => ({
+    id,
+    name: decodeEntities(name),
+    slug,
+  }));
 }

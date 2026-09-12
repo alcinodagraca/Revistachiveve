@@ -18,9 +18,11 @@ function ensureEnvLoaded() {
   if (envLoaded) return;
   envLoaded = true;
 
-  // First try standard dotenv (cwd-based)
+  // Match Vite's precedence for local development without overriding values
+  // already supplied by the deployment environment.
   try {
-    loadDotenv();
+    loadDotenv({ path: ".env.local", override: false, quiet: true });
+    loadDotenv({ path: ".env", override: false, quiet: true });
   } catch {
     // ignore
   }
@@ -70,6 +72,11 @@ export type WPConfig = {
   authHeader: string | null;
 };
 
+export type WPSubmissionConfig = {
+  baseUrl: string;
+  authHeader: string;
+};
+
 let cached: WPConfig | null = null;
 
 export function getWPConfig(): WPConfig {
@@ -101,4 +108,22 @@ export function isWPConfigured(): boolean {
   } catch {
     return false;
   }
+}
+
+export function getWPSubmissionConfig(): WPSubmissionConfig {
+  ensureEnvLoaded();
+
+  const { baseUrl } = getWPConfig();
+  const user = process.env.WP_SUBMISSION_USERNAME;
+  const pass = process.env.WP_SUBMISSION_PASSWORD;
+  if (!user || !pass) {
+    throw new WPNotConfiguredError(
+      "WordPress submission credentials are not configured.",
+    );
+  }
+
+  return {
+    baseUrl,
+    authHeader: `Basic ${Buffer.from(`${user}:${pass}`).toString("base64")}`,
+  };
 }

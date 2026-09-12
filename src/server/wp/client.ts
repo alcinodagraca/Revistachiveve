@@ -65,7 +65,10 @@ export async function wpGet<T>(
   };
   if (auth && authHeader) headers.Authorization = authHeader;
 
-  const res = await fetch(url, { headers, signal });
+  const res = await fetch(url, {
+    headers,
+    signal: signal ?? AbortSignal.timeout(10_000),
+  });
   if (!res.ok) {
     const body = await res.text().catch(() => "");
     throw new WPError(
@@ -106,7 +109,10 @@ export async function wpList<T>(
   const headers: Record<string, string> = { Accept: "application/json" };
   if (auth && authHeader) headers.Authorization = authHeader;
 
-  const res = await fetch(url, { headers, signal });
+  const res = await fetch(url, {
+    headers,
+    signal: signal ?? AbortSignal.timeout(10_000),
+  });
   if (!res.ok) {
     const body = await res.text().catch(() => "");
     if (res.status === 400 && body.includes("rest_post_invalid_page_number")) {

@@ -1,4 +1,9 @@
-export { isWPConfigured, getWPConfig, WPNotConfiguredError } from "./env";
+export {
+  isWPConfigured,
+  getWPConfig,
+  getWPSubmissionConfig,
+  WPNotConfiguredError,
+} from "./env";
 export { wpGet, wpList, clearWPCache, WPError } from "./client";
 export { getRegisteredRestBases, hasRestBase } from "./cpt-detect";
 export {
@@ -16,8 +21,8 @@ export type { Event } from "./events";
 export { listEditions } from "./editions";
 export type { Edition } from "./editions";
 export { listTenders } from "./tenders";
-export type { Tender } from "./tenders";
-export { listContacts } from "./contacts";
-export type { UsefulContact } from "./contacts";
+export type { Tender, TenderList } from "./tenders";
+export { listContactCategories, listContacts } from "./contacts";
+export type { ContactCategory, UsefulContact } from "./contacts";
 export { listTeam } from "./team";
 export type { TeamMember } from "./team";

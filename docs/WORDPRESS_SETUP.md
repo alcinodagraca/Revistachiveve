@@ -281,6 +281,49 @@ WP_APP_PASSWORD=…   # Application Password, not your login password
 `.env` is **never committed** (already in `.gitignore`). On production
 hosts, set these via the host's secret manager.
 
+### Public submission moderation
+
+The public forms on `/contactos-uteis` and `/concursos-publicos` create
+records with WordPress status `pending`. Editors review and publish them from
+the normal **Contactos Úteis** and **Concursos Públicos** admin screens.
+
+Create a dedicated WordPress user and generate an Application Password for that
+user. Do not reuse an administrator account:
+
+```
+WP_SUBMISSION_USERNAME=website-submissions
+WP_SUBMISSION_PASSWORD=…
+```
+
+The current CPT UI exports use WordPress's shared `post` capabilities. A normal
+**Contributor** is therefore a safe no-publish baseline, but it can create
+pending content outside these two CPTs if its Application Password is exposed.
+Before production, assign distinct capability types to `contacto-util` and
+`concurso`, then create a service role with create/edit access only to those two
+CPTs and no publish, delete, plugin, user, or settings capabilities. Grant the
+corresponding review capabilities to editors. Verify that the service account
+can create both CPTs as pending, cannot create normal posts, and cannot publish.
+
+Create a Cloudflare Turnstile widget for `www.revistachiveve.com` and configure:
+
+```
+TURNSTILE_SECRET=…
+TURNSTILE_HOSTNAMES=www.revistachiveve.com
+SUBMISSION_ORIGINS=https://www.revistachiveve.com
+```
+
+The server verifies the Turnstile token, action, explicit hostname allowlist,
+request origin, and WordPress category before creating a pending record. The
+site key `0x4AAAAAAExoS6ttyxnKc9Lt` is embedded in the frontend; the secret and
+WordPress Application Password must remain server-only. Production
+`TURNSTILE_HOSTNAMES` must not contain `localhost` or `127.0.0.1`; use those
+values only in a local development environment. Likewise, add local origins to
+`SUBMISSION_ORIGINS` only in local development.
+
+Turnstile is not a request quota. Add a Cloudflare or Vercel rate-limit rule for
+the public submission POST endpoint before launch, and monitor both the pending
+WordPress queue and Resend usage for abuse.
+
 ---
 
 ## Sitemap

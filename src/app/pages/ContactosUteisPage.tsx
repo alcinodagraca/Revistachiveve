@@ -6,9 +6,10 @@ import { EmptyState } from "../components/EmptyState";
 import { Heading, SectionHeader } from "../components/typography";
 import { Input } from "../components/ui/input";
 import { Route } from "../../routes/contactos-uteis";
+import { UsefulContactSubmissionDialog } from "../components/ListingSubmissionDialogs";
 
 export default function ContactosUteisPage() {
-  const { contacts: wpContacts } = Route.useLoaderData();
+  const { contacts: wpContacts, contactCategories } = Route.useLoaderData();
   const items = wpContacts ?? [];
 
   // Derive category list dynamically from the data so WP-added categories show up.
@@ -49,6 +50,8 @@ export default function ContactosUteisPage() {
             { label: "Contactos Úteis" },
           ]}
         />
+
+        <UsefulContactSubmissionDialog categories={contactCategories} />
 
         {items.length === 0 ? (
           <EmptyState

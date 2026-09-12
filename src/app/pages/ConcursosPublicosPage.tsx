@@ -12,6 +12,7 @@ import { ListPagination } from "../components/ListPagination";
 import { Heading, SectionHeader } from "../components/typography";
 import { Input } from "../components/ui/input";
 import { Route } from "../../routes/concursos-publicos";
+import { TenderSubmissionDialog } from "../components/ListingSubmissionDialogs";
 
 export default function ConcursosPublicosPage() {
   const { tenders, currentPage, totalPages, total } = Route.useLoaderData();
@@ -44,6 +45,8 @@ export default function ConcursosPublicosPage() {
           subtitle="Oportunidades no sector público reunidas para consulta rápida, com o essencial de cada edital."
           breadcrumbs={[{ label: "Início", to: "/" }, { label: "Concursos Públicos" }]}
         />
+
+        <TenderSubmissionDialog />
 
         {items.length === 0 ? (
           <EmptyState

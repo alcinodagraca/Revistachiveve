@@ -9,19 +9,17 @@ import { getCategoryBySlug, listCategories } from "./categories";
 import { getEventBySlug, listEvents } from "./events";
 import { listEditions } from "./editions";
 import { listTenders } from "./tenders";
-import { listContacts } from "./contacts";
+import { listContactCategories, listContacts } from "./contacts";
 import { listTeam } from "./team";
 
 export const fnListArticles = createServerFn({ method: "GET" })
   .inputValidator(
-    (
-      input?: {
-        page?: number;
-        perPage?: number;
-        categorySlug?: string;
-        search?: string;
-      },
-    ) => input ?? {},
+    (input?: {
+      page?: number;
+      perPage?: number;
+      categorySlug?: string;
+      search?: string;
+    }) => input ?? {},
   )
   .handler(({ data }) => listArticles(data));
 
@@ -42,7 +40,9 @@ export const fnGetArticleBundle = createServerFn({ method: "GET" })
   });
 
 export const fnGetMaisLidos = createServerFn({ method: "GET" })
-  .inputValidator((input?: { excludeId?: number; limit?: number }) => input ?? {})
+  .inputValidator(
+    (input?: { excludeId?: number; limit?: number }) => input ?? {},
+  )
   .handler(({ data }) => getMaisLidos(data.excludeId ?? 0, data.limit ?? 5));
 
 export const fnListCategories = createServerFn({ method: "GET" }).handler(() =>
@@ -80,13 +80,17 @@ export const fnListEditions = createServerFn({ method: "GET" }).handler(() =>
   listEditions(),
 );
 
-export const fnListTenders = createServerFn({ method: "GET" }).handler(() =>
-  listTenders(),
-);
+export const fnListTenders = createServerFn({ method: "GET" })
+  .inputValidator((input?: { page?: number; perPage?: number }) => input ?? {})
+  .handler(({ data }) => listTenders(data));
 
 export const fnListContacts = createServerFn({ method: "GET" }).handler(() =>
   listContacts(),
 );
+
+export const fnListContactCategories = createServerFn({
+  method: "GET",
+}).handler(() => listContactCategories());
 
 export const fnListTeam = createServerFn({ method: "GET" }).handler(() =>
   listTeam(),
