@@ -31,7 +31,7 @@ export const Route = createFileRoute("/pesquisa")({
     pageSeo({
       title: loaderData?.q ? `"${loaderData.q}" · Pesquisa` : "Pesquisa",
       description:
-        "Pesquise artigos da Revista Chiveve por palavra-chave, tema, cidade ou autor.",
+        "Pesquise artigos da Revista Negócios no Chiveve por palavra-chave, tema, cidade ou autor.",
       path: "/pesquisa",
       noindex: true,
     }),

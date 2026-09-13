@@ -8,7 +8,7 @@ export const Route = createFileRoute("/termos")({
     pageSeo({
       title: "Termos e Condições",
       description:
-        "Termos e condições de utilização do site da Revista Chiveve.",
+        "Termos e condições de utilização do site da Revista Negócios no Chiveve.",
       path: "/termos",
     }),
 });

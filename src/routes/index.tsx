@@ -1,7 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
 import HomePage from '../app/pages/HomePage'
 import { fnListArticles, fnListEditions } from '../server/wp/server-fns'
-import { pageSeo, SITE_TAGLINE } from '../server/seo'
+import {
+  organizationJsonLd,
+  pageSeo,
+  SITE_NAME,
+  SITE_TAGLINE,
+  websiteJsonLd,
+} from '../server/seo'
 
 export const Route = createFileRoute('/')({
   component: HomePage,
@@ -14,12 +20,12 @@ export const Route = createFileRoute('/')({
     ])
     return { recent, opiniao, entrevistas, editions: editions ?? [] }
   },
-  head: ({ loaderData }) =>
+  head: () =>
     pageSeo({
-      title: 'Revista Chiveve',
+      title: SITE_NAME,
       description: SITE_TAGLINE,
       path: '/',
-      image: loaderData?.recent.articles[0]?.heroImage,
-      imageAlt: loaderData?.recent.articles[0]?.heroAlt,
+      imageAlt: 'Revista Negócios no Chiveve',
+      jsonLd: [organizationJsonLd(), websiteJsonLd()],
     }),
 })

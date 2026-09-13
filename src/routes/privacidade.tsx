@@ -8,7 +8,7 @@ export const Route = createFileRoute("/privacidade")({
     pageSeo({
       title: "Política de Privacidade",
       description:
-        "Política de privacidade da Revista Chiveve — como recolhemos, usamos e protegemos os seus dados.",
+        "Política de privacidade da Revista Negócios no Chiveve: como recolhemos, utilizamos e protegemos os seus dados.",
       path: "/privacidade",
     }),
 });

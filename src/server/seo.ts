@@ -13,10 +13,19 @@ export const SITE_URL = (
   "https://www.revistachiveve.com"
 ).replace(/\/$/, "");
 
-export const SITE_NAME = "Revista Chiveve";
+export const SITE_NAME = "Revista Negócios no Chiveve";
+export const SITE_SHORT_NAME = "Chiveve";
 export const SITE_TAGLINE =
   "A sua revista de referência para negócios, empreendedorismo, liderança e inovação em Moçambique e África.";
 export const SITE_LOCALE = "pt_MZ";
+export const ORGANIZATION_ID = `${SITE_URL}/#organization`;
+export const WEBSITE_ID = `${SITE_URL}/#website`;
+
+const SOCIAL_PROFILES = [
+  "https://facebook.com/Revistachiveve/",
+  "https://www.youtube.com/@RevistaChiveve",
+  "https://www.linkedin.com/company/neg%C3%B3cios-no-chiveve/",
+];
 
 // Default OG image used when a page has no hero of its own.
 // Should be ≥ 1200×630 — host at /public/og-default.png when available.
@@ -90,31 +99,43 @@ export function pageSeo(input: PageSeoInput) {
   const image = absUrl(input.image || DEFAULT_OG_IMAGE);
   const type = input.type ?? "website";
   const description = normalizeDescription(input.description);
+  const fullTitle = joinTitle(input.title);
 
   const meta: HeadMeta[] = [
-    { title: joinTitle(input.title) },
+    { title: fullTitle },
     { name: "description", content: description },
+    {
+      name: "robots",
+      content: input.noindex
+        ? "noindex,follow"
+        : "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1",
+    },
 
     // Open Graph
     { property: "og:site_name", content: SITE_NAME },
     { property: "og:locale", content: SITE_LOCALE },
     { property: "og:type", content: type },
-    { property: "og:title", content: input.title },
+    { property: "og:title", content: fullTitle },
     { property: "og:description", content: description },
     { property: "og:url", content: url },
     { property: "og:image", content: image },
+    { property: "og:image:secure_url", content: image },
     { property: "og:image:alt", content: input.imageAlt ?? input.title },
 
     // Twitter
     { name: "twitter:card", content: "summary_large_image" },
-    { name: "twitter:title", content: input.title },
+    { name: "twitter:title", content: fullTitle },
     { name: "twitter:description", content: description },
     { name: "twitter:image", content: image },
     { name: "twitter:image:alt", content: input.imageAlt ?? input.title },
   ];
 
-  if (input.noindex) {
-    meta.push({ name: "robots", content: "noindex,follow" });
+  if (!input.image) {
+    meta.push(
+      { property: "og:image:type", content: "image/png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+    );
   }
 
   if (type === "article" && input.article) {
@@ -154,10 +175,25 @@ export function organizationJsonLd() {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": ORGANIZATION_ID,
     name: SITE_NAME,
     url: SITE_URL,
-    logo: `${SITE_URL}/logo.png`,
+    logo: {
+      "@type": "ImageObject",
+      url: `${SITE_URL}/icon-512.png`,
+      width: 512,
+      height: 512,
+    },
+    image: DEFAULT_OG_IMAGE,
     description: SITE_TAGLINE,
+    email: "geral@revistachiveve.com",
+    telephone: "+258862326404",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Beira",
+      addressCountry: "MZ",
+    },
+    sameAs: SOCIAL_PROFILES,
   };
 }
 
@@ -165,10 +201,13 @@ export function websiteJsonLd() {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": WEBSITE_ID,
     name: SITE_NAME,
+    alternateName: SITE_SHORT_NAME,
     url: SITE_URL,
     description: SITE_TAGLINE,
     inLanguage: "pt-MZ",
+    publisher: { "@id": ORGANIZATION_ID },
     potentialAction: {
       "@type": "SearchAction",
       target: `${SITE_URL}/pesquisa?q={search_term_string}`,
@@ -214,9 +253,17 @@ export function articleJsonLd(input: ArticleJsonLdInput) {
     mainEntityOfPage: { "@type": "WebPage", "@id": absUrl(input.url) },
     publisher: {
       "@type": "Organization",
+      "@id": ORGANIZATION_ID,
       name: SITE_NAME,
-      logo: { "@type": "ImageObject", url: `${SITE_URL}/logo.png` },
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE_URL}/icon-512.png`,
+        width: 512,
+        height: 512,
+      },
     },
+    isAccessibleForFree: true,
+    inLanguage: "pt-MZ",
     ...(input.authorName
       ? { author: { "@type": "Person", name: input.authorName } }
       : {}),
@@ -246,6 +293,7 @@ export function eventJsonLd(input: EventJsonLdInput) {
     image: [absUrl(input.image || DEFAULT_OG_IMAGE)],
     startDate: normalizeDate(input.startDate),
     url: absUrl(input.url),
+    inLanguage: "pt-MZ",
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
     ...(input.locationName || input.city

@@ -8,7 +8,7 @@ export const Route = createFileRoute("/anuncios")({
     pageSeo({
       title: "Anuncie Connosco",
       description:
-        "Espaços publicitários e parcerias na Revista Chiveve. Alcance o público de decisores em Moçambique.",
+        "Espaços publicitários e parcerias na Revista Negócios no Chiveve. Alcance empresários, gestores e decisores em Moçambique.",
       path: "/anuncios",
     }),
 });

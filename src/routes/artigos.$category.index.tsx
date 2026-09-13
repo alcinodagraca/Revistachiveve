@@ -29,7 +29,7 @@ export const Route = createFileRoute('/artigos/$category/')({
     if (!loaderData) {
       return pageSeo({
         title: 'Categoria',
-        description: 'Artigos da Revista Chiveve por categoria.',
+        description: 'Artigos da Revista Negócios no Chiveve organizados por categoria.',
         path: '/artigos',
       })
     }
@@ -44,7 +44,7 @@ export const Route = createFileRoute('/artigos/$category/')({
           : loaderData.category.name,
       description:
         (introduction ||
-          `Artigos da Revista Chiveve na categoria ${loaderData.category.name}.`) +
+          `Artigos da Revista Negócios no Chiveve na categoria ${loaderData.category.name}.`) +
         (page > 1 ? ` Página ${page}.` : ''),
       path,
       image: loaderData.articles[0]?.heroImage,

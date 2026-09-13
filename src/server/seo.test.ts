@@ -4,7 +4,9 @@ import {
   articleJsonLd,
   DEFAULT_OG_IMAGE,
   eventJsonLd,
+  organizationJsonLd,
   pageSeo,
+  SITE_NAME,
   SITE_URL,
 } from "./seo";
 
@@ -27,6 +29,38 @@ test("pageSeo preserves pagination in the canonical URL", () => {
         entry.content === "Artigos",
     ),
   );
+  assert.ok(
+    seo.meta.some(
+      (entry) =>
+        "property" in entry &&
+        entry.property === "og:image:width" &&
+        entry.content === "1200",
+    ),
+  );
+  assert.ok(
+    seo.meta.some(
+      (entry) =>
+        "name" in entry &&
+        entry.name === "robots" &&
+        entry.content.includes("max-image-preview:large"),
+    ),
+  );
+  assert.ok(
+    seo.meta.some(
+      (entry) =>
+        "property" in entry &&
+        entry.property === "og:title" &&
+        entry.content === `Artigos - Página 2 · ${SITE_NAME}`,
+    ),
+  );
+});
+
+test("organization schema identifies the publisher and its profiles", () => {
+  const schema = organizationJsonLd();
+  assert.equal(schema.name, SITE_NAME);
+  assert.equal(schema.address.addressCountry, "MZ");
+  assert.equal(schema.sameAs.length, 3);
+  assert.equal(schema.logo.width, 512);
 });
 
 test("pageSeo caps and normalizes metadata descriptions", () => {

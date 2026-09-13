@@ -9,7 +9,7 @@ import { Layout } from '../app/components/Layout'
 import NotFoundPage from '../app/pages/NotFoundPage'
 import appCss from '../styles/index.css?url'
 import { fnListCategories } from '../server/wp/server-fns'
-import { organizationJsonLd, websiteJsonLd, SITE_NAME } from '../server/seo'
+import { SITE_NAME, SITE_SHORT_NAME } from '../server/seo'
 
 export const Route = createRootRoute({
   head: () => ({
@@ -20,11 +20,17 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1.0',
       },
       { title: SITE_NAME },
+      { name: 'application-name', content: SITE_NAME },
+      { name: 'apple-mobile-web-app-title', content: SITE_SHORT_NAME },
+      { name: 'color-scheme', content: 'light' },
       { name: 'theme-color', content: '#1E4ED8' },
     ],
     links: [
-      { rel: 'icon', href: '/logo-alt.png', type: 'image/png' },
-      { rel: 'apple-touch-icon', href: '/logo-alt.png' },
+      { rel: 'icon', href: '/favicon-96x96.png', type: 'image/png', sizes: '96x96' },
+      { rel: 'icon', href: '/favicon.ico', type: 'image/x-icon', sizes: '32x32' },
+      { rel: 'icon', href: '/favicon-32x32.png', type: 'image/png', sizes: '32x32' },
+      { rel: 'apple-touch-icon', href: '/apple-touch-icon.png', sizes: '180x180' },
+      { rel: 'manifest', href: '/site.webmanifest' },
       { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
       { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
       {
@@ -32,16 +38,6 @@ export const Route = createRootRoute({
         href: 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap',
       },
       { rel: 'stylesheet', href: appCss },
-    ],
-    scripts: [
-      {
-        type: 'application/ld+json',
-        children: JSON.stringify(organizationJsonLd()),
-      },
-      {
-        type: 'application/ld+json',
-        children: JSON.stringify(websiteJsonLd()),
-      },
     ],
   }),
   loader: async () => {
