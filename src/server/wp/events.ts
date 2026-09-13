@@ -33,9 +33,15 @@ const MONTH_PT_SHORT = [
   "JUL", "AGO", "SET", "OUT", "NOV", "DEZ",
 ];
 
-function formatDisplayDate(iso: string): { displayDate: string; day: string; month: string } {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return { displayDate: iso, day: "", month: "" };
+function normalizeEventDate(value: string): string {
+  const compact = value.match(/^(\d{4})(\d{2})(\d{2})$/);
+  if (compact) return `${compact[1]}-${compact[2]}-${compact[3]}T00:00:00Z`;
+  return value;
+}
+
+function formatDisplayDate(value: string): { displayDate: string; day: string; month: string } {
+  const d = new Date(normalizeEventDate(value));
+  if (Number.isNaN(d.getTime())) return { displayDate: value, day: "", month: "" };
   const day = String(d.getDate()).padStart(2, "0");
   const month = MONTH_PT_SHORT[d.getMonth()];
   const displayDate = `${day} ${month.charAt(0)}${month.slice(1).toLowerCase()} ${d.getFullYear()}`;
@@ -63,8 +69,9 @@ function pick(post: WPEvent, ...keys: string[]): string | undefined {
 }
 
 function normalizeWPEvent(post: WPEvent): Event {
-  const iso =
+  const rawDate =
     pick(post, "data_do_evento", "event_date") ?? post.date_gmt;
+  const iso = normalizeEventDate(rawDate);
   const { displayDate, day, month } = formatDisplayDate(iso);
   const bodyHtml = sanitizeWordPressHtml(post.content.rendered);
   return {
@@ -104,7 +111,18 @@ export async function listEvents(): Promise<Event[]> {
     page++;
   }
 
-  return events.map(normalizeWPEvent);
+  const normalized = events.map(normalizeWPEvent);
+  const now = Date.now();
+  return normalized.sort((a, b) => {
+    const aTime = new Date(a.date).getTime();
+    const bTime = new Date(b.date).getTime();
+    const aUpcoming = Number.isNaN(aTime) || aTime >= now;
+    const bUpcoming = Number.isNaN(bTime) || bTime >= now;
+    if (aUpcoming !== bUpcoming) return aUpcoming ? -1 : 1;
+    if (Number.isNaN(aTime)) return 1;
+    if (Number.isNaN(bTime)) return -1;
+    return aUpcoming ? aTime - bTime : bTime - aTime;
+  });
 }
 
 export async function getEventBySlug(slug: string): Promise<Event | null> {

@@ -20,36 +20,80 @@ export function ListPagination({
   currentPage,
   totalPages,
   getPageHref,
+  onPageChange,
 }: {
   currentPage: number;
   totalPages: number;
-  getPageHref: (page: number) => string;
+  getPageHref?: (page: number) => string;
+  onPageChange?: (page: number) => void;
 }) {
   if (totalPages <= 1) return null;
 
   const items = buildPageItems(currentPage, totalPages);
+
+  const pageControl = (
+    page: number,
+    label: string | number,
+    options?: { disabled?: boolean; rel?: "prev" | "next" },
+  ) => {
+    const isCurrent = page === currentPage && typeof label === "number";
+    const variant = isCurrent ? "default" : "outline";
+
+    if (options?.disabled) {
+      return (
+        <Button type="button" variant="outline" size="sm" disabled>
+          {label}
+        </Button>
+      );
+    }
+
+    if (onPageChange) {
+      return (
+        <Button
+          type="button"
+          variant={variant}
+          size="sm"
+          aria-current={isCurrent ? "page" : undefined}
+          aria-label={typeof label === "number" ? `Página ${page}` : undefined}
+          onClick={() => onPageChange(page)}
+        >
+          {label}
+        </Button>
+      );
+    }
+
+    if (!getPageHref) return null;
+    return (
+      <Button asChild variant={variant} size="sm">
+        <a
+          href={getPageHref(page)}
+          rel={options?.rel}
+          aria-current={isCurrent ? "page" : undefined}
+          aria-label={typeof label === "number" ? `Página ${page}` : undefined}
+        >
+          {label}
+        </a>
+      </Button>
+    );
+  };
 
   return (
     <nav
       aria-label="Paginação"
       className="mt-12 flex flex-col items-center gap-4 border-t border-border pt-6"
     >
-      <span className="font-sans text-[0.78rem] font-light uppercase tracking-[0.08em] text-muted-foreground">
+      <span
+        className="font-sans text-[0.78rem] font-light uppercase tracking-[0.08em] text-muted-foreground"
+        aria-live="polite"
+      >
         Página {currentPage} de {totalPages}
       </span>
 
       <div className="flex flex-wrap items-center justify-center gap-2">
-        {currentPage === 1 ? (
-          <Button type="button" variant="outline" size="sm" disabled>
-            Anterior
-          </Button>
-        ) : (
-          <Button asChild variant="outline" size="sm">
-            <a href={getPageHref(currentPage - 1)} rel="prev">
-              Anterior
-            </a>
-          </Button>
-        )}
+        {pageControl(currentPage - 1, "Anterior", {
+          disabled: currentPage === 1,
+          rel: "prev",
+        })}
 
         {items.map((item, index) =>
           item === "..." ? (
@@ -60,33 +104,14 @@ export function ListPagination({
               ...
             </span>
           ) : (
-            <Button
-              key={item}
-              asChild
-              variant={item === currentPage ? "default" : "outline"}
-              size="sm"
-            >
-              <a
-                href={getPageHref(item)}
-                aria-current={item === currentPage ? "page" : undefined}
-              >
-                {item}
-              </a>
-            </Button>
+            <span key={item}>{pageControl(item, item)}</span>
           ),
         )}
 
-        {currentPage === totalPages ? (
-          <Button type="button" variant="outline" size="sm" disabled>
-            Seguinte
-          </Button>
-        ) : (
-          <Button asChild variant="outline" size="sm">
-            <a href={getPageHref(currentPage + 1)} rel="next">
-              Seguinte
-            </a>
-          </Button>
-        )}
+        {pageControl(currentPage + 1, "Seguinte", {
+          disabled: currentPage === totalPages,
+          rel: "next",
+        })}
       </div>
     </nav>
   );

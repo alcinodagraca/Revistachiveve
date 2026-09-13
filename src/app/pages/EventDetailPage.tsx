@@ -21,10 +21,7 @@ import { Route } from "../../routes/eventos.$slug";
 export default function EventDetailPage() {
   const { event, related } = Route.useLoaderData();
   const [copied, setCopied] = useState(false);
-  const eventUrl =
-    typeof window !== "undefined"
-      ? window.location.href
-      : `https://www.revistachiveve.com/eventos/${event.slug}`;
+  const eventUrl = `https://www.revistachiveve.com/eventos/${event.slug}`;
   const shareText = `${event.title} | Revista Chiveve`;
 
   async function copyEventLink() {
@@ -123,7 +120,7 @@ export default function EventDetailPage() {
                   href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(eventUrl)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex h-9 w-9 items-center justify-center border border-border bg-background text-foreground no-underline transition-colors hover:border-primary hover:text-primary"
+                  className="inline-flex size-[44px] items-center justify-center border border-border bg-background text-foreground no-underline transition-colors hover:border-primary hover:text-primary"
                   aria-label="Partilhar no Facebook"
                 >
                   <FaFacebookF size={14} />
@@ -133,7 +130,7 @@ export default function EventDetailPage() {
                   href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(eventUrl)}&text=${encodeURIComponent(shareText)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex h-9 w-9 items-center justify-center border border-border bg-background text-foreground no-underline transition-colors hover:border-primary hover:text-primary"
+                  className="inline-flex size-[44px] items-center justify-center border border-border bg-background text-foreground no-underline transition-colors hover:border-primary hover:text-primary"
                   aria-label="Partilhar no X"
                 >
                   <SiX size={13} />
@@ -143,7 +140,7 @@ export default function EventDetailPage() {
                   href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(eventUrl)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex h-9 w-9 items-center justify-center border border-border bg-background text-foreground no-underline transition-colors hover:border-primary hover:text-primary"
+                  className="inline-flex size-[44px] items-center justify-center border border-border bg-background text-foreground no-underline transition-colors hover:border-primary hover:text-primary"
                   aria-label="Partilhar no LinkedIn"
                 >
                   <FaLinkedinIn size={14} />
@@ -153,7 +150,7 @@ export default function EventDetailPage() {
                   href={`https://wa.me/?text=${encodeURIComponent(`${shareText} ${eventUrl}`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex h-9 w-9 items-center justify-center border border-border bg-background text-foreground no-underline transition-colors hover:border-primary hover:text-primary"
+                  className="inline-flex size-[44px] items-center justify-center border border-border bg-background text-foreground no-underline transition-colors hover:border-primary hover:text-primary"
                   aria-label="Partilhar no WhatsApp"
                 >
                   <FaWhatsapp size={15} />
@@ -162,7 +159,7 @@ export default function EventDetailPage() {
                 <button
                   type="button"
                   onClick={copyEventLink}
-                  className="inline-flex items-center gap-2 border border-border bg-background px-3 py-2 font-sans text-[0.82rem] font-medium text-foreground transition-colors hover:border-primary hover:text-primary"
+                  className="inline-flex min-h-[44px] items-center gap-2 border border-border bg-background px-3 py-2 font-sans text-[0.82rem] font-medium text-foreground transition-colors hover:border-primary hover:text-primary"
                 >
                   <FaLink size={13} />
                   {copied ? "Link copiado" : "Copiar link"}

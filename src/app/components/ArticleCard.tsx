@@ -38,7 +38,7 @@ export function ArticleCard({
           <ImageWithFallback
             src={article.heroImage}
             alt={article.title}
-            className="w-full object-cover block transition-transform duration-500 group-hover:scale-105"
+            className="w-full object-cover block transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none"
             style={{ height: imageHeight }}
           />
         </div>
@@ -55,7 +55,7 @@ export function ArticleCard({
           {article.title}
         </Heading>
 
-        <p className="font-sans text-sm font-normal text-muted-foreground mb-3">
+        <p className="font-sans text-sm font-normal text-foreground/65 mb-3">
           {formatDate(article.publishedAt)} · {article.readTime} min de leitura
         </p>
 

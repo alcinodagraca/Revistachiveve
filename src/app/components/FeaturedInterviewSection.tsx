@@ -13,17 +13,17 @@ function formatDateLong(iso: string) {
 
 export function FeaturedInterviewSection({
   article,
-  maisLidos = [],
+  recentArticles = [],
 }: {
   article: Article | null;
-  maisLidos?: Article[];
+  recentArticles?: Article[];
 }) {
   if (!article) return null;
 
   return (
     <section className="bg-background pt-18 pb-8 md:pt-20 md:pb-8">
       <div className="site-shell">
-        <SectionHeader>Entrevista Principal</SectionHeader>
+        <SectionHeader>Histórias de Capa</SectionHeader>
 
         <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,320px)] lg:gap-10">
           <article className="flex flex-col">
@@ -41,7 +41,7 @@ export function FeaturedInterviewSection({
               </div>
 
               <p className="mb-3 font-sans text-[0.74rem] font-medium uppercase tracking-[0.12em] text-primary">
-                Conversa de capa
+                Entrevista
               </p>
 
               <Heading
@@ -72,11 +72,11 @@ export function FeaturedInterviewSection({
                 Esta Semana
               </h3>
               <ol className="m-0 list-none p-0">
-                {maisLidos.slice(0, 5).map((item, index) => (
+                {recentArticles.slice(0, 5).map((item, index) => (
                   <li
                     key={item.slug}
                     className={
-                      "mb-3 pb-3" + (index < Math.min(maisLidos.length, 5) - 1 ? " border-b border-border" : "")
+                      "mb-3 pb-3" + (index < Math.min(recentArticles.length, 5) - 1 ? " border-b border-border" : "")
                     }
                   >
                     <Link

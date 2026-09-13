@@ -1,6 +1,7 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import EventDetailPage from "../app/pages/EventDetailPage";
 import NotFoundPage from "../app/pages/NotFoundPage";
+import { mockEvents } from "../data/mockListings";
 import { fnGetEventBySlug, fnListEvents } from "../server/wp/server-fns";
 import { breadcrumbJsonLd, eventJsonLd, pageSeo } from "../server/seo";
 
@@ -8,11 +9,14 @@ export const Route = createFileRoute("/eventos/$slug")({
   component: EventDetailPage,
   notFoundComponent: NotFoundPage,
   loader: async ({ params }) => {
-    const [event, all] = await Promise.all([
-      fnGetEventBySlug({ data: params.slug }),
-      fnListEvents(),
+    const [publishedEvent, publishedEvents] = await Promise.all([
+      fnGetEventBySlug({ data: params.slug }).catch(() => null),
+      fnListEvents().catch(() => []),
     ]);
+    const event =
+      publishedEvent ?? mockEvents.find((item) => item.slug === params.slug) ?? null;
     if (!event) throw notFound();
+    const all = publishedEvents.length > 0 ? publishedEvents : mockEvents;
     const related = all
       .filter((e) => e.slug !== event.slug)
       .slice(0, 3);

@@ -2,6 +2,7 @@ import { createFileRoute, notFound } from '@tanstack/react-router'
 import CategoryPage from '../app/pages/CategoryPage'
 import { fnGetCategoryWithArticles } from '../server/wp/server-fns'
 import { breadcrumbJsonLd, pageSeo } from '../server/seo'
+import { getCategoryIntroduction } from '../data/category-introductions'
 
 type SearchParams = { page?: number }
 
@@ -35,13 +36,14 @@ export const Route = createFileRoute('/artigos/$category/')({
     const categoryPath = `/artigos/${loaderData.category.slug}`
     const page = loaderData.currentPage
     const path = page > 1 ? `${categoryPath}?page=${page}` : categoryPath
+    const introduction = getCategoryIntroduction(loaderData.category)
     return pageSeo({
       title:
         page > 1
           ? `${loaderData.category.name} - Página ${page}`
           : loaderData.category.name,
       description:
-        (loaderData.category.description ||
+        (introduction ||
           `Artigos da Revista Chiveve na categoria ${loaderData.category.name}.`) +
         (page > 1 ? ` Página ${page}.` : ''),
       path,

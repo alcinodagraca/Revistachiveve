@@ -13,13 +13,15 @@ const mainLinks: { label: string; to: string }[] = [
   { label: "Edição Impressa", to: "/edicao-impressa" },
   { label: "Eventos", to: "/eventos" },
   { label: "Concursos Públicos", to: "/concursos-publicos" },
+  { label: "Directório Empresarial", to: "/contactos-uteis" },
+  { label: "Sobre Nós", to: "/sobre-nos" },
+  { label: "Contacte-nos", to: "/contactos" },
 ];
 
 const supportLinks: { label: string; to: string }[] = [
-  { label: "Contactos Úteis", to: "/contactos-uteis" },
-  { label: "Sobre Nós", to: "/sobre-nos" },
   { label: "Anunciar Aqui", to: "/anuncios" },
   { label: "Privacidade", to: "/privacidade" },
+  { label: "Termos de Uso", to: "/termos" },
 ];
 
 const socials = [
@@ -39,34 +41,28 @@ export function Footer() {
     <footer className="bg-primary text-primary-foreground">
       <div className="pt-18 pb-14">
         <div className="site-shell">
-          <div className="grid grid-cols-1 gap-y-10 md:grid-cols-[1.1fr_0.7fr_0.7fr_0.8fr] md:gap-x-8">
-            <div className="max-w-[420px] text-center md:text-left">
+          <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 sm:gap-x-10 lg:grid-cols-[1.1fr_0.7fr_0.7fr_0.8fr] lg:gap-x-8">
+            <div className="max-w-[420px] text-center sm:text-left">
               <img
                 src={logoAlt}
                 alt="Negócios no Chiveve — Revista"
-                className="mx-auto mb-4 block h-12 w-auto md:mx-0"
+                className="mx-auto mb-4 block h-12 w-auto sm:mx-0"
               />
 
               <p className="mb-6 font-sans text-sm font-normal leading-[1.7] text-primary-foreground">
-                Leitura de referência para acompanhar negócios, liderança e
-                inovação em Moçambique e no continente africano.
+                Negócios, liderança e inovação em Moçambique.
               </p>
 
-              <div className="flex flex-wrap items-center justify-center gap-2 md:justify-start">
-                {socials.map(({ Icon, href, label }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    aria-label={label}
-                    className="w-8 h-8 rounded-full flex items-center justify-center transition-opacity hover:opacity-80 bg-white"
-                  >
-                    <Icon size={16} className="text-primary" />
-                  </a>
-                ))}
-              </div>
+              <p className="mb-6 font-sans text-sm font-normal leading-[1.7] text-primary-foreground">
+                Acompanhe as nossas publicações, leia as nossas edições, partilhe
+                histórias e faça parte desta comunidade empresarial que acredita
+                no poder da informação para transformar negócios e desenvolver o
+                país.
+              </p>
+
             </div>
 
-            <div>
+            <nav aria-label="Navegação no rodapé">
               <h4 className={headingClass}>Navegação</h4>
               <ul className="grid gap-2">
                 {mainLinks.map((link) => (
@@ -77,9 +73,9 @@ export function Footer() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </nav>
 
-            <div>
+            <nav aria-label="Informações no rodapé">
               <h4 className={headingClass}>Informações</h4>
               <ul className="grid gap-2">
                 {supportLinks.map((link) => (
@@ -90,33 +86,70 @@ export function Footer() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </nav>
 
             <div>
               <h4 className={headingClass}>Contactos</h4>
               <ul className="grid gap-3">
                 <li>
-                  <span className={`${linkClass} cursor-default`}>Maputo, Moçambique</span>
+                  <span className={`${linkClass} cursor-default`}>Cidade da Beira, Moçambique</span>
                 </li>
                 <li>
                   <a
-                    href="mailto:info@revistachiveve.co.mz"
+                    href="mailto:geral@revistachiveve.com"
                     className={`${linkClass} transition-opacity hover:opacity-80`}
                   >
-                    info@revistachiveve.co.mz
+                    Email: geral@revistachiveve.com
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="tel:+258862326404"
+                    className={`${linkClass} transition-opacity hover:opacity-80`}
+                  >
+                    Telefone: +258 86 232 6404
                   </a>
                 </li>
               </ul>
+
+              <p className="mb-2 mt-6 font-sans text-xs uppercase tracking-[0.1em] text-primary-foreground/80">
+                Redes sociais
+              </p>
+              <div className="flex flex-wrap items-center gap-2">
+                {socials.map(({ Icon, href, label }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Revista Chiveve no ${label}`}
+                    className="flex size-[44px] items-center justify-center rounded-full bg-white transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  >
+                    <Icon size={19} className="text-primary" />
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <div className="border-t border-white/25 py-4">
-        <div className="site-shell flex items-center justify-center">
-          <span className="font-sans text-xs font-normal text-primary-foreground">
-            Revista Chiveve — Todos os direitos reservados © 2026
+        <div className="site-shell flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <span className="font-sans text-xs font-normal text-primary-foreground sm:text-left">
+            © 2026 Revista Negócios no Chiveve — Todos os direitos reservados.
           </span>
+
+          <div className="flex self-end items-center gap-3 sm:self-auto sm:justify-end">
+            <span className="whitespace-nowrap font-sans text-[0.68rem] font-medium uppercase tracking-[0.1em] text-primary-foreground">
+              Suportado por
+            </span>
+            <img
+              src="/Logo Branco.png"
+              alt="Negócios no Chiveve Hub"
+              className="block h-7 w-auto max-w-[132px] object-contain"
+            />
+          </div>
         </div>
       </div>
     </footer>

@@ -13,7 +13,7 @@ export function ContinueImpactadoSection() {
       <div className="site-shell">
         <div className="mb-9 border-b border-white/30 pb-4">
           <h2 className="font-sans text-[1.25rem] font-semibold uppercase tracking-[-0.02em] text-[#ffd400]">
-            Chiveve Em Vídeo
+            Revista Negócios no Chiveve Media
           </h2>
         </div>
 
@@ -26,15 +26,6 @@ export function ContinueImpactadoSection() {
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
-            <a
-              href={YOUTUBE_CHANNEL_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="absolute right-4 bottom-4 inline-flex items-center gap-2 bg-white/92 px-3 py-2 font-sans text-[0.78rem] font-semibold uppercase tracking-[0.04em] text-primary no-underline transition-opacity hover:opacity-90"
-            >
-              <FaYoutube size={14} className="text-[#ff2f2f]" />
-              Explorar o canal
-            </a>
           </div>
 
           <div className="flex flex-col justify-center">
@@ -43,22 +34,24 @@ export function ContinueImpactadoSection() {
             </h3>
 
             <p className="mb-4 font-sans text-[1rem] font-light leading-[1.82] tracking-[0.005em] text-white/88 md:text-[1.02rem]">
-              Acompanhe entrevistas, análises e histórias de quem está a mover
-              os negócios em Moçambique. Cada episódio acrescenta contexto,
-              leitura de mercado e vozes que ajudam a perceber o que está a
-              mudar agora.
+              Acompanhe entrevistas, conversas e conteúdos em vídeo com
+              empreendedores, empresários, líderes e protagonistas que estão a
+              movimentar o mercado em Moçambique.
             </p>
 
             <p className="mb-6 font-sans text-[0.96rem] font-light leading-[1.5] tracking-[0.01em] text-white/92 md:text-[0.98rem]">
-              Veja o último episódio e descubra o arquivo completo.
+              Cada episódio aproxima o leitor das histórias por trás dos
+              negócios, trazendo experiências, desafios, decisões e visões que
+              ajudam a compreender melhor o ambiente empresarial.
             </p>
 
-            <div className="flex items-center gap-2.5">
+            <div className="flex flex-wrap items-center gap-2.5">
               <a
                 href={FACEBOOK_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-[#5f78b9] transition-opacity duration-200 hover:opacity-85"
+                aria-label="Revista Chiveve no Facebook"
+                className="flex size-[44px] items-center justify-center rounded-full bg-white text-[#5f78b9] transition-opacity duration-200 hover:opacity-85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
                 <FaFacebook size={15} />
               </a>
@@ -66,7 +59,8 @@ export function ContinueImpactadoSection() {
                 href={LINKEDIN_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-[#1b75bb] transition-opacity duration-200 hover:opacity-85"
+                aria-label="Revista Chiveve no LinkedIn"
+                className="flex size-[44px] items-center justify-center rounded-full bg-white text-[#1b75bb] transition-opacity duration-200 hover:opacity-85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
                 <FaLinkedin size={14} />
               </a>
@@ -74,10 +68,10 @@ export function ContinueImpactadoSection() {
                 href={YOUTUBE_CHANNEL_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 font-sans text-[0.78rem] font-medium uppercase tracking-[0.06em] text-primary no-underline transition-opacity duration-200 hover:opacity-85"
+                className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-white px-4 py-2 font-sans text-[0.78rem] font-medium uppercase tracking-[0.06em] text-primary no-underline transition-opacity duration-200 hover:opacity-85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
                 <FaYoutube size={15} className="text-[#ff2f2f]" />
-                Canal no YouTube
+                Explorar o canal
               </a>
             </div>
           </div>

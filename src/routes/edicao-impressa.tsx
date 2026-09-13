@@ -14,7 +14,7 @@ export const Route = createFileRoute('/edicao-impressa')({
     return pageSeo({
       title: 'Edição Impressa',
       description:
-        'Arquivo completo da edição impressa da Revista Chiveve. Descarregue ou consulte edições anteriores.',
+        'Leia a edição actual e consulte o arquivo da Revista Negócios no Chiveve.',
       path: '/edicao-impressa',
       image: current?.cover,
       imageAlt: current?.title,

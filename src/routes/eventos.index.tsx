@@ -1,5 +1,6 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
 import EventosPage from '../app/pages/EventosPage'
+import { mockEvents } from '../data/mockListings'
 import { fnListEvents } from '../server/wp/server-fns'
 import { pageSeo } from '../server/seo'
 
@@ -17,7 +18,8 @@ export const Route = createFileRoute('/eventos/')({
   loaderDeps: ({ search }) => ({ page: search.page ?? 1 }),
   component: EventosPage,
   loader: async ({ deps }) => {
-    const allEvents = await fnListEvents()
+    const publishedEvents = await fnListEvents().catch(() => [])
+    const allEvents = publishedEvents.length > 0 ? publishedEvents : mockEvents
     const perPage = 8
     const start = (deps.page - 1) * perPage
     const totalPages = Math.max(1, Math.ceil(allEvents.length / perPage))
@@ -34,7 +36,7 @@ export const Route = createFileRoute('/eventos/')({
     return pageSeo({
       title: page > 1 ? `Eventos - Página ${page}` : 'Eventos',
       description:
-        'Próximos eventos de negócios, empreendedorismo e liderança em Moçambique.' +
+        'Agenda empresarial, encontros estratégicos, conferências, formações e oportunidades de networking em Moçambique.' +
         (page > 1 ? ` Página ${page}.` : ''),
       path: page > 1 ? `/eventos?page=${page}` : '/eventos',
       image: loaderData?.events[0]?.image,

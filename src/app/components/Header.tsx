@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import {
@@ -19,7 +19,7 @@ const navItems = [
   { label: "Edição Impressa", href: "/edicao-impressa" },
   { label: "Eventos", href: "/eventos" },
   { label: "Concursos Públicos", href: "/concursos-publicos" },
-  { label: "Contactos Úteis", href: "/contactos-uteis" },
+  { label: "Directório empresarial", href: "/contactos-uteis" },
   { label: "Sobre Nós", href: "/sobre-nos" },
   { label: "Contactos", href: "/contactos" },
 ];
@@ -80,6 +80,8 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [artigosDropdownOpen, setArtigosDropdownOpen] = useState(false);
+  const mobilePanelRef = useRef<HTMLElement>(null);
+  const mobileCloseRef = useRef<HTMLButtonElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -103,15 +105,37 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
 
   useEffect(() => {
     if (!mobileOpen) return;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setMobileOpen(false);
+      if (e.key === "Escape") {
+        setMobileOpen(false);
+        return;
+      }
+      if (e.key !== "Tab" || !mobilePanelRef.current) return;
+      const controls = Array.from(
+        mobilePanelRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      );
+      if (controls.length === 0) return;
+      const first = controls[0];
+      const last = controls[controls.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     }
     window.addEventListener("keydown", onKey);
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    requestAnimationFrame(() => mobileCloseRef.current?.focus());
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = prevOverflow;
+      previouslyFocused?.focus();
     };
   }, [mobileOpen]);
 
@@ -125,12 +149,14 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
 
   return (
     <header className="bg-background">
-      <div className="bg-primary py-5">
+      <div className="bg-primary py-2">
         <div className="site-shell relative flex items-center justify-between gap-4">
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="p-1 transition-opacity hover:opacity-80 text-white"
+            className="flex size-[44px] items-center justify-center text-white transition-opacity hover:opacity-80"
             aria-label="Menu"
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-navigation"
           >
             {mobileOpen ? <FaXmark size={24} /> : <FaBars size={24} />}
           </button>
@@ -143,26 +169,28 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
             <img
               src={logoAlt}
               alt="Negócios no Chiveve — Revista"
-              className="h-10 md:h-12 w-auto block"
+              className="h-10 w-auto md:h-12"
             />
           </Link>
 
-          <div className="ml-auto hidden items-center gap-2.5 md:flex">
+          <div className="ml-auto hidden items-center gap-0 lg:flex">
             {socials.map(({ Icon, href, label }) => (
               <a
                 key={label}
                 href={href}
                 aria-label={label}
-                className="flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-white/88 text-primary transition-all hover:bg-white hover:opacity-100"
+                className="group flex size-[44px] items-center justify-center text-primary"
               >
-                <Icon size={13} />
+                <span className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/88 transition-colors group-hover:bg-white">
+                  <Icon size={18} />
+                </span>
               </a>
             ))}
           </div>
         </div>
       </div>
 
-      <nav className="sticky top-0 z-[80] relative hidden border-b border-border/90 bg-background/96 shadow-[0_1px_0_rgba(15,23,42,0.05)] backdrop-blur-sm md:block">
+      <nav className="sticky top-0 z-[80] relative hidden border-b border-border/90 bg-background/96 shadow-[0_1px_0_rgba(15,23,42,0.05)] backdrop-blur-sm lg:block">
         <div className="site-shell flex items-center justify-between">
           <ul className="flex items-center -ml-3">
             {navItems.map((item) => (
@@ -208,7 +236,7 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
           </ul>
           <button
             onClick={() => setSearchOpen(!searchOpen)}
-            className="p-2 transition-colors text-foreground hover:text-primary"
+            className="flex size-[44px] items-center justify-center transition-colors text-foreground hover:text-primary"
             aria-label="Pesquisar"
           >
             <FaMagnifyingGlass size={18} />
@@ -235,6 +263,7 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
                   />
                   <input
                     autoFocus
+                    aria-label="Pesquisar no site"
                     type="text"
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
@@ -246,7 +275,7 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
                       type="button"
                       onClick={() => setSearchInput("")}
                       aria-label="Limpar"
-                      className="p-2 transition-opacity hover:opacity-80 text-muted-foreground"
+                    className="flex size-[44px] items-center justify-center transition-opacity hover:opacity-80 text-muted-foreground"
                     >
                       <FaXmark size={18} />
                     </button>
@@ -255,7 +284,7 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
                     type="button"
                     onClick={() => setSearchOpen(false)}
                     aria-label="Fechar"
-                    className="ml-2 cursor-pointer border border-border bg-background px-3 py-1.5 font-sans text-[0.68rem] font-medium uppercase tracking-[0.06em] text-muted-foreground transition-opacity hover:opacity-80"
+                    className="ml-2 min-h-[44px] cursor-pointer border border-foreground/45 bg-background px-3 py-1.5 font-sans text-[0.68rem] font-medium uppercase tracking-[0.06em] text-muted-foreground transition-opacity hover:opacity-80"
                   >
                     Esc
                   </button>
@@ -285,6 +314,8 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
             />
 
             <motion.aside
+              id="mobile-navigation"
+              ref={mobilePanelRef}
               key="sidebar-panel"
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
@@ -297,8 +328,9 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
             >
               <div className="flex items-center py-5 px-6 border-b border-white/[0.18]">
                 <button
+                  ref={mobileCloseRef}
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-2 transition-opacity hover:opacity-80 text-white bg-transparent border-none cursor-pointer p-0 font-sans text-base font-medium"
+                  className="flex min-h-[44px] items-center gap-2 border-none bg-transparent p-0 font-sans text-base font-medium text-white transition-opacity hover:opacity-80"
                   aria-label="Fechar menu"
                 >
                   <FaXmark size={24} />
@@ -358,9 +390,9 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
                       key={label}
                       href={href}
                       aria-label={label}
-                      className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white text-primary transition-opacity hover:opacity-85"
+                      className="flex size-[44px] items-center justify-center rounded-full border border-white/20 bg-white text-primary transition-opacity hover:opacity-85"
                     >
-                      <Icon size={15} />
+                      <Icon size={18} />
                     </a>
                   ))}
                 </div>

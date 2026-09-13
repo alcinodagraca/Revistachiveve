@@ -6,6 +6,7 @@ import {
 import { Resend } from "resend";
 import { listContactCategories } from "./wp/contacts";
 import { getWPSubmissionConfig } from "./wp/env";
+import { CONTACT_CATEGORY_NAMES } from "../data/contactCategories";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_PATTERN = /^[+\d][\d\s()./-]{5,49}$/;
@@ -18,6 +19,12 @@ const SUBMISSION_ERROR =
 export const TENDER_TYPES = [
   "Concurso Público",
   "Concurso Limitado",
+  "Manifestação de interesse",
+  "Contratação",
+  "Fornecimento",
+  "Prestação de serviços",
+  "Consultoria",
+  "Empreitada pública",
   "Outros",
 ] as const;
 
@@ -34,6 +41,7 @@ type SubmissionBase = {
 export type UsefulContactSubmission = SubmissionBase & {
   name: string;
   categoryId: number;
+  categoryName?: string;
   phone: string;
   email: string;
   address: string;
@@ -161,7 +169,11 @@ export function validateUsefulContactSubmission(
 ): UsefulContactSubmission {
   const record = asRecord(input);
   const categoryId = Number(record.categoryId);
-  if (!Number.isInteger(categoryId) || categoryId <= 0) {
+  const categoryName = optionalString(record, "categoryName", 100);
+  const isKnownCategory = CONTACT_CATEGORY_NAMES.some(
+    (name) => name.localeCompare(categoryName, "pt", { sensitivity: "base" }) === 0,
+  );
+  if (!Number.isInteger(categoryId) || (categoryId <= 0 && !isKnownCategory)) {
     throw new Error("Seleccione uma categoria válida.");
   }
 
@@ -180,6 +192,7 @@ export function validateUsefulContactSubmission(
     ...submissionBase(record),
     name: requiredString(record, "name", 2, 140),
     categoryId,
+    categoryName,
     phone,
     email: publicEmail,
     address,
@@ -220,7 +233,9 @@ export function buildUsefulContactPayload(data: UsefulContactSubmission) {
   return {
     status: "pending" as const,
     title: data.name,
-    "contacto-categorias": [data.categoryId],
+    ...(data.categoryId > 0
+      ? { "contacto-categorias": [data.categoryId] }
+      : {}),
     acf: {
       contacto_phone: data.phone,
       contacto_email: data.email,
@@ -441,20 +456,35 @@ export const submitUsefulContact = createServerFn({ method: "POST" })
     await verifyTurnstile(data.turnstileToken, "submit_contact");
 
     const categories = await listContactCategories();
-    if (!categories.some((category) => category.id === data.categoryId)) {
+    const matchedCategory = categories.find(
+      (category) =>
+        category.id === data.categoryId ||
+        category.name.localeCompare(data.categoryName ?? "", "pt", {
+          sensitivity: "base",
+        }) === 0,
+    );
+    if (data.categoryId > 0 && !matchedCategory) {
       throw new Error("Seleccione uma categoria válida.");
     }
 
+    const submission = {
+      ...data,
+      categoryId: matchedCategory?.id ?? 0,
+    };
+
     const post = await createPendingPost(
       "contacto-util",
-      buildUsefulContactPayload(data),
+      buildUsefulContactPayload(submission),
     );
     await notifyEditors({
       kind: "Contacto útil",
       postId: post.id,
       submitterName: data.submitterName,
       submitterEmail: data.submitterEmail,
-      summary: [`Contacto: ${data.name}`, `Categoria ID: ${data.categoryId}`],
+      summary: [
+        `Contacto: ${data.name}`,
+        `Categoria: ${data.categoryName || matchedCategory?.name || data.categoryId}`,
+      ],
     });
     return { accepted: true };
   });

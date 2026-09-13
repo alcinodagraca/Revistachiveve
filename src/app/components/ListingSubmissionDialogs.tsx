@@ -17,6 +17,7 @@ import {
 } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
+import { CONTACT_CATEGORY_NAMES } from "../../data/contactCategories";
 
 type SubmissionState = "idle" | "sending" | "success" | "error";
 
@@ -46,9 +47,9 @@ const TURNSTILE_SITE_KEY = "0x4AAAAAAExoS6ttyxnKc9Lt";
 const fieldLabel =
   "mb-1.5 block font-sans text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-primary";
 const submissionForm =
-  "space-y-4 px-5 py-5 sm:px-7 [&_[data-slot=input]]:h-10 [&_[data-slot=input]]:border-foreground/15 [&_[data-slot=input]]:bg-secondary/35 [&_[data-slot=input]]:focus-visible:bg-background [&_[data-slot=textarea]]:border-foreground/15 [&_[data-slot=textarea]]:bg-secondary/35 [&_[data-slot=textarea]]:focus-visible:bg-background";
+  "space-y-4 px-5 py-5 sm:px-7 [&_[data-slot=input]]:min-h-[44px] [&_[data-slot=input]]:border-foreground/45 [&_[data-slot=input]]:bg-secondary/35 [&_[data-slot=input]]:focus-visible:bg-background [&_[data-slot=textarea]]:border-foreground/45 [&_[data-slot=textarea]]:bg-secondary/35 [&_[data-slot=textarea]]:focus-visible:bg-background";
 const selectControl =
-  "h-10 w-full border border-foreground/15 bg-secondary/35 px-3 font-sans text-sm outline-none transition-[color,box-shadow] focus:border-ring focus:bg-background focus:ring-3 focus:ring-ring/50";
+  "min-h-[44px] w-full border border-foreground/45 bg-secondary/35 px-3 font-sans text-sm outline-none transition-[color,box-shadow] focus:border-ring focus:bg-background focus:ring-3 focus:ring-ring/50";
 
 function TurnstileWidget({
   action,
@@ -221,25 +222,46 @@ function DialogCta({
   eyebrow,
   text,
   button,
+  inverted = false,
   children,
 }: {
   eyebrow: string;
   text: string;
   button: string;
+  inverted?: boolean;
   children: React.ReactNode;
 }) {
   return (
-    <div className="mb-10 flex flex-col gap-5 border-y border-border bg-secondary/45 px-5 py-6 md:flex-row md:items-center md:justify-between md:px-7">
-      <div>
-        <p className="mb-1 font-sans text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-primary">
+    <div
+      className={`mb-10 flex flex-col gap-5 px-5 py-6 md:flex-row md:items-center md:justify-between md:px-7 ${
+        inverted
+          ? "border-0 bg-primary"
+          : "border-y border-border bg-secondary/45"
+      }`}
+    >
+      <div className={inverted ? "min-w-0 flex-1" : undefined}>
+        <p
+          className={`mb-1 font-sans text-[0.7rem] font-semibold uppercase tracking-[0.12em] ${
+            inverted ? "text-primary-foreground" : "text-primary"
+          }`}
+        >
           {eyebrow}
         </p>
-        <p className="max-w-2xl font-sans text-[0.94rem] font-light leading-7 text-foreground/75">
+        <p
+          className={`${inverted ? "max-w-4xl text-primary-foreground/90" : "max-w-2xl text-foreground/75"} font-sans text-[0.94rem] font-light leading-7`}
+        >
           {text}
         </p>
       </div>
       <DialogTrigger asChild>
-        <Button size="lg" className="self-start md:self-auto">
+        <Button
+          size="lg"
+          className={`self-start shrink-0 md:self-auto ${
+            inverted
+              ? "bg-primary-foreground text-primary hover:bg-primary-foreground/90"
+              : ""
+          }`}
+        >
           {button}
           <FaArrowRight />
         </Button>
@@ -266,7 +288,7 @@ export function UsefulContactSubmissionDialog({
   const [token, setToken] = useState("");
   const [resetSignal, setResetSignal] = useState(0);
 
-  if (!TURNSTILE_SITE_KEY || categories.length === 0) return null;
+  if (!TURNSTILE_SITE_KEY) return null;
 
   const handleOpenChange = (nextOpen: boolean) => {
     if (!nextOpen && state === "sending") return;
@@ -284,13 +306,22 @@ export function UsefulContactSubmissionDialog({
     if (state === "sending" || !token) return;
     const form = event.currentTarget;
     const data = new FormData(form);
+    const categoryName = String(data.get("categoryName") ?? "");
+    const categoryId =
+      categories.find(
+        (category) =>
+          category.name.localeCompare(categoryName, "pt", {
+            sensitivity: "base",
+          }) === 0,
+      )?.id ?? 0;
     setState("sending");
     setError("");
     try {
       await submitUsefulContact({
         data: {
           name: String(data.get("name") ?? ""),
-          categoryId: Number(data.get("categoryId")),
+          categoryId,
+          categoryName,
           phone: String(data.get("phone") ?? ""),
           email: String(data.get("email") ?? ""),
           address: String(data.get("address") ?? ""),
@@ -316,18 +347,19 @@ export function UsefulContactSubmissionDialog({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogCta
-        eyebrow="Directório colaborativo"
-        text="Conhece uma instituição ou serviço que deve constar deste directório? Envie os dados para revisão editorial."
-        button="Adicionar contacto"
+        eyebrow="Submeter Organização"
+        text="Representa uma empresa, instituição, associação ou organização relevante para o ecossistema empresarial? Envie os seus dados para análise e possível inclusão no Directório de Contactos da Revista Negócios no Chiveve."
+        button="Submeter Organização"
+        inverted
       >
         <DialogContent className="max-h-[calc(100dvh-2rem)] gap-0 overflow-y-auto rounded-none border-0 p-0 shadow-2xl sm:max-w-2xl">
           <DialogHeader className="sticky top-0 z-10 border-b border-border bg-background px-5 py-5 pr-14 shadow-sm sm:px-7">
-            <DialogTitle className="font-serif text-2xl leading-tight text-primary sm:text-3xl">
-              Adicionar contacto útil
+            <DialogTitle className="font-sans text-2xl font-normal leading-tight tracking-[-0.025em] text-primary sm:text-3xl">
+              Submeter Organização
             </DialogTitle>
             <DialogDescription className="leading-6">
-              A submissão ficará pendente no WordPress até ser revista e
-              aprovada pela equipa.
+              Partilhe os dados da organização. A nossa equipa irá analisá-los
+              antes de os publicar no directório.
             </DialogDescription>
           </DialogHeader>
           {state === "success" ? (
@@ -356,7 +388,7 @@ export function UsefulContactSubmissionDialog({
                   </label>
                   <select
                     id="contact-category"
-                    name="categoryId"
+                    name="categoryName"
                     required
                     defaultValue=""
                     className={selectControl}
@@ -364,9 +396,9 @@ export function UsefulContactSubmissionDialog({
                     <option value="" disabled>
                       Seleccione
                     </option>
-                    {categories.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
+                    {CONTACT_CATEGORY_NAMES.map((category) => (
+                      <option key={category} value={category}>
+                        {category}
                       </option>
                     ))}
                   </select>
@@ -410,9 +442,6 @@ export function UsefulContactSubmissionDialog({
                     Endereço
                   </label>
                   <Input id="contact-address" name="address" maxLength={300} />
-                  <p className="mt-1 font-sans text-xs text-muted-foreground">
-                    Indique pelo menos telefone, email, endereço ou website.
-                  </p>
                 </div>
                 <div className="md:col-span-2">
                   <label htmlFor="contact-description" className={fieldLabel}>
@@ -551,18 +580,19 @@ export function TenderSubmissionDialog() {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogCta
-        eyebrow="Partilhe uma oportunidade"
-        text="Ajude-nos a divulgar concursos públicos relevantes. Todos os editais são verificados antes de aparecerem nesta página."
+        eyebrow="Tem um concurso para divulgar?"
+        text="Instituições públicas, organizações, empresas e parceiros podem enviar editais, anúncios de contratação ou oportunidades institucionais para publicação na revista."
         button="Submeter concurso"
+        inverted
       >
         <DialogContent className="max-h-[calc(100dvh-2rem)] gap-0 overflow-y-auto rounded-none border-0 p-0 shadow-2xl sm:max-w-2xl">
           <DialogHeader className="sticky top-0 z-10 border-b border-border bg-background px-5 py-5 pr-14 shadow-sm sm:px-7">
-            <DialogTitle className="font-serif text-2xl leading-tight text-primary sm:text-3xl">
-              Submeter concurso público
+            <DialogTitle className="font-sans text-2xl font-normal leading-tight tracking-[-0.025em] text-primary sm:text-3xl">
+              Submeter concurso
             </DialogTitle>
             <DialogDescription className="leading-6">
-              Envie os dados essenciais e o link oficial do edital para revisão
-              editorial.
+              Partilhe os dados essenciais e o link oficial. A nossa equipa irá
+              verificar a informação antes da publicação.
             </DialogDescription>
           </DialogHeader>
           {state === "success" ? (
@@ -628,16 +658,14 @@ export function TenderSubmissionDialog() {
                 </div>
                 <div>
                   <label htmlFor="tender-vacancies" className={fieldLabel}>
-                    Número de vagas *
+                    Número de vagas (quando aplicável)
                   </label>
                   <Input
                     id="tender-vacancies"
                     name="vacancies"
                     type="number"
-                    required
                     min={0}
                     max={100000}
-                    defaultValue={0}
                   />
                 </div>
                 <div>

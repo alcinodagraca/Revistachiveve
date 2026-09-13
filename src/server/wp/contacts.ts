@@ -66,7 +66,7 @@ function normalize(post: WPContact): UsefulContact {
     logo: resolveFeaturedImage(post),
     description:
       pickMeta(post, "descricao", "contacto_description") ||
-      stripTags(post.excerpt.rendered),
+      stripTags(post.excerpt?.rendered ?? ""),
   };
 }
 

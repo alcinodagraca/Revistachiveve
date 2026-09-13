@@ -49,6 +49,31 @@ function asNumber(v: unknown, fallback = 0): number {
   return fallback;
 }
 
+function formatDeadline(value: string | undefined): string {
+  if (!value) return "";
+  const compactMatch = value.match(/^(\d{4})(\d{2})(\d{2})$/);
+  const isoMatch = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  const match = compactMatch ?? isoMatch;
+  if (!match) return value;
+
+  const [, year, month, day] = match;
+  const date = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)));
+  if (
+    date.getUTCFullYear() !== Number(year) ||
+    date.getUTCMonth() !== Number(month) - 1 ||
+    date.getUTCDate() !== Number(day)
+  ) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat("pt-MZ", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(date);
+}
+
 function normalize(post: WPTender): Tender {
   return {
     id: post.id,
@@ -56,10 +81,11 @@ function normalize(post: WPTender): Tender {
     title: decodeEntities(post.title.rendered),
     institution:
       asString(pickMeta(post, "instituicao", "concurso_institution")) ?? "",
-    deadline:
+    deadline: formatDeadline(
       asString(
         pickMeta(post, "data_limite_de_submissao", "concurso_deadline"),
-      ) ?? "",
+      ),
+    ),
     type: asString(pickMeta(post, "tipo_de_concurso", "concurso_type")) ?? "",
     vacancies: asNumber(
       pickMeta(post, "numero_de_vagas", "concurso_vacancies"),
@@ -72,7 +98,7 @@ function normalize(post: WPTender): Tender {
 
 export async function listTenders({
   page = 1,
-  perPage = 8,
+  perPage = 10,
 }: {
   page?: number;
   perPage?: number;

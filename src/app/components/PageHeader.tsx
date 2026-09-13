@@ -4,10 +4,12 @@ import { Heading } from "./typography";
 export function PageHeader({
   title,
   subtitle,
+  subtitleClassName,
   breadcrumbs,
 }: {
   title: string;
   subtitle?: string;
+  subtitleClassName?: string;
   breadcrumbs: Crumb[];
 }) {
   return (
@@ -19,7 +21,7 @@ export function PageHeader({
         {title}
       </Heading>
       {subtitle && (
-        <p className="w-full font-sans text-[0.92rem] font-light leading-[1.62] text-muted-foreground md:text-[0.98rem]">
+        <p className={`w-full font-sans text-[0.92rem] font-light leading-[1.62] text-muted-foreground md:text-[0.98rem] ${subtitleClassName ?? ""}`}>
           {subtitle}
         </p>
       )}

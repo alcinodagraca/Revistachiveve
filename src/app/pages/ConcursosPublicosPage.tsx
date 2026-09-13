@@ -42,7 +42,7 @@ export default function ConcursosPublicosPage() {
       <div className="site-shell py-12 md:py-14">
         <PageHeader
           title="Concursos Públicos"
-          subtitle="Oportunidades no sector público reunidas para consulta rápida, com o essencial de cada edital."
+          subtitle="Oportunidades de contratação, fornecimento e prestação de serviços para empresas e profissionais."
           breadcrumbs={[{ label: "Início", to: "/" }, { label: "Concursos Públicos" }]}
         />
 
@@ -53,32 +53,34 @@ export default function ConcursosPublicosPage() {
             icon={FaBriefcase}
             title="Sem concursos publicados"
             message="Ainda não existem editais disponíveis nesta secção. Assim que novos concursos forem publicados, passam a aparecer aqui."
-            cta={{ label: "Ver edições recentes", to: "/edicao-impressa" }}
           />
         ) : (
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[280px_1fr] lg:gap-12">
             <aside className="h-fit border border-border bg-card p-5 lg:sticky lg:top-24">
               <div className="mb-8">
-                <label className="mb-3 block font-sans text-[0.72rem] font-medium uppercase tracking-[0.12em] text-primary">
+                <label htmlFor="tender-search" className="mb-3 block font-sans text-[0.72rem] font-medium uppercase tracking-[0.12em] text-primary">
                   Pesquisar
                 </label>
                 <div className="relative flex items-center">
-                  <FaMagnifyingGlass size={18} className="absolute left-3 text-muted-foreground" />
+                  <FaMagnifyingGlass aria-hidden="true" size={18} className="absolute left-3 text-muted-foreground" />
                   <Input
+                    id="tender-search"
                     type="text"
                     placeholder="Cargo ou instituição..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="h-11 w-full border-border bg-[var(--input-background)] py-3 pr-3 pl-[42px] text-sm"
+                    className="h-11 w-full border-foreground/45 bg-[var(--input-background)] py-3 pr-3 pl-[42px] text-sm"
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="mb-3 block font-sans text-[0.72rem] font-medium uppercase tracking-[0.12em] text-primary">
+              <div className="min-w-0 max-w-full">
+                <p className="mb-3 block font-sans text-[0.72rem] font-medium uppercase tracking-[0.12em] text-primary">
                   Tipo de concurso
-                </label>
-                <div className="flex flex-col gap-1">
+                </p>
+                <div
+                  className="-mx-1 flex max-w-full gap-2 overflow-x-auto px-1 pb-2 lg:mx-0 lg:flex-col lg:gap-0 lg:overflow-visible lg:px-0 lg:pb-0"
+                >
                   {typeOptions.map((type) => {
                     const isSelected = selectedType === type;
                     const count =
@@ -90,11 +92,12 @@ export default function ConcursosPublicosPage() {
                       <button
                         key={type}
                         type="button"
+                        aria-pressed={isSelected}
                         onClick={() => setSelectedType(type)}
                         className={
-                          "flex items-center justify-between border-none px-0 py-2.5 font-sans text-sm cursor-pointer text-left transition-all border-b border-border/70 last:border-b-0 " +
+                          "flex min-h-[44px] shrink-0 items-center gap-3 border-0 bg-secondary px-3 py-0 font-sans text-sm cursor-pointer text-left transition-all lg:w-full lg:justify-between lg:bg-transparent lg:px-0 " +
                           (isSelected
-                            ? "text-foreground font-medium"
+                            ? "bg-primary/10 text-primary font-medium lg:bg-transparent lg:text-foreground"
                             : "bg-transparent text-foreground/72 font-normal hover:text-foreground")
                         }
                       >
@@ -108,8 +111,8 @@ export default function ConcursosPublicosPage() {
 
             </aside>
 
-            <main className="min-w-0">
-              <SectionHeader>Concursos em Destaque</SectionHeader>
+            <section aria-label="Oportunidades disponíveis" className="min-w-0">
+              <SectionHeader>Oportunidades disponíveis</SectionHeader>
 
               {filteredItems.length === 0 ? (
                 <EmptyState
@@ -126,7 +129,12 @@ export default function ConcursosPublicosPage() {
                     >
                       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_180px] lg:items-start">
                         <div className="min-w-0">
-                          <Heading as="h2" variant="feature-title" className="mb-2 max-w-[34ch] text-foreground">
+                          {concurso.type && (
+                            <span className="mb-2 inline-flex bg-primary/10 px-2.5 py-1 font-sans text-[0.65rem] font-semibold uppercase tracking-[0.1em] text-primary">
+                              {concurso.type}
+                            </span>
+                          )}
+                          <Heading as="h3" variant="feature-title" className="mb-2 max-w-[34ch] text-foreground">
                             {concurso.title}
                           </Heading>
 
@@ -136,18 +144,20 @@ export default function ConcursosPublicosPage() {
 
                           <div className="grid gap-x-6 gap-y-2 md:grid-cols-2">
                             <div className="flex items-center gap-2">
-                              <FaCalendarDays size={14} className="shrink-0 text-primary" />
+                              <FaCalendarDays aria-hidden="true" size={14} className="shrink-0 text-primary" />
                               <span className="font-sans text-[0.9rem] font-normal text-foreground">
                                 Prazo: {concurso.deadline || "Por confirmar"}
                               </span>
                             </div>
 
-                            <div className="flex items-center gap-2">
-                              <FaFileLines size={14} className="shrink-0 text-primary" />
-                              <span className="font-sans text-[0.9rem] font-normal text-foreground">
-                                {concurso.vacancies} {concurso.vacancies === 1 ? "vaga" : "vagas"}
-                              </span>
-                            </div>
+                            {concurso.vacancies > 0 && (
+                              <div className="flex items-center gap-2">
+                                <FaFileLines aria-hidden="true" size={14} className="shrink-0 text-primary" />
+                                <span className="font-sans text-[0.9rem] font-normal text-foreground">
+                                  {concurso.vacancies} {concurso.vacancies === 1 ? "vaga" : "vagas"}
+                                </span>
+                              </div>
+                            )}
                           </div>
                         </div>
 
@@ -160,16 +170,12 @@ export default function ConcursosPublicosPage() {
                               className="inline-flex items-center gap-2 whitespace-nowrap border-none bg-primary px-6 py-3 font-sans text-[0.9rem] font-medium text-primary-foreground no-underline transition-opacity hover:opacity-90"
                             >
                               Ver Edital
-                              <FaUpRightFromSquare size={15} />
+                              <FaUpRightFromSquare aria-hidden="true" size={15} />
                             </a>
                           ) : (
-                            <button
-                              type="button"
-                              className="inline-flex items-center gap-2 whitespace-nowrap border-none bg-primary px-6 py-3 font-sans text-[0.9rem] font-medium text-primary-foreground transition-opacity hover:opacity-90"
-                            >
-                              Ver Edital
-                              <FaUpRightFromSquare size={15} />
-                            </button>
+                            <span className="font-sans text-sm text-muted-foreground">
+                              Edital indisponível
+                            </span>
                           )}
                         </div>
                       </div>
@@ -177,7 +183,7 @@ export default function ConcursosPublicosPage() {
                   ))}
                 </div>
               )}
-            </main>
+            </section>
           </div>
         )}
 

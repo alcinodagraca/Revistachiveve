@@ -8,7 +8,7 @@ export const Route = createFileRoute('/contactos')({
     pageSeo({
       title: 'Contactos',
       description:
-        'Entre em contacto com a Revista Chiveve. Sugestões editoriais, parcerias e atendimento.',
+        'Contacte a Revista Negócios no Chiveve para sugestões editoriais, entrevistas, publicidade, eventos e parcerias.',
       path: '/contactos',
     }),
 })

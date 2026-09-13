@@ -9,6 +9,7 @@ import { Heading, SectionHeader, Eyebrow } from "../components/typography";
 import { ArticleCard, articleCardGridVariants } from "../components/ArticleCard";
 import { Route } from "../../routes/artigos.$category.index";
 import { CATEGORY_COLORS } from "../../data/category-colors";
+import { getCategoryIntroduction } from "../../data/category-introductions";
 
 function formatDateLong(iso: string): string {
   return new Intl.DateTimeFormat("pt-PT", {
@@ -21,6 +22,7 @@ function formatDateLong(iso: string): string {
 export default function CategoryPage() {
   const { category, articles, totalPages, currentPage } = Route.useLoaderData();
   const color = CATEGORY_COLORS[category.slug] ?? "var(--primary)";
+  const introduction = getCategoryIntroduction(category);
 
   const featured = articles.slice(0, 2);
   const rest = articles.slice(2);
@@ -30,7 +32,8 @@ export default function CategoryPage() {
       <div className="site-shell py-12">
         <PageHeader
           title={category.name}
-          subtitle={category.description || undefined}
+          subtitle={introduction || undefined}
+          subtitleClassName="max-w-4xl text-foreground/65"
           breadcrumbs={[
             { label: "Início", to: "/" },
             { label: "Artigos", to: "/artigos" },

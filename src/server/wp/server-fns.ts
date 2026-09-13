@@ -23,6 +23,38 @@ export const fnListArticles = createServerFn({ method: "GET" })
   )
   .handler(({ data }) => listArticles(data));
 
+export const fnGetArticlesLanding = createServerFn({ method: "GET" }).handler(
+  async () => {
+    const [categories, recentList, editions] = await Promise.all([
+      listCategories(),
+      listArticles({ perPage: 5 }),
+      listEditions(),
+    ]);
+
+    const sections = await Promise.all(
+      categories
+        .filter((category) => category.count > 0)
+        .sort(
+          (a, b) =>
+            b.count - a.count || a.name.localeCompare(b.name, "pt-MZ"),
+        )
+        .map(async (category) => ({
+          category,
+          articles: (
+            await listArticles({ categorySlug: category.slug, perPage: 4 })
+          ).articles,
+        })),
+    );
+
+    return {
+      sections: sections.filter((section) => section.articles.length > 0),
+      recent: recentList.articles,
+      currentEdition:
+        editions?.find((edition) => edition.featured) ?? editions?.[0] ?? null,
+    };
+  },
+);
+
 export const fnGetArticleBySlug = createServerFn({ method: "GET" })
   .inputValidator((slug: string) => slug)
   .handler(({ data: slug }) => getArticleBySlug(slug));

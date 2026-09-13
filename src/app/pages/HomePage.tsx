@@ -7,7 +7,7 @@ import { AdvertisementBanner } from "../components/AdvertisementBanner";
 import { Route } from "../../routes/index";
 
 export default function HomePage() {
-  const { recent, opiniao, entrevistas, editions, maisLidos } = Route.useLoaderData();
+  const { recent, opiniao, entrevistas, editions } = Route.useLoaderData();
   const featuredInterview = entrevistas.articles[0] ?? recent.articles[0] ?? null;
   const exploreArticles = [
     ...recent.articles,
@@ -33,13 +33,13 @@ export default function HomePage() {
   return (
     <>
       <h1 className="sr-only">
-        Revista Chiveve - Negócios, empreendedorismo, liderança e inovação
+        Negócios, liderança e inovação que movem Moçambique
       </h1>
       <DestaquesSection articles={recent.articles.slice(0, 3)} />
       <ContinueImpactadoSection />
       <FeaturedInterviewSection
         article={featuredInterview}
-        maisLidos={maisLidos}
+        recentArticles={recent.articles}
       />
       <AdvertisementBanner />
       <ColunistasSection

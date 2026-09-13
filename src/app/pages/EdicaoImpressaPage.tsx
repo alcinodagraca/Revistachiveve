@@ -40,7 +40,8 @@ export default function EdicaoImpressaPage() {
       <div className="site-shell pt-8">
         <PageHeader
           title="Edição Impressa"
-          subtitle="A edição actual e o arquivo recente da revista, com leituras de referência sobre negócios, liderança e transformação económica."
+          subtitle="Leia a edição actual e consulte o arquivo da Revista Negócios no Chiveve."
+          subtitleClassName="text-foreground/65"
           breadcrumbs={[
             { label: "Início", to: "/" },
             { label: "Edição Impressa" },
@@ -50,8 +51,8 @@ export default function EdicaoImpressaPage() {
 
       <section className="border-b border-border bg-secondary">
         <div className="site-shell py-16">
-          <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-[minmax(0,400px)_1fr] md:gap-16">
-            <div className="w-full shadow-[0_20px_60px_rgba(0,0,0,0.15)] transition-transform duration-300 hover:scale-[1.02]">
+          <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(280px,400px)_minmax(0,1fr)] lg:gap-16">
+            <div className="w-full max-w-[400px] shadow-[0_20px_60px_rgba(0,0,0,0.15)] transition-transform duration-300 hover:scale-[1.02]">
               <ImageWithFallback
                 src={current.cover}
                 alt={`Edição ${current.title}`}
@@ -78,22 +79,17 @@ export default function EdicaoImpressaPage() {
                 </p>
               )}
 
-              <div className="mb-8 max-w-3xl space-y-4 font-sans text-[0.96rem] font-light leading-[1.76] text-foreground/76">
+              <div className="mb-8 max-w-3xl font-sans text-[0.96rem] font-light leading-[1.76] text-foreground/76">
                 <p>
-                  Esta edição reúne temas, protagonistas e sinais que ajudam a
-                  compreender o momento dos negócios em Moçambique e no espaço
-                  africano mais amplo.
-                </p>
-                <p>
-                  É uma leitura pensada para quem prefere contexto, critério e
-                  selecção editorial a informação dispersa.
+                  Esta edição reúne entrevistas, reportagens e análises sobre
+                  negócios em Moçambique, com atenção à Beira e à região centro.
                 </p>
               </div>
 
               {current.highlights.length > 0 && (
                 <div className="mb-8 border-t border-primary/25 pt-5">
                   <p className="mb-4 font-sans text-[0.78rem] font-medium uppercase tracking-[0.12em] text-primary">
-                    Leituras em destaque nesta edição
+                    Nesta edição
                   </p>
                   <ul className="m-0 flex list-none flex-col gap-3 p-0">
                     {current.highlights.map((highlight, index) => (
@@ -108,26 +104,17 @@ export default function EdicaoImpressaPage() {
                 </div>
               )}
 
-              <div className="flex flex-col gap-4 border-t border-border pt-5 sm:flex-row sm:items-center sm:justify-between">
-                <p className="max-w-xl font-sans text-[0.84rem] font-light leading-[1.7] text-muted-foreground">
-                  Disponível em formato digital para leitura, consulta e download.
-                </p>
-
-                {current.pdfDownloadUrl ? (
+              <div className="flex justify-start border-t border-border pt-5">
+                {current.pdfDownloadUrl && (
                   <a
                     href={current.pdfDownloadUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 border-none bg-primary px-7 py-3.5 font-sans text-[0.94rem] font-medium text-primary-foreground no-underline transition-all duration-200 hover:bg-foreground hover:-translate-y-0.5"
+                    className="inline-flex min-h-[44px] items-center gap-2 border-none bg-primary px-7 py-3.5 font-sans text-[0.94rem] font-medium text-primary-foreground no-underline transition-all duration-200 hover:-translate-y-0.5 hover:bg-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transform-none motion-reduce:transition-none"
                   >
                     <FaDownload size={18} />
                     Abrir Edição
                   </a>
-                ) : (
-                  <button className="inline-flex items-center gap-2 border-none bg-primary px-7 py-3.5 font-sans text-[0.94rem] font-medium text-primary-foreground transition-all duration-200 hover:bg-foreground hover:-translate-y-0.5">
-                    <FaDownload size={18} />
-                    Abrir Edição
-                  </button>
                 )}
               </div>
             </div>
@@ -138,7 +125,7 @@ export default function EdicaoImpressaPage() {
       <section className="site-shell py-16">
         <div className="mb-12">
           <SectionHeader>Edições Anteriores</SectionHeader>
-          <p className="font-sans text-[0.95rem] font-light text-muted-foreground leading-[1.7]">
+          <p className="font-sans text-[0.95rem] font-light text-foreground/65 leading-[1.7]">
             Consulte o arquivo recente da revista e revisite temas, perfis e análises das edições anteriores.
           </p>
         </div>
@@ -147,7 +134,7 @@ export default function EdicaoImpressaPage() {
           {past.map((edition) => (
             <article
               key={edition.id}
-              className="cursor-pointer transition-transform duration-200 hover:-translate-y-1"
+              className="transition-transform duration-200 hover:-translate-y-1 motion-reduce:transform-none motion-reduce:transition-none"
             >
               <div className="mb-4 shadow-[0_8px_24px_rgba(0,0,0,0.1)] transition-shadow duration-200 hover:shadow-[0_12px_32px_rgba(0,0,0,0.15)]">
                 <ImageWithFallback
@@ -159,8 +146,8 @@ export default function EdicaoImpressaPage() {
 
               {edition.date && (
                 <div className="flex items-center gap-2 mb-2">
-                  <FaCalendarDays size={14} className="text-muted-foreground" />
-                  <span className="font-sans text-xs font-medium text-muted-foreground uppercase tracking-[0.05em]">
+                  <FaCalendarDays size={14} className="text-foreground/65" />
+                  <span className="font-sans text-xs font-medium text-foreground/65 uppercase tracking-[0.05em]">
                     {edition.date}
                   </span>
                 </div>
@@ -171,7 +158,7 @@ export default function EdicaoImpressaPage() {
               </Heading>
 
               {edition.subtitle && (
-                <p className="font-sans text-sm text-muted-foreground leading-[1.5] mb-3">
+                <p className="font-sans text-sm text-foreground/65 leading-[1.5] mb-3">
                   {edition.subtitle}
                 </p>
               )}
@@ -181,7 +168,7 @@ export default function EdicaoImpressaPage() {
                   href={edition.pdfDownloadUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 font-sans text-sm font-medium text-primary no-underline transition-[gap] duration-200 hover:gap-3"
+                  className="inline-flex min-h-[44px] items-center gap-2 font-sans text-sm font-medium text-primary no-underline transition-[gap] duration-200 hover:gap-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transition-none"
                 >
                   <FaFileLines size={16} />
                   Baixar PDF

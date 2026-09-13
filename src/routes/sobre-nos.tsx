@@ -6,14 +6,14 @@ import { pageSeo } from '../server/seo'
 export const Route = createFileRoute('/sobre-nos')({
   component: SobreNosPage,
   loader: async () => {
-    const team = await fnListTeam()
+    const team = await fnListTeam().catch(() => null)
     return { team }
   },
   head: () =>
     pageSeo({
       title: 'Sobre Nós',
       description:
-        'A Revista Chiveve é a referência de negócios e empreendedorismo em Moçambique. Conheça a nossa equipa.',
+        'Conheça a Revista Negócios no Chiveve, a sua linha editorial, equipa e parceria com o Negócios no Chiveve Hub.',
       path: '/sobre-nos',
     }),
 })

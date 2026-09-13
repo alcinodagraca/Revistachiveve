@@ -16,24 +16,32 @@ const contactChannels = [
   {
     title: "Redacção",
     description:
-      "Sugestões editoriais, propostas de entrevista, temas para investigação e contributos relevantes para a agenda da revista.",
-    value: "geral@negociosnochiveve.co.mz",
-    href: "mailto:geral@negociosnochiveve.co.mz",
+      "Sugestões de temas, propostas de entrevista, artigos, histórias de empreendedores e contributos editoriais.",
+    value: "geral@revistachiveve.com",
+    href: "mailto:geral@revistachiveve.com",
+    icon: FaEnvelope,
+  },
+  {
+    title: "Publicidade e Parcerias",
+    description:
+      "Anúncios, conteúdos patrocinados, divulgação de marcas, cobertura de eventos e parcerias institucionais.",
+    value: "anuncio@revistachiveve.co.mz",
+    href: "mailto:anuncio@revistachiveve.co.mz",
     icon: FaEnvelope,
   },
   {
     title: "Telefone",
     description:
       "Para contacto directo com a equipa e acompanhamento de pedidos institucionais, editoriais ou comerciais.",
-    value: "+258 84 300 1234",
-    href: "tel:+258843001234",
+    value: "+258 86 232 6404",
+    href: "tel:+258862326404",
     icon: FaPhone,
   },
   {
-    title: "Maputo",
+    title: "Localização",
     description:
-      "Estamos disponíveis para reuniões, parcerias e encontros editoriais mediante agendamento prévio.",
-    value: "Av. Julius Nyerere, 1234, Maputo, Moçambique",
+      "Reuniões, entrevistas e encontros institucionais podem ser realizados mediante agendamento prévio.",
+    value: "Cidade da Beira, Moçambique",
     href: undefined,
     icon: FaLocationDot,
   },
@@ -71,7 +79,7 @@ export default function ContactosPage() {
       <div className="site-shell py-12 md:py-14">
         <PageHeader
           title="Contactos"
-          subtitle="Fale com a Revista Chiveve para sugestões editoriais, parcerias, publicidade ou pedidos institucionais."
+          subtitle="Fale com a Revista Negócios no Chiveve sobre conteúdos editoriais, entrevistas, publicidade, eventos ou parcerias."
           breadcrumbs={[{ label: "Início", to: "/" }, { label: "Contactos" }]}
         />
 
@@ -119,8 +127,8 @@ export default function ContactosPage() {
           <section className="border border-border bg-card p-7 md:p-8">
             <SectionHeader as="h2">Envie-nos uma mensagem</SectionHeader>
             <p className="mb-6 max-w-2xl font-sans text-[0.94rem] font-light leading-[1.72] text-foreground/74">
-              Se preferir, partilhe o seu pedido por aqui. Quanto mais claro for o contexto,
-              mais útil e rápida será a nossa resposta.
+              Indique o assunto, o contexto e o tipo de contacto pretendido para ajudarmos
+              a encaminhar a sua mensagem.
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-5">
@@ -159,7 +167,7 @@ export default function ContactosPage() {
                       setFormData({ ...formData, name: e.target.value })
                     }
                     placeholder="O seu nome"
-                    className="h-11 border-border bg-white px-4"
+                    className="h-11 border-foreground/45 bg-white px-4"
                   />
                 </div>
 
@@ -180,7 +188,7 @@ export default function ContactosPage() {
                       setFormData({ ...formData, email: e.target.value })
                     }
                     placeholder="nome@empresa.com"
-                    className="h-11 border-border bg-white px-4"
+                    className="h-11 border-foreground/45 bg-white px-4"
                   />
                 </div>
               </div>
@@ -203,7 +211,7 @@ export default function ContactosPage() {
                     setFormData({ ...formData, subject: e.target.value })
                   }
                   placeholder="Ex.: Sugestão editorial, parceria, publicidade"
-                  className="h-11 border-border bg-white px-4"
+                  className="h-11 border-foreground/45 bg-white px-4"
                 />
               </div>
 
@@ -225,13 +233,13 @@ export default function ContactosPage() {
                     setFormData({ ...formData, message: e.target.value })
                   }
                   placeholder="Partilhe connosco o contexto do seu pedido."
-                  className="min-h-[180px] border-border bg-white px-4 py-3"
+                  className="min-h-[180px] border-foreground/45 bg-white px-4 py-3"
                 />
               </div>
 
               <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:items-center sm:justify-between">
                 <p className="font-sans text-[0.82rem] font-light leading-[1.6] text-muted-foreground">
-                  A equipa responde prioritariamente a pedidos com contexto claro e relevância editorial ou institucional.
+                  Damos prioridade a mensagens com informação clara e relevância editorial, institucional ou comercial.
                 </p>
                 <Button
                   type="submit"

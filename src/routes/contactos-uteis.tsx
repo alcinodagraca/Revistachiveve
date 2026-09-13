@@ -10,16 +10,19 @@ export const Route = createFileRoute("/contactos-uteis")({
   component: ContactosUteisPage,
   loader: async () => {
     const [contacts, contactCategories] = await Promise.all([
-      fnListContacts(),
+      fnListContacts().catch(() => null),
       fnListContactCategories().catch(() => []),
     ]);
-    return { contacts, contactCategories };
+    return {
+      contacts: contacts ?? [],
+      contactCategories,
+    };
   },
   head: () =>
     pageSeo({
-      title: "Directório de Empresas",
+      title: "Directório empresarial e institucional",
       description:
-        "Directório de instituições, bancos, associações empresariais e organizações úteis em Moçambique.",
+        "Instituições, associações, empresas, serviços e organizações que apoiam oportunidades de negócio em Moçambique.",
       path: "/contactos-uteis",
     }),
 });

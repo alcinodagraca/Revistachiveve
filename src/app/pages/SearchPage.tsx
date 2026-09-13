@@ -40,7 +40,11 @@ export default function SearchPage() {
             onSubmit={onSubmit}
             className="flex flex-col gap-3 md:flex-row md:items-center"
           >
+            <label htmlFor="site-search-results" className="sr-only">
+              Pesquisar artigos
+            </label>
             <Input
+              id="site-search-results"
               autoFocus
               type="text"
               value={input}
