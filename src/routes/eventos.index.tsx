@@ -1,6 +1,5 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
 import EventosPage from '../app/pages/EventosPage'
-import { mockEvents } from '../data/mockListings'
 import { fnListEvents } from '../server/wp/server-fns'
 import { pageSeo } from '../server/seo'
 
@@ -18,8 +17,7 @@ export const Route = createFileRoute('/eventos/')({
   loaderDeps: ({ search }) => ({ page: search.page ?? 1 }),
   component: EventosPage,
   loader: async ({ deps }) => {
-    const publishedEvents = await fnListEvents().catch(() => [])
-    const allEvents = publishedEvents.length > 0 ? publishedEvents : mockEvents
+    const allEvents = await fnListEvents().catch(() => [])
     const perPage = 8
     const start = (deps.page - 1) * perPage
     const totalPages = Math.max(1, Math.ceil(allEvents.length / perPage))

@@ -1,7 +1,6 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import EventDetailPage from "../app/pages/EventDetailPage";
 import NotFoundPage from "../app/pages/NotFoundPage";
-import { mockEvents } from "../data/mockListings";
 import { fnGetEventBySlug, fnListEvents } from "../server/wp/server-fns";
 import { breadcrumbJsonLd, eventJsonLd, pageSeo } from "../server/seo";
 
@@ -13,11 +12,9 @@ export const Route = createFileRoute("/eventos/$slug")({
       fnGetEventBySlug({ data: params.slug }).catch(() => null),
       fnListEvents().catch(() => []),
     ]);
-    const event =
-      publishedEvent ?? mockEvents.find((item) => item.slug === params.slug) ?? null;
+    const event = publishedEvent;
     if (!event) throw notFound();
-    const all = publishedEvents.length > 0 ? publishedEvents : mockEvents;
-    const related = all
+    const related = publishedEvents
       .filter((e) => e.slug !== event.slug)
       .slice(0, 3);
     return { event, related };

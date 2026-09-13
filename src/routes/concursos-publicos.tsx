@@ -2,7 +2,6 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import ConcursosPublicosPage from "../app/pages/ConcursosPublicosPage";
 import { fnListTenders } from "../server/wp/server-fns";
 import { pageSeo } from "../server/seo";
-import { mockTenders } from "../data/mockListings";
 
 type SearchParams = { page?: number };
 
@@ -23,20 +22,13 @@ export const Route = createFileRoute("/concursos-publicos")({
     const list = await fnListTenders({
       data: { page: deps.page, perPage },
     }).catch(() => ({ tenders: [], total: 0, totalPages: 0 }));
-    const mockSlots = deps.page === 1 ? Math.max(0, 6 - list.tenders.length) : 0;
-    const tenders = [
-      ...list.tenders,
-      ...mockTenders.slice(0, mockSlots),
-    ];
-    const usesMockData = mockSlots > 0;
-    const total = usesMockData ? tenders.length : list.total;
-    const totalPages = usesMockData ? 1 : Math.max(1, list.totalPages);
+    const totalPages = Math.max(1, list.totalPages);
     if (deps.page > totalPages) throw notFound();
     return {
-      tenders,
+      tenders: list.tenders,
       currentPage: deps.page,
       totalPages,
-      total,
+      total: list.total,
     };
   },
   head: ({ loaderData }) => {
