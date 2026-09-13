@@ -5,7 +5,7 @@
  *
  * Re-run via cron or CI hook for incremental updates without rebuilding.
  */
-import { writeFileSync, mkdirSync } from "node:fs";
+import { existsSync, writeFileSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { config as loadDotenv } from "dotenv";
 import { listArticles } from "../src/server/wp/articles";
@@ -52,8 +52,37 @@ const STATIC_PATHS = [
   "/termos",
 ];
 
-async function main() {
-  const [categories, events] = await Promise.all([listCategories(), listEvents()]);
+type SitemapEntry = { loc: string; lastmod?: string };
+
+function buildXml(entries: SitemapEntry[]): string {
+  const body = entries
+    .map(
+      (entry) =>
+        `  <url>\n    <loc>${xmlEscape(entry.loc)}</loc>${
+          entry.lastmod
+            ? `\n    <lastmod>${xmlEscape(entry.lastmod)}</lastmod>`
+            : ""
+        }\n  </url>`,
+    )
+    .join("\n");
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${body}
+</urlset>
+`;
+}
+
+function writeSitemap(entries: SitemapEntry[], outPath: string): void {
+  writeFileSync(outPath, buildXml(entries), "utf8");
+  console.log(`[sitemap] wrote ${entries.length} URLs to ${outPath}`);
+}
+
+async function getDynamicEntries(): Promise<SitemapEntry[]> {
+  const [categories, events] = await Promise.all([
+    listCategories(),
+    listEvents(),
+  ]);
 
   // Paginate through articles (WP caps per_page at 100).
   const allArticles: Awaited<ReturnType<typeof listArticles>>["articles"] = [];
@@ -64,14 +93,11 @@ async function main() {
     if (page >= chunk.totalPages || chunk.articles.length === 0) break;
     page++;
   }
-  const list = { articles: allArticles };
-
-  const entries: { loc: string; lastmod?: string }[] = [];
-  for (const p of STATIC_PATHS) entries.push({ loc: `${SITE_URL}${p}` });
+  const entries: SitemapEntry[] = [];
   for (const c of categories.filter((category) => category.count > 0)) {
     entries.push({ loc: `${SITE_URL}/artigos/${c.slug}` });
   }
-  for (const a of list.articles) {
+  for (const a of allArticles) {
     entries.push({
       loc: `${SITE_URL}/artigos/${a.category}/${a.slug}`,
       lastmod: normalizeLastmod(a.modifiedAt || a.publishedAt),
@@ -83,27 +109,35 @@ async function main() {
       lastmod: normalizeLastmod(event.modifiedAt),
     });
   }
+  return entries;
+}
 
-  const body = entries
-    .map(
-      (e) =>
-        `  <url>\n    <loc>${xmlEscape(e.loc)}</loc>${
-          e.lastmod ? `\n    <lastmod>${xmlEscape(e.lastmod)}</lastmod>` : ""
-        }\n  </url>`,
-    )
-    .join("\n");
-
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${body}
-</urlset>
-`;
-
+async function main() {
   const outDir = resolve(process.cwd(), "public");
   mkdirSync(outDir, { recursive: true });
   const outPath = resolve(outDir, "sitemap.xml");
-  writeFileSync(outPath, xml, "utf8");
-  console.log(`[sitemap] wrote ${entries.length} URLs to ${outPath}`);
+
+  const staticEntries = STATIC_PATHS.map((path) => ({
+    loc: `${SITE_URL}${path}`,
+  }));
+
+  try {
+    const dynamicEntries = await getDynamicEntries();
+    writeSitemap([...staticEntries, ...dynamicEntries], outPath);
+  } catch (error) {
+    const reason = error instanceof Error ? error.message : String(error);
+    if (existsSync(outPath)) {
+      console.warn(
+        `[sitemap] WordPress unavailable; keeping the existing sitemap. ${reason}`,
+      );
+      return;
+    }
+
+    console.warn(
+      `[sitemap] WordPress unavailable and no previous sitemap exists; writing static routes only. ${reason}`,
+    );
+    writeSitemap(staticEntries, outPath);
+  }
 }
 
 main().catch((e) => {
