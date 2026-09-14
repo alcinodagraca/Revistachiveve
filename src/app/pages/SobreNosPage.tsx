@@ -7,18 +7,18 @@ import { Route } from "../../routes/sobre-nos";
 const editorialPrinciples = [
   {
     number: "01",
-    title: "Contexto antes do ruído",
-    text: "Explicamos porque um tema importa e o que pode mudar para quem toma decisões.",
+    title: "Negócios com contexto",
+    text: "Não olhamos apenas para acontecimentos isolados. Procuramos explicar o que está por trás das decisões, dos desafios e das oportunidades que influenciam o ambiente empresarial.",
   },
   {
     number: "02",
-    title: "Protagonistas que constroem",
-    text: "Damos voz a empresários, empreendedores e iniciativas que fazem a economia acontecer.",
+    title: "Histórias com impacto",
+    text: "Valorizamos protagonistas reais, percursos inspiradores e experiências que mostram como os negócios nascem, crescem, resistem e se reinventam.",
   },
   {
     number: "03",
-    title: "Informação para agir",
-    text: "Procuramos entregar clareza e conhecimento aplicável, sem complicar o que pode ser simples.",
+    title: "Economia próxima das pessoas",
+    text: "Acreditamos que a economia não se resume a números. Ela está presente no comércio, nos serviços, nos transportes, nas feiras, nas empresas familiares, nas startups, nos mercados e nas decisões diárias de quem empreende.",
   },
 ];
 
@@ -27,7 +27,7 @@ const davidFranco = {
   name: "David Franco",
   role: "Editor-Chefe",
   image: "/Franco-Editor Chefe.jpeg",
-  bio: "Responsável pela direcção editorial da Revista Negócios no Chiveve.",
+  bio: "Editor-Chefe da Revista Negócios no Chiveve.",
   linkedin: "https://www.linkedin.com/in/david-franco-1b248976/",
 };
 
@@ -49,51 +49,97 @@ export default function SobreNosPage() {
           breadcrumbs={[{ label: "Início", to: "/" }, { label: "Sobre Nós" }]}
         />
 
-        <section className="mb-14 border-t border-border pt-8 md:mb-18 md:pt-10">
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,1.25fr)_340px] lg:items-start lg:gap-12">
-            <div>
+        <section className="mb-10 border-t border-border pt-8 md:mb-12 md:pt-10">
+          <div className="grid overflow-hidden border border-border lg:grid-cols-[minmax(0,1.35fr)_minmax(300px,0.65fr)]">
+            <div className="px-7 py-8 md:px-10 md:py-11 lg:px-12">
               <Eyebrow className="mb-3 inline-block">Revista Negócios no Chiveve</Eyebrow>
               <Heading as="h2" variant="article-title" className="mb-5 max-w-4xl text-foreground">
-                Informação empresarial com raízes na Beira e atenção a todo o país.
+                Negócios, liderança e inovação em Moçambique.
               </Heading>
-              <div className="max-w-3xl font-sans text-[0.98rem] font-light leading-[1.8] text-foreground/78">
+              <div className="max-w-4xl space-y-5 font-sans text-[0.98rem] font-light leading-[1.8] text-foreground/78">
                 <p>
-                  A Revista Negócios no Chiveve acompanha o empreendedorismo, a liderança,
-                  a inovação e as oportunidades económicas em Moçambique, aproximando quem
-                  cria, lidera e investe.
+                  A Revista Negócios no Chiveve é uma plataforma editorial dedicada à valorização
+                  do empreendedorismo, da liderança empresarial, tecnologia, da inovação e das
+                  oportunidades económicas em Moçambique, com especial atenção à cidade da Beira
+                  e à região centro do país.
+                </p>
+                <p>
+                  Nascemos para contar histórias que merecem visibilidade, interpretar os
+                  movimentos do mercado e aproximar empresários, empreendedores, investidores,
+                  instituições e leitores interessados no desenvolvimento económico nacional.
                 </p>
               </div>
             </div>
 
-            <aside className="border border-border bg-card p-6 md:p-7">
-              <Eyebrow className="mb-5 inline-block">Em foco</Eyebrow>
-              <div className="space-y-5">
-                <div>
-                  <Heading as="h3" variant="feature-title" className="mb-2 text-foreground">
-                    O nosso propósito
-                  </Heading>
-                  <p className="font-sans text-[0.92rem] font-light leading-[1.65] text-foreground/74">
-                    Transformar informação empresarial em conteúdo útil para decisões e negócios.
-                  </p>
-                </div>
-                <div>
-                  <Heading as="h3" variant="feature-title" className="mb-2 text-foreground">
-                    O que fazemos
-                  </Heading>
-                  <p className="font-sans text-[0.92rem] font-light leading-[1.65] text-foreground/74">
-                    Produzimos reportagens, entrevistas e análises sobre a economia moçambicana.
-                  </p>
-                </div>
-                <div>
-                  <Heading as="h3" variant="feature-title" className="mb-2 text-foreground">
-                    Para quem escrevemos
-                  </Heading>
-                  <p className="font-sans text-[0.92rem] font-light leading-[1.65] text-foreground/74">
-                    Empreendedores, gestores, investidores, profissionais e estudantes.
-                  </p>
-                </div>
+            <div className="flex flex-col justify-between bg-primary px-7 py-8 text-primary-foreground md:px-10 md:py-11">
+              <Eyebrow className="mb-10 inline-block text-primary-foreground/80">
+                A nossa identidade
+              </Eyebrow>
+              <p className="max-w-md font-sans text-[1.35rem] font-medium leading-[1.5] md:text-[1.55rem]">
+                Mais do que uma revista, somos um espaço de leitura, memória, promoção e conexão empresarial.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="mb-14 md:mb-18" aria-label="Identidade editorial">
+          <div className="grid divide-y divide-border border border-border bg-background lg:grid-cols-[0.95fr_1.05fr_1.15fr] lg:divide-x lg:divide-y-0">
+            <article className="p-7 md:p-8">
+              <Eyebrow className="mb-5 inline-block">01</Eyebrow>
+              <Heading as="h2" variant="feature-title" className="mb-4 text-foreground">
+                O Nosso Propósito
+              </Heading>
+              <div className="space-y-3 font-sans text-[0.93rem] font-light leading-[1.72] text-foreground/74">
+                <p>
+                  O nosso propósito é transformar informação, experiências e trajectórias
+                  empresariais em conteúdos relevantes, capazes de inspirar decisões, estimular
+                  negócios e fortalecer o ecossistema empreendedor moçambicano.
+                </p>
+                <p>
+                  Acreditamos que cada empresa, cada empreendedor, cada associação, cada
+                  iniciativa local e cada história de superação contribui para a construção de
+                  uma economia mais dinâmica, inclusiva e competitiva.
+                </p>
               </div>
-            </aside>
+            </article>
+
+            <article className="p-7 md:p-8">
+              <Eyebrow className="mb-5 inline-block">02</Eyebrow>
+              <Heading as="h2" variant="feature-title" className="mb-4 text-foreground">
+                O Que Fazemos
+              </Heading>
+              <div className="space-y-3 font-sans text-[0.93rem] font-light leading-[1.72] text-foreground/74">
+                <p>
+                  Produzimos e publicamos conteúdos editoriais sobre negócios, empreendedorismo,
+                  liderança, inovação, investimento, economia local, associativismo empresarial,
+                  marcas, eventos, oportunidades e desenvolvimento.
+                </p>
+                <p>
+                  Damos destaque a empresários, jovens empreendedores, mulheres líderes,
+                  pequenas e médias empresas, instituições públicas e privadas, projectos de
+                  impacto e iniciativas que contribuem para transformar comunidades e mercados.
+                </p>
+              </div>
+            </article>
+
+            <article className="p-7 md:p-8">
+              <Eyebrow className="mb-5 inline-block">03</Eyebrow>
+              <Heading as="h2" variant="feature-title" className="mb-4 text-foreground">
+                Para Quem Escrevemos
+              </Heading>
+              <div className="space-y-3 font-sans text-[0.93rem] font-light leading-[1.72] text-foreground/74">
+                <p>
+                  Escrevemos para empreendedores, empresários, gestores, investidores, decisores
+                  públicos, profissionais, estudantes, associações empresariais, instituições de
+                  desenvolvimento e todos aqueles que procuram compreender melhor os negócios e
+                  as oportunidades em Moçambique.
+                </p>
+                <p>
+                  A nossa revista é feita para quem cria, lidera, investe, vende, compra, emprega,
+                  arrisca, aprende e acredita no potencial económico do país.
+                </p>
+              </div>
+            </article>
           </div>
         </section>
 
@@ -105,7 +151,7 @@ export default function SobreNosPage() {
                 O nosso critério
               </Eyebrow>
               <p className="max-w-md font-sans text-[1.35rem] font-medium leading-[1.48] md:text-[1.6rem]">
-                Contar melhor o que acontece nos negócios para ajudar o leitor a compreender o que vem a seguir.
+                Negócios com contexto. Histórias com impacto. Economia próxima das pessoas.
               </p>
             </div>
 
@@ -141,12 +187,19 @@ export default function SobreNosPage() {
             {members.slice(0, 4).map((member) => {
               const linkedin = "linkedin" in member ? member.linkedin : undefined;
               return (
-                <article key={member.id}>
+                <article
+                  key={member.id}
+                  className={member.id === davidFranco.id ? "group" : undefined}
+                >
                   <div className="mb-4 aspect-square overflow-hidden bg-secondary">
                     <ImageWithFallback
                       src={member.image}
                       alt={`${member.name}, ${member.role}`}
-                      className="h-full w-full object-cover"
+                      className={
+                        member.id === davidFranco.id
+                          ? "h-full w-full object-cover grayscale transition-[filter] duration-500 ease-out group-hover:grayscale-0 group-focus-within:grayscale-0 motion-reduce:transition-none"
+                          : "h-full w-full object-cover"
+                      }
                     />
                   </div>
                   <div className="flex items-start justify-between gap-4">
@@ -199,9 +252,8 @@ export default function SobreNosPage() {
                 Negócios no Chiveve Hub
               </Heading>
               <p className="max-w-2xl font-sans text-[0.96rem] font-light leading-[1.75] text-primary-foreground/90">
-                A Revista Negócios no Chiveve faz parte do Negócios no Chiveve Hub,
-                uma plataforma que liga iniciativas de informação, colaboração e
-                desenvolvimento do ecossistema empresarial.
+                A Revista Negócios no Chiveve faz parte do Negócios no Chiveve Hub e
+                conta com o seu apoio institucional.
               </p>
             </div>
           </div>
