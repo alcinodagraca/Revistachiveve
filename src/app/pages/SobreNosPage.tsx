@@ -235,7 +235,7 @@ export default function SobreNosPage() {
         </section>
 
         <section>
-          <SectionHeader as="h2">Parcerias</SectionHeader>
+          <SectionHeader as="h2">Suportado por</SectionHeader>
           <div className="grid overflow-hidden bg-primary lg:grid-cols-[minmax(300px,0.8fr)_minmax(0,1.2fr)]">
             <div className="flex min-h-[210px] items-center justify-center p-8 md:p-10">
               <img
@@ -245,15 +245,12 @@ export default function SobreNosPage() {
               />
             </div>
             <div className="flex flex-col justify-center border-t border-white/20 px-7 py-8 text-primary-foreground md:px-10 lg:border-l lg:border-t-0">
-              <Eyebrow className="mb-3 inline-block text-primary-foreground/80">
-                Parceiro institucional
-              </Eyebrow>
               <Heading as="h3" variant="feature-title" className="mb-3 text-primary-foreground">
                 Negócios no Chiveve Hub
               </Heading>
               <p className="max-w-2xl font-sans text-[0.96rem] font-light leading-[1.75] text-primary-foreground/90">
-                A Revista Negócios no Chiveve faz parte do Negócios no Chiveve Hub e
-                conta com o seu apoio institucional.
+                A Revista Negócios no Chiveve é suportada pelo Negócios no Chiveve Hub,
+                do qual faz parte.
               </p>
             </div>
           </div>
