@@ -38,7 +38,7 @@ export function ArticleCard({
           <ImageWithFallback
             src={article.heroImage}
             alt={article.title}
-            className="block w-full object-contain object-center"
+            className="block w-full object-cover object-center"
             style={{ height: imageHeight }}
           />
         </div>

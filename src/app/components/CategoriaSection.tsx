@@ -63,7 +63,7 @@ export function CategoriaSection({
                   <ImageWithFallback
                     src={lead.heroImage}
                     alt={lead.heroAlt || lead.title}
-                    className="block h-full w-full object-contain object-center"
+                    className="block h-full w-full object-cover object-center"
                   />
                 </div>
                 <Heading

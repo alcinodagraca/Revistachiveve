@@ -94,7 +94,7 @@ export default function ArticleDetailPage() {
               <ImageWithFallback
                 src={article.heroImage}
                 alt={article.heroAlt}
-                className="block h-full w-full object-contain object-center"
+                className="block h-full w-full object-cover object-center"
               />
             </motion.div>
 
@@ -183,7 +183,7 @@ export default function ArticleDetailPage() {
                           <ImageWithFallback
                             src={a.heroImage}
                             alt={a.heroAlt}
-                            className="block h-full w-full object-contain object-center"
+                            className="block h-full w-full object-cover object-center"
                           />
                         </div>
 

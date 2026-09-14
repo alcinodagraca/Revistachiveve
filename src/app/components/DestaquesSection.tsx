@@ -73,7 +73,7 @@ export function DestaquesSection({ articles }: { articles: Article[] }) {
                     <ImageWithFallback
                       src={article.heroImage}
                       alt={article.heroAlt || article.title}
-                      className="block h-full w-full object-contain object-center"
+                      className="block h-full w-full object-cover object-center"
                     />
                   </Link>
 

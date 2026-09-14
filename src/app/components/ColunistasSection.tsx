@@ -21,7 +21,7 @@ export function ColunistasSection({ articles }: { articles: Article[] }) {
               key={article.slug}
               to="/artigos/$category/$slug"
               params={{ category: article.category, slug: article.slug }}
-              className="group grid h-full min-h-[350px] overflow-hidden border border-border text-inherit no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:grid-cols-[minmax(0,1fr)_minmax(180px,0.92fr)] md:min-h-[230px]"
+              className="group grid min-h-0 overflow-hidden border border-border text-inherit no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:h-[350px] sm:grid-cols-[minmax(0,1fr)_minmax(180px,0.92fr)] md:h-[360px]"
             >
               <div className="order-2 flex min-w-0 flex-col p-5 sm:order-1 md:p-6">
                 {article.categoryName && (
@@ -47,11 +47,11 @@ export function ColunistasSection({ articles }: { articles: Article[] }) {
                 </p>
               </div>
 
-              <div className="order-1 min-h-[190px] overflow-hidden bg-secondary sm:order-2 sm:min-h-0">
+              <div className="order-1 h-[240px] min-h-0 overflow-hidden bg-secondary sm:order-2 sm:h-full">
                 <ImageWithFallback
                   src={article.heroImage}
                   alt=""
-                  className="block h-full w-full object-contain object-center"
+                  className="block h-full w-full object-cover object-center"
                 />
               </div>
             </Link>

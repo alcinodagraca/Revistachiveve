@@ -65,7 +65,7 @@ export default function CategoryPage() {
                         <ImageWithFallback
                           src={article.heroImage}
                           alt={article.heroAlt}
-                          className="block h-[280px] w-full object-contain object-center"
+                          className="block h-[280px] w-full object-cover object-center"
                         />
                       </div>
 
