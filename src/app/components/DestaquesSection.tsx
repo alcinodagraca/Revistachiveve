@@ -52,32 +52,32 @@ export function DestaquesSection({ articles }: { articles: Article[] }) {
           setApi={setApi}
           opts={{ loop: slides.length > 1 }}
           aria-label="Artigos em destaque"
-          className="min-w-0 max-w-full overflow-hidden border border-border bg-secondary"
+          className="w-full min-w-0 max-w-full overflow-hidden border border-border bg-secondary"
         >
-          <CarouselContent className="-ml-0 min-w-0">
+          <CarouselContent className="-ml-0 w-full min-w-0 items-start">
             {slides.map((article, index) => (
               <CarouselItem
                 key={article.id}
-                className="min-w-0 max-w-full pl-0"
+                className="w-full min-w-0 max-w-full self-start pl-0"
                 aria-label={`Artigo ${index + 1} de ${slides.length}`}
                 aria-hidden={index !== current}
                 inert={index !== current ? true : undefined}
               >
-                <article className="grid min-h-[520px] min-w-0 max-w-full grid-cols-1 overflow-hidden bg-background lg:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.75fr)]">
+                <article className="grid w-full min-w-0 max-w-full grid-cols-1 overflow-hidden bg-background lg:h-[520px] lg:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.75fr)]">
                   <Link
                     to="/artigos/$category/$slug"
                     params={{ category: article.category, slug: article.slug }}
-                    className="group block min-h-[300px] min-w-0 overflow-hidden bg-secondary no-underline sm:min-h-[420px] lg:min-h-[520px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
+                    className="group block h-[300px] min-w-0 overflow-hidden bg-secondary no-underline sm:h-[420px] lg:h-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
                     aria-label={`Ler ${article.title}`}
                   >
                     <ImageWithFallback
                       src={article.heroImage}
                       alt={article.heroAlt || article.title}
-                      className="block h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.025] motion-reduce:transition-none"
+                      className="block h-full w-full object-contain object-center"
                     />
                   </Link>
 
-                  <div className="flex min-w-0 flex-col justify-center px-6 pb-24 pt-8 sm:px-8 lg:px-10 lg:pb-24 lg:pt-10">
+                  <div className="flex min-w-0 flex-col justify-center overflow-hidden px-6 pb-24 pt-8 sm:px-8 lg:px-10 lg:pb-24 lg:pt-10">
                     <p className="mb-4 font-sans text-[0.72rem] font-medium uppercase tracking-[0.12em] text-primary">
                       {article.categoryName}
                     </p>
@@ -89,12 +89,12 @@ export function DestaquesSection({ articles }: { articles: Article[] }) {
                       <Heading
                         as="h3"
                         variant="article-title"
-                        className="mb-5 text-foreground transition-colors group-hover:text-primary"
+                        className="mb-5 break-words text-foreground transition-colors group-hover:text-primary"
                       >
                         {article.title}
                       </Heading>
                     </Link>
-                    <p className="mb-6 line-clamp-4 font-sans text-[0.94rem] font-light leading-[1.72] text-foreground/78">
+                    <p className="mb-6 line-clamp-4 break-words font-sans text-[0.94rem] font-light leading-[1.72] text-foreground/78">
                       {article.excerpt}
                     </p>
                     <p className="font-sans text-[0.74rem] uppercase tracking-[0.07em] text-foreground/68">

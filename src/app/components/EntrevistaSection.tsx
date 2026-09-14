@@ -33,7 +33,7 @@ export function EntrevistaSection({ article }: { article: Article | null }) {
             <ImageWithFallback
               src={article.heroImage}
               alt={article.heroAlt || article.title}
-              className="w-full h-full object-cover block transition-transform duration-500 group-hover:scale-105"
+              className="block h-full w-full object-contain object-center"
             />
           </Link>
 

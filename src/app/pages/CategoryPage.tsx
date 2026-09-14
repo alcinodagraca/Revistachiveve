@@ -61,11 +61,11 @@ export default function CategoryPage() {
                       params={{ category: article.category, slug: article.slug }}
                       className="block no-underline group"
                     >
-                      <div className="relative mb-4 overflow-hidden">
+                      <div className="relative mb-4 overflow-hidden bg-secondary">
                         <ImageWithFallback
                           src={article.heroImage}
                           alt={article.heroAlt}
-                          className="w-full h-[280px] object-cover block transition-transform duration-500 group-hover:scale-105"
+                          className="block h-[280px] w-full object-contain object-center"
                         />
                       </div>
 

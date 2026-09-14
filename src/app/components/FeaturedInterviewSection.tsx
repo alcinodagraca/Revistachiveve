@@ -36,7 +36,7 @@ export function FeaturedInterviewSection({
                 <ImageWithFallback
                   src={article.heroImage}
                   alt={article.heroAlt || article.title}
-                  className="block h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="block h-full w-full object-contain object-center"
                 />
               </div>
 

@@ -20,7 +20,7 @@ function RecentArticle({ article }: { article: Article }) {
         <ImageWithFallback
           src={article.heroImage}
           alt=""
-          className="block h-20 w-[88px] object-cover"
+          className="block h-20 w-[88px] bg-secondary object-contain object-center"
         />
         <div className="min-w-0">
           <Heading

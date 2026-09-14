@@ -51,7 +51,7 @@ export function ColunistasSection({ articles }: { articles: Article[] }) {
                 <ImageWithFallback
                   src={article.heroImage}
                   alt=""
-                  className="block h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none"
+                  className="block h-full w-full object-contain object-center"
                 />
               </div>
             </Link>

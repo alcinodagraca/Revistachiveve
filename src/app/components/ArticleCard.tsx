@@ -34,11 +34,11 @@ export function ArticleCard({
         params={{ category: article.category, slug: article.slug }}
         className="group block no-underline"
       >
-        <div className="mb-4 overflow-hidden">
+        <div className="mb-4 overflow-hidden bg-secondary">
           <ImageWithFallback
             src={article.heroImage}
             alt={article.title}
-            className="w-full object-cover block transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none"
+            className="block w-full object-contain object-center"
             style={{ height: imageHeight }}
           />
         </div>
