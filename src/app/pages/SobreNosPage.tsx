@@ -187,19 +187,12 @@ export default function SobreNosPage() {
             {members.slice(0, 4).map((member) => {
               const linkedin = "linkedin" in member ? member.linkedin : undefined;
               return (
-                <article
-                  key={member.id}
-                  className={member.id === davidFranco.id ? "group" : undefined}
-                >
+                <article key={member.id}>
                   <div className="mb-4 aspect-square overflow-hidden bg-secondary">
                     <ImageWithFallback
                       src={member.image}
                       alt={`${member.name}, ${member.role}`}
-                      className={
-                        member.id === davidFranco.id
-                          ? "h-full w-full object-cover grayscale transition-[filter] duration-500 ease-out group-hover:grayscale-0 group-focus-within:grayscale-0 motion-reduce:transition-none"
-                          : "h-full w-full object-cover"
-                      }
+                      className="h-full w-full object-cover"
                     />
                   </div>
                   <div className="flex items-start justify-between gap-4">
