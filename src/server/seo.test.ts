@@ -20,6 +20,16 @@ test("pageSeo preserves pagination in the canonical URL", () => {
 
   assert.deepEqual(seo.links, [
     { rel: "canonical", href: `${SITE_URL}/artigos?page=2` },
+    {
+      rel: "alternate",
+      hrefLang: "pt-MZ",
+      href: `${SITE_URL}/artigos?page=2`,
+    },
+    {
+      rel: "alternate",
+      hrefLang: "x-default",
+      href: `${SITE_URL}/artigos?page=2`,
+    },
   ]);
   assert.ok(
     seo.meta.some(

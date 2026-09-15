@@ -11,6 +11,10 @@ import appCss from '../styles/index.css?url'
 import { fnListCategories } from '../server/wp/server-fns'
 import { SITE_NAME, SITE_SHORT_NAME } from '../server/seo'
 
+// Browsers keep a separate, unusually persistent favicon cache. Keep this
+// version stable until the artwork changes again, then bump it once.
+const FAVICON_VERSION = '20260915'
+
 export const Route = createRootRoute({
   head: () => ({
     meta: [
@@ -26,11 +30,29 @@ export const Route = createRootRoute({
       { name: 'theme-color', content: '#1E4ED8' },
     ],
     links: [
-      { rel: 'icon', href: '/favicon-96x96.png', type: 'image/png', sizes: '96x96' },
-      { rel: 'icon', href: '/favicon.ico', type: 'image/x-icon', sizes: '32x32' },
-      { rel: 'icon', href: '/favicon-32x32.png', type: 'image/png', sizes: '32x32' },
-      { rel: 'apple-touch-icon', href: '/apple-touch-icon.png', sizes: '180x180' },
-      { rel: 'manifest', href: '/site.webmanifest' },
+      {
+        rel: 'icon',
+        href: `/favicon-96x96.png?v=${FAVICON_VERSION}`,
+        type: 'image/png',
+        sizes: '96x96',
+      },
+      {
+        rel: 'icon',
+        href: `/favicon-32x32.png?v=${FAVICON_VERSION}`,
+        type: 'image/png',
+        sizes: '32x32',
+      },
+      {
+        rel: 'shortcut icon',
+        href: `/favicon.ico?v=${FAVICON_VERSION}`,
+        type: 'image/x-icon',
+      },
+      {
+        rel: 'apple-touch-icon',
+        href: `/apple-touch-icon.png?v=${FAVICON_VERSION}`,
+        sizes: '180x180',
+      },
+      { rel: 'manifest', href: `/site.webmanifest?v=${FAVICON_VERSION}` },
       { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
       { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
       {

@@ -104,6 +104,8 @@ export function pageSeo(input: PageSeoInput) {
   const meta: HeadMeta[] = [
     { title: fullTitle },
     { name: "description", content: description },
+    { name: "author", content: SITE_NAME },
+    { name: "publisher", content: SITE_NAME },
     {
       name: "robots",
       content: input.noindex
@@ -157,7 +159,11 @@ export function pageSeo(input: PageSeoInput) {
     }
   }
 
-  const links = [{ rel: "canonical", href: url }];
+  const links = [
+    { rel: "canonical", href: url },
+    { rel: "alternate", hrefLang: "pt-MZ", href: url },
+    { rel: "alternate", hrefLang: "x-default", href: url },
+  ];
 
   const scripts = (input.jsonLd ?? []).map((data) => ({
     type: "application/ld+json",
