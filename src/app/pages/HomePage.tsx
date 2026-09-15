@@ -7,8 +7,14 @@ import { AdvertisementBanner } from "../components/AdvertisementBanner";
 import { Route } from "../../routes/index";
 
 export default function HomePage() {
-  const { recent, opiniao, entrevistas, editions } = Route.useLoaderData();
+  const { destaques, recent, opiniao, entrevistas, editions } = Route.useLoaderData();
   const featuredInterview = entrevistas.articles[0] ?? recent.articles[0] ?? null;
+  const carouselArticles = [
+    ...destaques.articles,
+    ...recent.articles.filter((article) =>
+      destaques.articles.every((featuredArticle) => featuredArticle.id !== article.id),
+    ),
+  ].slice(0, 3);
   const exploreArticles = [
     ...recent.articles,
     ...opiniao.articles.filter((article) =>
@@ -35,7 +41,7 @@ export default function HomePage() {
       <h1 className="sr-only">
         Negócios, liderança e inovação que movem Moçambique
       </h1>
-      <DestaquesSection articles={recent.articles.slice(0, 3)} />
+      <DestaquesSection articles={carouselArticles} />
       <ContinueImpactadoSection />
       <FeaturedInterviewSection
         article={featuredInterview}

@@ -38,6 +38,14 @@ nativas. Vá a **Posts → Categorias** e crie/edite as seguintes:
 - Categorias novas aparecem automaticamente no menu e na grelha de
   `/artigos`.
 
+### Artigos no carrossel da página inicial
+
+O carrossel **Em Destaque** é controlado pela tag nativa **Destaques**, com
+slug `destaques`. Aplique a tag aos artigos que devem aparecer no carrossel e
+retire-a quando deixarem de estar em destaque. São apresentados no máximo três
+artigos, ordenados do mais recente para o mais antigo. A categoria editorial do
+artigo deve ser mantida separadamente.
+
 ---
 
 ## 2. Custom Post Types (CPT UI)

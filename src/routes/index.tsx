@@ -12,13 +12,14 @@ import {
 export const Route = createFileRoute('/')({
   component: HomePage,
   loader: async () => {
-    const [recent, opiniao, entrevistas, editions] = await Promise.all([
+    const [destaques, recent, opiniao, entrevistas, editions] = await Promise.all([
+      fnListArticles({ data: { tagSlug: 'destaques', perPage: 3 } }),
       fnListArticles({ data: { perPage: 6 } }),
       fnListArticles({ data: { categorySlug: 'opiniao', perPage: 3 } }),
       fnListArticles({ data: { categorySlug: 'entrevistas', perPage: 1 } }),
       fnListEditions(),
     ])
-    return { recent, opiniao, entrevistas, editions: editions ?? [] }
+    return { destaques, recent, opiniao, entrevistas, editions: editions ?? [] }
   },
   head: () =>
     pageSeo({

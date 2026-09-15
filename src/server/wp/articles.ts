@@ -89,6 +89,8 @@ export type ListArticlesArgs = {
   perPage?: number;
   /** Category slug — resolved to WP category id internally. */
   categorySlug?: string;
+  /** Tag slug — used for editorial selections such as the home carousel. */
+  tagSlug?: string;
   /** Free-text search (passed to WP's ?search=). */
   search?: string;
   /** Exclude one article id (used for "Related" / "Mais Lidos"). */
@@ -124,6 +126,17 @@ export async function listArticles(
       return { articles: [], total: 0, totalPages: 0 };
     }
     params.categories = cats.items[0].id;
+  }
+
+  if (args.tagSlug) {
+    const tags = await wpList<{ id: number; slug: string }>("/tags", {
+      params: { slug: args.tagSlug, per_page: 1 },
+      ttlMs: 60 * 60_000,
+    });
+    if (tags.items.length === 0) {
+      return { articles: [], total: 0, totalPages: 0 };
+    }
+    params.tags = tags.items[0].id;
   }
 
   const res = await wpList<WPPost>("/posts", {

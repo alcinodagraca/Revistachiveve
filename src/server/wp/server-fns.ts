@@ -18,6 +18,7 @@ export const fnListArticles = createServerFn({ method: "GET" })
       page?: number;
       perPage?: number;
       categorySlug?: string;
+      tagSlug?: string;
       search?: string;
     }) => input ?? {},
   )

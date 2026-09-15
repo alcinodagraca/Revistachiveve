@@ -65,6 +65,12 @@ Articles use **built-in WP `post`** with **built-in WP categories**.
 
 3. **Featured image on every post.** Without one, the image area remains empty.
 
+4. **Select home-carousel articles with a tag.** Apply the native post tag
+   **Destaques** (slug `destaques`) to articles that should appear in the
+   **Em Destaque** carousel. The frontend shows up to three tagged articles,
+   newest first, and falls back to recent posts if fewer than three are tagged.
+   Keep the article's editorial category separate from this presentation tag.
+
 ---
 
 ## Phase 2 — CPTs to register
