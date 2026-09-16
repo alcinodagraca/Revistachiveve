@@ -26,12 +26,9 @@ function formatDateLong(iso: string): string {
 }
 
 export default function ArticleDetailPage() {
-  const { article, related, maisLidos } = Route.useLoaderData();
+  const { article, related, maisLidos, articlePreviewEnd } = Route.useLoaderData();
   const [copied, setCopied] = useState(false);
-  const articleUrl =
-    typeof window !== "undefined"
-      ? window.location.href
-      : `https://www.revistachiveve.com/artigos/${article.category}/${article.slug}`;
+  const articleUrl = `https://www.revistachiveve.com/artigos/${article.category}/${article.slug}`;
   const shareText = `${article.title} | Revista Chiveve`;
 
   async function copyArticleLink() {
@@ -105,8 +102,28 @@ export default function ArticleDetailPage() {
             )}
 
             <Prose>
-              <div dangerouslySetInnerHTML={{ __html: article.bodyHtml }} />
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: articlePreviewEnd === null
+                    ? article.bodyHtml
+                    : article.bodyHtml.slice(0, articlePreviewEnd),
+                }}
+              />
             </Prose>
+
+            {articlePreviewEnd !== null && (
+              <details className="group mt-6 max-w-[760px]">
+                <summary className="inline-flex min-h-11 cursor-pointer list-none items-center border border-primary bg-primary px-5 py-2 font-sans text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary [&::-webkit-details-marker]:hidden">
+                  <span className="group-open:hidden">Continuar a ler</span>
+                  <span className="hidden group-open:inline">Mostrar menos</span>
+                </summary>
+                <div className="mt-6">
+                  <Prose>
+                    <div dangerouslySetInnerHTML={{ __html: article.bodyHtml.slice(articlePreviewEnd) }} />
+                  </Prose>
+                </div>
+              </details>
+            )}
 
             <div className="mt-10 max-w-[760px] border-t border-border pt-5">
               <div className="mb-3 flex flex-wrap items-center gap-3">

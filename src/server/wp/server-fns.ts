@@ -11,6 +11,7 @@ import { listEditions } from "./editions";
 import { listTenders } from "./tenders";
 import { listContactCategories, listContacts } from "./contacts";
 import { listTeam } from "./team";
+import { findArticlePreviewEnd } from "./article-reading";
 
 export const fnListArticles = createServerFn({ method: "GET" })
   .inputValidator(
@@ -69,7 +70,12 @@ export const fnGetArticleBundle = createServerFn({ method: "GET" })
       getRelatedArticles(article, 3),
       getMaisLidos(article.id, 5),
     ]);
-    return { article, related, maisLidos };
+    return {
+      article,
+      related,
+      maisLidos,
+      articlePreviewEnd: findArticlePreviewEnd(article.bodyHtml),
+    };
   });
 
 export const fnGetMaisLidos = createServerFn({ method: "GET" })
