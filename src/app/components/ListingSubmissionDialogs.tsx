@@ -7,6 +7,8 @@ import {
   submitUsefulContact,
   TENDER_TYPES,
   MAX_SUBMISSION_IMAGE_BYTES,
+  MAX_SUBMISSION_PDF_BYTES,
+  MAX_TENDER_UPLOAD_BYTES,
 } from "../../server/submissions";
 import { Button } from "./ui/button";
 import {
@@ -279,7 +281,7 @@ function getErrorMessage(error: unknown): string {
     : "Não foi possível receber a submissão. Tente novamente.";
 }
 
-function ImageField({ id, label }: { id: string; label: string }) {
+function ImageField({ id, label, extraHint }: { id: string; label: string; extraHint?: string }) {
   return (
     <div className="md:col-span-2">
       <label htmlFor={id} className={fieldLabel}>{label}</label>
@@ -292,7 +294,7 @@ function ImageField({ id, label }: { id: string; label: string }) {
         className="block min-h-11 min-w-0 w-full border border-foreground/50 bg-secondary/35 p-2 font-sans text-sm text-foreground file:mr-3 file:border-0 file:bg-primary file:px-3 file:py-2 file:font-semibold file:text-primary-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
       />
       <p id={`${id}-hint`} className="mt-1.5 font-sans text-xs leading-5 text-foreground/75">
-        Opcional · JPEG, PNG ou WebP · máximo 2 MB. A imagem será revista, mas o ficheiro poderá ser acessível por link após o envio; não inclua dados confidenciais.
+        Opcional · JPEG, PNG ou WebP · máximo 2 MB. {extraHint ? `${extraHint} ` : ""}A imagem será revista, mas o ficheiro poderá ser acessível por link após o envio; não inclua dados confidenciais.
       </p>
     </div>
   );
@@ -312,6 +314,22 @@ async function readSubmissionImage(value: FormDataEntryValue | null) {
     binary += String.fromCharCode(...bytes.subarray(index, index + 8192));
   }
   return { mime: value.type, base64: btoa(binary) };
+}
+
+async function readSubmissionPdf(value: FormDataEntryValue | null) {
+  if (!(value instanceof File) || value.size === 0) return undefined;
+  if (
+    value.size > MAX_SUBMISSION_PDF_BYTES ||
+    (value.type !== "application/pdf" && !value.name.toLowerCase().endsWith(".pdf"))
+  ) {
+    throw new Error("O edital deve ser um PDF com até 3 MB.");
+  }
+  const bytes = new Uint8Array(await value.arrayBuffer());
+  let binary = "";
+  for (let index = 0; index < bytes.length; index += 8192) {
+    binary += String.fromCharCode(...bytes.subarray(index, index + 8192));
+  }
+  return { mime: "application/pdf" as const, base64: btoa(binary) };
 }
 
 export function UsefulContactSubmissionDialog({
@@ -842,6 +860,7 @@ export function TenderSubmissionDialog() {
   const [error, setError] = useState("");
   const [token, setToken] = useState("");
   const [resetSignal, setResetSignal] = useState(0);
+  const [editalFieldError, setEditalFieldError] = useState("");
 
   if (!TURNSTILE_SITE_KEY) return null;
 
@@ -853,6 +872,7 @@ export function TenderSubmissionDialog() {
       setError("");
       setToken("");
       setResetSignal((value) => value + 1);
+      setEditalFieldError("");
     }
   };
 
@@ -861,18 +881,35 @@ export function TenderSubmissionDialog() {
     if (state === "sending" || !token) return;
     const form = event.currentTarget;
     const data = new FormData(form);
+    const editalUrl = String(data.get("editalUrl") ?? "").trim();
+    const pdfFile = data.get("editalPdf");
+    const imageFile = data.get("image");
+    const pdfSize = pdfFile instanceof File ? pdfFile.size : 0;
+    const imageSize = imageFile instanceof File ? imageFile.size : 0;
+    if (!editalUrl && !pdfSize) {
+      setEditalFieldError("Anexe o edital em PDF ou indique o link oficial.");
+      form.querySelector<HTMLInputElement>("#tender-pdf")?.focus();
+      return;
+    }
+    if (pdfSize + imageSize > MAX_TENDER_UPLOAD_BYTES) {
+      setEditalFieldError("O PDF e a imagem juntos não podem exceder 3 MB.");
+      form.querySelector<HTMLInputElement>("#tender-pdf")?.focus();
+      return;
+    }
+    setEditalFieldError("");
     setState("sending");
     setError("");
     try {
       await submitTender({
         data: {
           image: await readSubmissionImage(data.get("image")),
+          editalPdf: await readSubmissionPdf(pdfFile),
           title: String(data.get("title") ?? ""),
           institution: String(data.get("institution") ?? ""),
           deadline: String(data.get("deadline") ?? ""),
           type: String(data.get("type") ?? ""),
           vacancies: Number(data.get("vacancies")),
-          editalUrl: String(data.get("editalUrl") ?? ""),
+          editalUrl,
           submitterName: String(data.get("submitterName") ?? ""),
           submitterEmail: String(data.get("submitterEmail") ?? ""),
           consent: data.get("consent") === "on",
@@ -904,8 +941,8 @@ export function TenderSubmissionDialog() {
               Submeter concurso
             </DialogTitle>
             <DialogDescription className="leading-6">
-              Partilhe os dados essenciais e o link oficial. A nossa equipa irá
-              verificar a informação antes da publicação.
+              Partilhe os dados essenciais e anexe o edital em PDF ou indique o
+              link oficial. A nossa equipa irá verificar a informação antes da publicação.
             </DialogDescription>
           </DialogHeader>
           {state === "success" ? (
@@ -981,20 +1018,42 @@ export function TenderSubmissionDialog() {
                     max={100000}
                   />
                 </div>
-                <div>
-                  <label htmlFor="tender-url" className={fieldLabel}>
-                    Link oficial do edital *
-                  </label>
-                  <Input
-                    id="tender-url"
-                    name="editalUrl"
-                    type="url"
-                    required
-                    placeholder="https://"
-                    maxLength={2000}
-                  />
-                </div>
-                <ImageField id="tender-image" label="Imagem do concurso" />
+                <fieldset className="md:col-span-2">
+                  <legend className={fieldLabel}>Edital *</legend>
+                  <p id="tender-edital-hint" className="mb-3 font-sans text-xs leading-5 text-foreground/75">
+                    Anexe um PDF até 3 MB ou indique o link oficial. O ficheiro poderá ser acessível por link após o envio; não inclua dados confidenciais.
+                  </p>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <label htmlFor="tender-pdf" className={fieldLabel}>PDF do edital</label>
+                      <input
+                        id="tender-pdf"
+                        name="editalPdf"
+                        type="file"
+                        accept="application/pdf,.pdf"
+                        aria-invalid={Boolean(editalFieldError)}
+                        aria-describedby={`tender-edital-hint${editalFieldError ? " tender-edital-error" : ""}`}
+                        onChange={() => setEditalFieldError("")}
+                        className="block min-h-11 min-w-0 w-full border border-foreground/50 bg-secondary/35 p-2 font-sans text-sm text-foreground file:mr-3 file:border-0 file:bg-primary file:px-3 file:py-2 file:font-semibold file:text-primary-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="tender-url" className={fieldLabel}>Ou link oficial</label>
+                      <Input
+                        id="tender-url"
+                        name="editalUrl"
+                        type="url"
+                        placeholder="https://"
+                        maxLength={2000}
+                        aria-invalid={Boolean(editalFieldError)}
+                        aria-describedby={`tender-edital-hint${editalFieldError ? " tender-edital-error" : ""}`}
+                        onChange={() => setEditalFieldError("")}
+                      />
+                    </div>
+                  </div>
+                  {editalFieldError && <p id="tender-edital-error" className="mt-2 font-sans text-sm text-foreground" role="alert">{editalFieldError}</p>}
+                </fieldset>
+                <ImageField id="tender-image" label="Imagem do concurso" extraHint="Se anexar PDF e imagem, o total dos dois ficheiros não pode exceder 3 MB." />
                 <div>
                   <label htmlFor="tender-submitter" className={fieldLabel}>
                     Seu nome *

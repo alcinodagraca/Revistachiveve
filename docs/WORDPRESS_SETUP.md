@@ -166,7 +166,8 @@ Frontend route: `/concursos-publicos`. It shows an empty state until the CPT is 
 | `concurso_deadline` | Date Picker | Display date. |
 | `concurso_type` | Select | Options: `Concurso Público`, `Concurso Limitado`, `Outros`. |
 | `concurso_vacancies` | Number | Integer. |
-| `concurso_edital_url` | URL | Link to the public notice PDF. If empty, the CTA renders as a disabled-style button. |
+| `concurso_edital_url` | URL | External official notice link, or URL copied from a public form PDF upload. |
+| `concurso_edital_pdf` | File | PDF attachment selected in the CMS media picker; PDF only, up to 20 MB. Takes precedence over the URL on the website. Enable Show in REST. |
 
 ### 2D — Useful Contacts (`contacto-util`)
 
@@ -302,6 +303,16 @@ If the media upload succeeds but pending-post creation fails, the server logs
 the unattached media ID for an editor to remove manually.
 Set PHP/WordPress upload limits above 2 MB and confirm the REST `/media`
 endpoint permits JPEG, PNG, and WebP uploads from the submission account.
+For tenders, the public form additionally accepts an edital PDF (up to 3 MB)
+instead of an external link. PDF and image combined may not exceed 3 MB so
+the encoded request stays below Vercel's 4.5 MB function body limit. The PDF
+is uploaded to WordPress media, its attachment ID is stored in
+`concurso_edital_pdf`, and its public URL is stored in `concurso_edital_url`.
+An editor can also attach a PDF directly using the SCF file field in the CMS;
+the website requests `acf_format=standard` so that field yields a URL. Like
+images, uploaded PDFs may be publicly accessible before editorial approval.
+Set WordPress/PHP upload limits accordingly and verify PDF is allowed for the
+dedicated submission account.
 
 Create a dedicated WordPress user and generate an Application Password for that
 user. Do not reuse an administrator account:

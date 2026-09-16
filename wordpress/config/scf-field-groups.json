@@ -7,7 +7,8 @@
       {"key":"field_rc_concurso_deadline","label":"Prazo","name":"concurso_deadline","type":"date_picker","show_in_rest":1,"display_format":"d/m/Y","return_format":"Y-m-d","first_day":1},
       {"key":"field_rc_concurso_type","label":"Tipo","name":"concurso_type","type":"select","show_in_rest":1,"choices":{"Concurso Público":"Concurso Público","Concurso Limitado":"Concurso Limitado","Outros":"Outros"},"default_value":"Concurso Público","return_format":"value"},
       {"key":"field_rc_concurso_vacancies","label":"Vagas","name":"concurso_vacancies","type":"number","show_in_rest":1,"min":0,"step":1},
-      {"key":"field_rc_concurso_edital_url","label":"Link do Edital","name":"concurso_edital_url","type":"url","show_in_rest":1}
+      {"key":"field_rc_concurso_edital_url","label":"Link do Edital","name":"concurso_edital_url","type":"url","show_in_rest":1,"instructions":"Use quando o edital está publicado noutro website. Se carregar o PDF abaixo, este terá prioridade no site."},
+      {"key":"field_6aaa8901704e8","label":"PDF do Edital","name":"concurso_edital_pdf","type":"file","show_in_rest":1,"return_format":"url","library":"all","mime_types":"pdf","max_size":20,"instructions":"Carregue ou seleccione o PDF do edital. Use o campo Link do Edital apenas quando o documento estiver alojado noutro website."}
     ],
     "location": [[{"param":"post_type","operator":"==","value":"concurso"}]],
     "menu_order": 0, "position": "normal", "style": "default", "label_placement": "top",

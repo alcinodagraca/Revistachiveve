@@ -5,12 +5,14 @@ import {
   buildTenderPayload,
   buildUsefulContactPayload,
   decodeSubmissionImage,
+  decodeSubmissionPdf,
   isAllowedSubmissionOrigin,
   isValidTurnstileResult,
   validateEventSubmission,
   validateTenderSubmission,
   validateUsefulContactSubmission,
   validateImageInput,
+  validatePdfInput,
 } from "./submissions";
 
 const base = {
@@ -117,6 +119,47 @@ test("validates a tender and converts its date for SCF", () => {
   assert.equal(payload.status, "pending");
   assert.equal(payload.acf.concurso_deadline, "20261031");
   assert.equal(payload.acf.concurso_vacancies, 4);
+});
+
+test("accepts a PDF instead of a link and links the uploaded media", () => {
+  const editalPdf = {
+    mime: "application/pdf",
+    base64: Buffer.from("%PDF-1.7\n1 0 obj\nendobj\n%%EOF").toString("base64"),
+  };
+  const data = validateTenderSubmission({ ...tender, editalUrl: "", editalPdf });
+  assert.deepEqual(decodeSubmissionPdf(data.editalPdf!), Buffer.from(editalPdf.base64, "base64"));
+  assert.deepEqual(validatePdfInput(editalPdf), editalPdf);
+  const payload = buildTenderPayload(data, {
+    id: 42,
+    sourceUrl: "https://admin.revistachiveve.com/wp-content/uploads/edital.pdf",
+  });
+  assert.equal(payload.status, "pending");
+  assert.equal(payload.acf.concurso_edital_pdf, 42);
+  assert.equal(payload.acf.concurso_edital_url, "https://admin.revistachiveve.com/wp-content/uploads/edital.pdf");
+});
+
+test("rejects missing, disguised and excessive edital files", () => {
+  const fakePdf = { mime: "application/pdf", base64: Buffer.from("not a pdf").toString("base64") };
+  assert.throws(() => validateTenderSubmission({ ...tender, editalUrl: "" }), /Anexe o edital/);
+  assert.throws(() => validateTenderSubmission({ ...tender, editalUrl: "", editalPdf: fakePdf }), /deve ser um PDF/);
+  assert.throws(() => validatePdfInput({ mime: "image/png", base64: "AAAA" }), /deve ser um PDF/);
+  assert.throws(() => validatePdfInput({ mime: "application/pdf", base64: "A".repeat(4_300_000) }), /deve ser um PDF/);
+});
+
+test("limits the combined PDF and image size before upload", () => {
+  const pdf = Buffer.alloc(2 * 1024 * 1024, 0x20);
+  pdf.write("%PDF-", 0, "ascii");
+  const image = Buffer.alloc(2 * 1024 * 1024, 0);
+  image.set([0xff, 0xd8, 0xff], 0);
+  assert.throws(
+    () => validateTenderSubmission({
+      ...tender,
+      editalUrl: "",
+      editalPdf: { mime: "application/pdf", base64: pdf.toString("base64") },
+      image: { mime: "image/jpeg", base64: image.toString("base64") },
+    }),
+    /juntos não podem exceder 3 MB/,
+  );
 });
 
 test("validates an event and builds a safe pending WordPress payload", () => {

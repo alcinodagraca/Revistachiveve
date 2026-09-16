@@ -28,7 +28,7 @@ type WPTender = WPPost & {
   acf?: Record<string, unknown>;
 };
 
-function pickMeta(post: WPTender, ...keys: string[]): unknown {
+function pickMeta(post: Pick<WPTender, "meta" | "acf">, ...keys: string[]): unknown {
   for (const k of keys) {
     const v = post.meta?.[k] ?? post.acf?.[k];
     if (v !== undefined && v !== null && v !== "") return v;
@@ -38,6 +38,21 @@ function pickMeta(post: WPTender, ...keys: string[]): unknown {
 
 function asString(v: unknown): string | undefined {
   return typeof v === "string" || typeof v === "number" ? String(v) : undefined;
+}
+
+export function resolveTenderEditalUrl(post: Pick<WPTender, "meta" | "acf">): string | undefined {
+  // SCF formats a File field in `acf` when acf_format=standard; the raw meta
+  // value may still be an attachment ID, so inspect the formatted field first.
+  for (const file of [post.acf?.concurso_edital_pdf, post.meta?.concurso_edital_pdf]) {
+    const fileUrl =
+      typeof file === "string"
+        ? file
+        : file && typeof file === "object" && "url" in file
+          ? (file as { url?: unknown }).url
+          : undefined;
+    if (typeof fileUrl === "string" && /^https?:\/\//.test(fileUrl)) return fileUrl;
+  }
+  return asString(pickMeta(post, "link_do_concurso", "concurso_edital_url"));
 }
 
 function asNumber(v: unknown, fallback = 0): number {
@@ -90,9 +105,7 @@ function normalize(post: WPTender): Tender {
     vacancies: asNumber(
       pickMeta(post, "numero_de_vagas", "concurso_vacancies"),
     ),
-    editalUrl: asString(
-      pickMeta(post, "link_do_concurso", "concurso_edital_url"),
-    ),
+    editalUrl: resolveTenderEditalUrl(post),
   };
 }
 
@@ -107,7 +120,7 @@ export async function listTenders({
     return { tenders: [], total: 0, totalPages: 0 };
   }
   const res = await wpList<WPTender>(`/${REST_BASE}`, {
-    params: { per_page: perPage, page, orderby: "date", order: "desc" },
+    params: { per_page: perPage, page, orderby: "date", order: "desc", acf_format: "standard" },
     ttlMs: TTL_MS,
   });
   return {

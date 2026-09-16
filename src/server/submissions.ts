@@ -16,6 +16,8 @@ const TURNSTILE_VERIFY_URL =
 const SUBMISSION_ERROR =
   "Não foi possível receber a submissão. Tente novamente.";
 export const MAX_SUBMISSION_IMAGE_BYTES = 2 * 1024 * 1024;
+export const MAX_SUBMISSION_PDF_BYTES = 3 * 1024 * 1024;
+export const MAX_TENDER_UPLOAD_BYTES = 3 * 1024 * 1024;
 const IMAGE_TYPES = {
   "image/jpeg": { extension: "jpg", signature: [0xff, 0xd8, 0xff] },
   "image/png": { extension: "png", signature: [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a] },
@@ -23,6 +25,7 @@ const IMAGE_TYPES = {
 } as const;
 
 export type SubmissionImage = { mime: string; base64: string };
+export type SubmissionPdf = { mime: "application/pdf"; base64: string };
 
 export const TENDER_TYPES = [
   "Concurso Público",
@@ -65,6 +68,7 @@ export type TenderSubmission = SubmissionBase & {
   type: TenderType;
   vacancies: number;
   editalUrl: string;
+  editalPdf?: SubmissionPdf;
 };
 
 export type EventSubmission = SubmissionBase & {
@@ -209,6 +213,34 @@ export function decodeSubmissionImage(image: SubmissionImage): Buffer {
   return bytes;
 }
 
+export function validatePdfInput(input: unknown): SubmissionPdf | undefined {
+  if (input === undefined || input === null) return undefined;
+  const record = asRecord(input);
+  const { mime, base64 } = record;
+  if (
+    mime !== "application/pdf" ||
+    typeof base64 !== "string" ||
+    !base64.length ||
+    base64.length > Math.ceil(MAX_SUBMISSION_PDF_BYTES / 3) * 4 ||
+    !/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(base64)
+  ) {
+    throw new Error("O edital deve ser um PDF com até 3 MB.");
+  }
+  return { mime, base64 };
+}
+
+export function decodeSubmissionPdf(pdf: SubmissionPdf): Buffer {
+  const bytes = Buffer.from(pdf.base64, "base64");
+  if (
+    bytes.length < 5 ||
+    bytes.length > MAX_SUBMISSION_PDF_BYTES ||
+    bytes.toString("ascii", 0, 5) !== "%PDF-"
+  ) {
+    throw new Error("O edital deve ser um PDF com até 3 MB.");
+  }
+  return bytes;
+}
+
 function isValidCalendarDate(value: string): boolean {
   if (!DATE_PATTERN.test(value)) return false;
   const [year, month, day] = value.split("-").map(Number);
@@ -259,6 +291,21 @@ export function validateUsefulContactSubmission(
 
 export function validateTenderSubmission(input: unknown): TenderSubmission {
   const record = asRecord(input);
+  const image = validateImageInput(record.image);
+  const editalPdf = validatePdfInput(record.editalPdf);
+  const editalUrl = httpUrl(record, "editalUrl");
+  if (!editalPdf && !editalUrl) {
+    throw new Error("Anexe o edital em PDF ou indique o link oficial.");
+  }
+  if (image && editalPdf) {
+    const imageBytes = decodeSubmissionImage(image).length;
+    const pdfBytes = decodeSubmissionPdf(editalPdf).length;
+    if (imageBytes + pdfBytes > MAX_TENDER_UPLOAD_BYTES) {
+      throw new Error("O PDF e a imagem juntos não podem exceder 3 MB.");
+    }
+  } else if (editalPdf) {
+    decodeSubmissionPdf(editalPdf);
+  }
   const deadline = requiredString(record, "deadline", 10, 10);
   if (!isValidCalendarDate(deadline)) {
     throw new Error("Data limite inválida.");
@@ -281,7 +328,8 @@ export function validateTenderSubmission(input: unknown): TenderSubmission {
     deadline,
     type: type as TenderType,
     vacancies,
-    editalUrl: httpUrl(record, "editalUrl", true),
+    editalUrl,
+    editalPdf,
   };
 }
 
@@ -353,7 +401,10 @@ export function buildUsefulContactPayload(data: UsefulContactSubmission) {
   };
 }
 
-export function buildTenderPayload(data: TenderSubmission) {
+export function buildTenderPayload(
+  data: TenderSubmission,
+  pdfMedia?: { id: number; sourceUrl: string },
+) {
   return {
     status: "pending" as const,
     title: data.title,
@@ -362,7 +413,8 @@ export function buildTenderPayload(data: TenderSubmission) {
       concurso_deadline: data.deadline.replaceAll("-", ""),
       concurso_type: data.type,
       concurso_vacancies: data.vacancies,
-      concurso_edital_url: data.editalUrl,
+      concurso_edital_url: pdfMedia?.sourceUrl ?? data.editalUrl,
+      ...(pdfMedia ? { concurso_edital_pdf: pdfMedia.id } : {}),
     },
   };
 }
@@ -525,39 +577,54 @@ async function createPendingPost(
   }
 }
 
-async function uploadSubmissionImage(image?: SubmissionImage): Promise<number | undefined> {
-  if (!image) return undefined;
-  const bytes = decodeSubmissionImage(image);
+type UploadedMedia = { id: number; sourceUrl: string };
+
+async function uploadSubmissionMedia(
+  file: SubmissionImage | SubmissionPdf,
+): Promise<UploadedMedia> {
+  const isPdf = file.mime === "application/pdf";
+  const bytes = isPdf
+    ? decodeSubmissionPdf(file as SubmissionPdf)
+    : decodeSubmissionImage(file);
   const { baseUrl, authHeader } = getWPSubmissionConfig();
-  const extension = IMAGE_TYPES[image.mime as keyof typeof IMAGE_TYPES].extension;
+  const extension = isPdf
+    ? "pdf"
+    : IMAGE_TYPES[file.mime as keyof typeof IMAGE_TYPES].extension;
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 15_000);
+  const timeout = setTimeout(() => controller.abort(), 20_000);
   try {
     const response = await fetch(`${baseUrl}/media`, {
       method: "POST",
       headers: {
         Accept: "application/json",
         Authorization: authHeader,
-        "Content-Type": image.mime,
+        "Content-Type": file.mime,
         "Content-Disposition": `attachment; filename="submission-${crypto.randomUUID()}.${extension}"`,
       },
-      body: new Blob([Uint8Array.from(bytes)], { type: image.mime }),
+      body: new Blob([Uint8Array.from(bytes)], { type: file.mime }),
       signal: controller.signal,
     });
     if (!response.ok) {
-      console.error("WordPress image upload failed:", response.status);
-      throw new Error("Não foi possível carregar a imagem. Tente novamente.");
+      console.error("WordPress media upload failed:", response.status);
+      throw new Error(`Não foi possível carregar ${isPdf ? "o PDF" : "a imagem"}. Tente novamente.`);
     }
-    const media = (await response.json()) as Partial<PendingPostResponse>;
+    const media = (await response.json()) as { id?: number; source_url?: string };
     if (!Number.isInteger(media.id)) throw new Error(SUBMISSION_ERROR);
-    return media.id;
+    if (isPdf && (!media.source_url || !/^https?:\/\//.test(media.source_url))) {
+      throw new Error(SUBMISSION_ERROR);
+    }
+    return { id: media.id!, sourceUrl: media.source_url ?? "" };
   } catch (error) {
     if (error instanceof Error && (error.message === SUBMISSION_ERROR || error.message.startsWith("Não foi possível carregar"))) throw error;
-    console.error("WordPress image upload request failed:", error instanceof Error ? error.name : "UnknownError");
-    throw new Error("Não foi possível carregar a imagem. Tente novamente.");
+    console.error("WordPress media upload request failed:", error instanceof Error ? error.name : "UnknownError");
+    throw new Error(`Não foi possível carregar ${isPdf ? "o PDF" : "a imagem"}. Tente novamente.`);
   } finally {
     clearTimeout(timeout);
   }
+}
+
+async function uploadSubmissionImage(image?: SubmissionImage): Promise<number | undefined> {
+  return image ? (await uploadSubmissionMedia(image)).id : undefined;
 }
 
 async function createSubmissionWithImage(
@@ -682,7 +749,20 @@ export const submitTender = createServerFn({ method: "POST" })
     assertSameOrigin();
     await verifyTurnstile(data.turnstileToken, "submit_tender");
 
-    const post = await createSubmissionWithImage("concurso", buildTenderPayload(data), data.image);
+    const pdfMedia = data.editalPdf
+      ? await uploadSubmissionMedia(data.editalPdf)
+      : undefined;
+    let post: PendingPostResponse;
+    try {
+      post = await createSubmissionWithImage(
+        "concurso",
+        buildTenderPayload(data, pdfMedia),
+        data.image,
+      );
+    } catch (error) {
+      if (pdfMedia) console.error("Submission PDF needs review:", pdfMedia.id);
+      throw error;
+    }
     await notifyEditors({
       kind: "Concurso público",
       postId: post.id,
