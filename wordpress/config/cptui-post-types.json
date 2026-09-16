@@ -20,7 +20,7 @@
     "rewrite": "true", "rewrite_slug": "concurso", "rewrite_withfront": "false", "query_var": "true",
     "query_var_slug": "", "menu_position": "", "show_in_menu": "true", "show_in_menu_string": "",
     "menu_icon": "dashicons-megaphone", "register_meta_box_cb": null,
-    "supports": ["title", "editor", "custom-fields"], "taxonomies": [], "labels": [],
+    "supports": ["title", "editor", "thumbnail", "custom-fields"], "taxonomies": [], "labels": [],
     "custom_supports": "", "enter_title_here": ""
   },
   "contacto-util": {

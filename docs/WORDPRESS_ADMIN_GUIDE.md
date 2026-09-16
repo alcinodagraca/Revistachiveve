@@ -175,7 +175,7 @@ grupo, sem alterações de código.
 - Show in REST: **True**
 - REST API base slug: `concurso`
 - Menu Icon: `dashicons-megaphone`
-- Supports: `title`, `editor`, `custom-fields`
+- Supports: `title`, `editor`, `thumbnail`, `custom-fields`
 
 ### 2.4 Contactos Úteis — `contacto-util`
 

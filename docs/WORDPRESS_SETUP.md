@@ -156,7 +156,7 @@ Frontend route: `/concursos-publicos`. It shows an empty state until the CPT is 
 - Singular Label: `Concurso`
 - Show in REST: Yes ✓
 - REST API base slug: `concurso`
-- Supports: `title`, `editor`, `custom-fields`
+- Supports: `title`, `editor`, `thumbnail`, `custom-fields`
 
 **SCF → Field Group "Concurso" (Show in REST ✓):**
 
@@ -289,9 +289,19 @@ hosts, set these via the host's secret manager.
 
 ### Public submission moderation
 
-The public forms on `/contactos-uteis` and `/concursos-publicos` create
-records with WordPress status `pending`. Editors review and publish them from
-the normal **Contactos Úteis** and **Concursos Públicos** admin screens.
+The public forms on `/contactos-uteis`, `/eventos`, and
+`/concursos-publicos` create records with WordPress status `pending`. Editors
+review and publish them from the normal **Contactos Úteis**, **Eventos**, and
+**Concursos Públicos** admin screens. An optional JPEG, PNG, or WebP image (up
+to 2 MB) is uploaded to the WordPress media library and assigned as the pending
+post's featured image. The image itself has a public media URL immediately on
+upload, even though the post remains pending: do not submit confidential images.
+Ensure all three CPTs support `thumbnail`, including **Concursos Públicos**;
+update the production CPT UI configuration before enabling image submissions.
+If the media upload succeeds but pending-post creation fails, the server logs
+the unattached media ID for an editor to remove manually.
+Set PHP/WordPress upload limits above 2 MB and confirm the REST `/media`
+endpoint permits JPEG, PNG, and WebP uploads from the submission account.
 
 Create a dedicated WordPress user and generate an Application Password for that
 user. Do not reuse an administrator account:
@@ -303,12 +313,15 @@ WP_SUBMISSION_PASSWORD=…
 
 The current CPT UI exports use WordPress's shared `post` capabilities. A normal
 **Contributor** is therefore a safe no-publish baseline, but it can create
-pending content outside these two CPTs if its Application Password is exposed.
-Before production, assign distinct capability types to `contacto-util` and
-`concurso`, then create a service role with create/edit access only to those two
-CPTs and no publish, delete, plugin, user, or settings capabilities. Grant the
-corresponding review capabilities to editors. Verify that the service account
-can create both CPTs as pending, cannot create normal posts, and cannot publish.
+pending content outside these three CPTs if its Application Password is
+exposed. Before production, assign distinct capability types to
+`contacto-util`, `event`, and `concurso`, then create a service role with
+create/edit access only to those three CPTs and `upload_files`, but no publish,
+delete, plugin, user, or settings capabilities. Note that `upload_files` allows
+media uploads beyond these CPTs; protect and rotate the Application Password,
+and rate-limit the public endpoint. Grant the corresponding review capabilities to
+editors. Verify that the service account can create all three CPTs as pending,
+cannot create normal posts, and cannot publish.
 
 Create a Cloudflare Turnstile widget for `www.revistachiveve.com` and configure:
 
@@ -319,7 +332,7 @@ SUBMISSION_ORIGINS=https://www.revistachiveve.com
 ```
 
 The server verifies the Turnstile token, action, explicit hostname allowlist,
-request origin, and WordPress category before creating a pending record. The
+request origin, and applicable WordPress taxonomy before creating a pending record. The
 site key `0x4AAAAAAExoS6ttyxnKc9Lt` is embedded in the frontend; the secret and
 WordPress Application Password must remain server-only. Production
 `TURNSTILE_HOSTNAMES` must not contain `localhost` or `127.0.0.1`; use those

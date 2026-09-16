@@ -7,6 +7,7 @@ import { ListPagination } from "../components/ListPagination";
 import { Heading, SectionHeader, Eyebrow } from "../components/typography";
 import { Route } from "../../routes/eventos.index";
 import type { Event } from "../../server/wp";
+import { EventSubmissionDialog } from "../components/ListingSubmissionDialogs";
 
 export default function EventosPage() {
   const { events, currentPage, totalPages } = Route.useLoaderData();
@@ -30,7 +31,7 @@ export default function EventosPage() {
             subtitle="Agenda empresarial, encontros estratégicos e oportunidades para quem acompanha os negócios em Moçambique."
             breadcrumbs={[{ label: "Início", to: "/" }, { label: "Eventos" }]}
           />
-          <EventPromotionCta />
+          <EventSubmissionDialog />
           <EmptyState
             icon={FaCalendarDays}
             title="Sem eventos por enquanto"
@@ -50,7 +51,7 @@ export default function EventosPage() {
           breadcrumbs={[{ label: "Início", to: "/" }, { label: "Eventos" }]}
         />
 
-        <EventPromotionCta />
+        <EventSubmissionDialog />
 
         {upcomingEvents.length > 0 && (
           <section aria-label="Próximos eventos" className="mb-16">
@@ -81,36 +82,6 @@ export default function EventosPage() {
             page === 1 ? "/eventos" : `/eventos?page=${page}`
           }
         />
-      </div>
-    </div>
-  );
-}
-
-function EventPromotionCta() {
-  return (
-    <div className="mb-12 flex flex-col gap-5 bg-primary px-5 py-6 md:flex-row md:items-center md:justify-between md:px-7">
-      <div className="min-w-0 flex-1">
-        <p className="mb-1 font-sans text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-primary-foreground">
-          Divulgue o seu evento
-        </p>
-        <p className="max-w-4xl font-sans text-[0.94rem] font-light leading-7 text-primary-foreground/90">
-          Tem um evento ligado a negócios, empreendedorismo, inovação, liderança,
-          formação ou investimento? Partilhe-o com a Revista Negócios no Chiveve.
-        </p>
-      </div>
-      <div className="flex shrink-0 flex-wrap items-center gap-4">
-        <Link
-          to="/anuncios"
-          className="inline-flex min-h-[44px] items-center font-sans text-sm font-medium text-primary-foreground underline underline-offset-4"
-        >
-          Anunciar na revista
-        </Link>
-        <Link
-          to="/contactos"
-          className="inline-flex min-h-[44px] items-center bg-primary-foreground px-5 font-sans text-sm font-medium text-primary no-underline transition-opacity hover:opacity-90"
-        >
-          Divulgar evento
-        </Link>
       </div>
     </div>
   );

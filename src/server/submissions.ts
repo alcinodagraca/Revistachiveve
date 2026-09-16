@@ -15,6 +15,14 @@ const TURNSTILE_VERIFY_URL =
   "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 const SUBMISSION_ERROR =
   "Não foi possível receber a submissão. Tente novamente.";
+export const MAX_SUBMISSION_IMAGE_BYTES = 2 * 1024 * 1024;
+const IMAGE_TYPES = {
+  "image/jpeg": { extension: "jpg", signature: [0xff, 0xd8, 0xff] },
+  "image/png": { extension: "png", signature: [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a] },
+  "image/webp": { extension: "webp", signature: [0x52, 0x49, 0x46, 0x46] },
+} as const;
+
+export type SubmissionImage = { mime: string; base64: string };
 
 export const TENDER_TYPES = [
   "Concurso Público",
@@ -36,6 +44,7 @@ type SubmissionBase = {
   consent: true;
   turnstileToken: string;
   fax?: string;
+  image?: SubmissionImage;
 };
 
 export type UsefulContactSubmission = SubmissionBase & {
@@ -56,6 +65,19 @@ export type TenderSubmission = SubmissionBase & {
   type: TenderType;
   vacancies: number;
   editalUrl: string;
+};
+
+export type EventSubmission = SubmissionBase & {
+  title: string;
+  description: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  location: string;
+  city: string;
+  price: string;
+  organizer: string;
+  registrationUrl: string;
 };
 
 type PendingPostResponse = { id: number };
@@ -150,7 +172,41 @@ function submissionBase(input: Record<string, unknown>): SubmissionBase {
     consent: true,
     turnstileToken: requiredString(input, "turnstileToken", 10, 2_048),
     fax: optionalString(input, "fax", 200),
+    image: validateImageInput(input.image),
   };
+}
+
+export function validateImageInput(input: unknown): SubmissionImage | undefined {
+  if (input === undefined || input === null) return undefined;
+  const record = asRecord(input);
+  const mime = record.mime;
+  const base64 = record.base64;
+  if (
+    typeof mime !== "string" ||
+    !(mime in IMAGE_TYPES) ||
+    typeof base64 !== "string" ||
+    !base64.length ||
+    base64.length > Math.ceil(MAX_SUBMISSION_IMAGE_BYTES / 3) * 4 ||
+    !/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(base64)
+  ) {
+    throw new Error("A imagem deve ser JPEG, PNG ou WebP e ter até 2 MB.");
+  }
+  return { mime, base64 };
+}
+
+export function decodeSubmissionImage(image: SubmissionImage): Buffer {
+  const bytes = Buffer.from(image.base64, "base64");
+  const format = IMAGE_TYPES[image.mime as keyof typeof IMAGE_TYPES];
+  if (
+    !format ||
+    !bytes.length ||
+    bytes.length > MAX_SUBMISSION_IMAGE_BYTES ||
+    !format.signature.every((byte, index) => bytes[index] === byte) ||
+    (image.mime === "image/webp" && bytes.toString("ascii", 8, 12) !== "WEBP")
+  ) {
+    throw new Error("A imagem deve ser JPEG, PNG ou WebP e ter até 2 MB.");
+  }
+  return bytes;
 }
 
 function isValidCalendarDate(value: string): boolean {
@@ -229,6 +285,57 @@ export function validateTenderSubmission(input: unknown): TenderSubmission {
   };
 }
 
+function eventTime(
+  input: Record<string, unknown>,
+  field: string,
+): string {
+  const value = optionalString(input, field, 5);
+  if (value && !/^([01]\d|2[0-3]):[0-5]\d$/.test(value)) {
+    throw new Error("Horário do evento inválido.");
+  }
+  return value;
+}
+
+export function validateEventSubmission(input: unknown): EventSubmission {
+  const record = asRecord(input);
+  const date = requiredString(record, "date", 10, 10);
+  if (!isValidCalendarDate(date)) {
+    throw new Error("Data do evento inválida.");
+  }
+
+  const startTime = eventTime(record, "startTime");
+  const endTime = eventTime(record, "endTime");
+  if (endTime && !startTime) {
+    throw new Error("Indique a hora de início do evento.");
+  }
+  if (startTime && endTime && endTime <= startTime) {
+    throw new Error("A hora de fim deve ser posterior à hora de início.");
+  }
+
+  return {
+    ...submissionBase(record),
+    title: requiredString(record, "title", 3, 180),
+    description: requiredString(record, "description", 20, 2_000),
+    date,
+    startTime,
+    endTime,
+    location: requiredString(record, "location", 2, 220),
+    city: requiredString(record, "city", 2, 120),
+    price: optionalString(record, "price", 100),
+    organizer: requiredString(record, "organizer", 2, 150),
+    registrationUrl: httpUrl(record, "registrationUrl"),
+  };
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 export function buildUsefulContactPayload(data: UsefulContactSubmission) {
   return {
     status: "pending" as const,
@@ -256,6 +363,30 @@ export function buildTenderPayload(data: TenderSubmission) {
       concurso_type: data.type,
       concurso_vacancies: data.vacancies,
       concurso_edital_url: data.editalUrl,
+    },
+  };
+}
+
+export function buildEventPayload(data: EventSubmission) {
+  const time = data.startTime
+    ? `${data.startTime}${data.endTime ? `–${data.endTime}` : ""}`
+    : "";
+  return {
+    status: "pending" as const,
+    title: data.title,
+    content: [
+      `<p>${escapeHtml(data.description)}</p>`,
+      time ? `<p><strong>Horário:</strong> ${escapeHtml(time)}</p>` : "",
+    ]
+      .filter(Boolean)
+      .join(""),
+    acf: {
+      event_date: data.date.replaceAll("-", ""),
+      event_location: data.location,
+      event_city: data.city,
+      event_price: data.price,
+      event_organizer: data.organizer,
+      event_registration_url: data.registrationUrl,
     },
   };
 }
@@ -356,7 +487,7 @@ async function verifyTurnstile(
 }
 
 async function createPendingPost(
-  restBase: "contacto-util" | "concurso",
+  restBase: "contacto-util" | "concurso" | "eventos",
   payload: Record<string, unknown>,
 ): Promise<PendingPostResponse> {
   const { baseUrl, authHeader } = getWPSubmissionConfig();
@@ -391,6 +522,60 @@ async function createPendingPost(
     throw new Error(SUBMISSION_ERROR);
   } finally {
     clearTimeout(timeout);
+  }
+}
+
+async function uploadSubmissionImage(image?: SubmissionImage): Promise<number | undefined> {
+  if (!image) return undefined;
+  const bytes = decodeSubmissionImage(image);
+  const { baseUrl, authHeader } = getWPSubmissionConfig();
+  const extension = IMAGE_TYPES[image.mime as keyof typeof IMAGE_TYPES].extension;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15_000);
+  try {
+    const response = await fetch(`${baseUrl}/media`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        Authorization: authHeader,
+        "Content-Type": image.mime,
+        "Content-Disposition": `attachment; filename="submission-${crypto.randomUUID()}.${extension}"`,
+      },
+      body: new Blob([Uint8Array.from(bytes)], { type: image.mime }),
+      signal: controller.signal,
+    });
+    if (!response.ok) {
+      console.error("WordPress image upload failed:", response.status);
+      throw new Error("Não foi possível carregar a imagem. Tente novamente.");
+    }
+    const media = (await response.json()) as Partial<PendingPostResponse>;
+    if (!Number.isInteger(media.id)) throw new Error(SUBMISSION_ERROR);
+    return media.id;
+  } catch (error) {
+    if (error instanceof Error && (error.message === SUBMISSION_ERROR || error.message.startsWith("Não foi possível carregar"))) throw error;
+    console.error("WordPress image upload request failed:", error instanceof Error ? error.name : "UnknownError");
+    throw new Error("Não foi possível carregar a imagem. Tente novamente.");
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function createSubmissionWithImage(
+  restBase: "contacto-util" | "concurso" | "eventos",
+  payload: Record<string, unknown>,
+  image?: SubmissionImage,
+): Promise<PendingPostResponse> {
+  const mediaId = await uploadSubmissionImage(image);
+  try {
+    return await createPendingPost(restBase, {
+      ...payload,
+      ...(mediaId ? { featured_media: mediaId } : {}),
+    });
+  } catch (error) {
+    // Upload permissions deliberately do not include deletion; leave a trace
+    // for an editor to clean up the unattached media item if post creation fails.
+    if (mediaId) console.error("Submission media needs review:", mediaId);
+    throw error;
   }
 }
 
@@ -472,9 +657,10 @@ export const submitUsefulContact = createServerFn({ method: "POST" })
       categoryId: matchedCategory?.id ?? 0,
     };
 
-    const post = await createPendingPost(
+    const post = await createSubmissionWithImage(
       "contacto-util",
       buildUsefulContactPayload(submission),
+      data.image,
     );
     await notifyEditors({
       kind: "Contacto útil",
@@ -496,13 +682,35 @@ export const submitTender = createServerFn({ method: "POST" })
     assertSameOrigin();
     await verifyTurnstile(data.turnstileToken, "submit_tender");
 
-    const post = await createPendingPost("concurso", buildTenderPayload(data));
+    const post = await createSubmissionWithImage("concurso", buildTenderPayload(data), data.image);
     await notifyEditors({
       kind: "Concurso público",
       postId: post.id,
       submitterName: data.submitterName,
       submitterEmail: data.submitterEmail,
       summary: [`Concurso: ${data.title}`, `Instituição: ${data.institution}`],
+    });
+    return { accepted: true };
+  });
+
+export const submitEvent = createServerFn({ method: "POST" })
+  .inputValidator(validateEventSubmission)
+  .handler(async ({ data }) => {
+    if (data.fax) return { accepted: true };
+    assertSameOrigin();
+    await verifyTurnstile(data.turnstileToken, "submit_event");
+
+    const post = await createSubmissionWithImage("eventos", buildEventPayload(data), data.image);
+    await notifyEditors({
+      kind: "Evento",
+      postId: post.id,
+      submitterName: data.submitterName,
+      submitterEmail: data.submitterEmail,
+      summary: [
+        `Evento: ${data.title}`,
+        `Data: ${data.date}`,
+        `Local: ${data.location}, ${data.city}`,
+      ],
     });
     return { accepted: true };
   });

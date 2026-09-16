@@ -2,9 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { FaArrowRight, FaCheck, FaPaperPlane } from "react-icons/fa6";
 import type { ContactCategory } from "../../server/wp/contacts";
 import {
+  submitEvent,
   submitTender,
   submitUsefulContact,
   TENDER_TYPES,
+  MAX_SUBMISSION_IMAGE_BYTES,
 } from "../../server/submissions";
 import { Button } from "./ui/button";
 import {
@@ -47,9 +49,9 @@ const TURNSTILE_SITE_KEY = "0x4AAAAAAExoS6ttyxnKc9Lt";
 const fieldLabel =
   "mb-1.5 block font-sans text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-primary";
 const submissionForm =
-  "space-y-4 px-5 py-5 sm:px-7 [&_[data-slot=input]]:min-h-[44px] [&_[data-slot=input]]:border-foreground/45 [&_[data-slot=input]]:bg-secondary/35 [&_[data-slot=input]]:focus-visible:bg-background [&_[data-slot=textarea]]:border-foreground/45 [&_[data-slot=textarea]]:bg-secondary/35 [&_[data-slot=textarea]]:focus-visible:bg-background";
+  "space-y-4 px-5 py-5 sm:px-7 [&_[data-slot=input]]:min-h-[44px] [&_[data-slot=input]]:border-foreground/50 [&_[data-slot=input]]:bg-secondary/35 [&_[data-slot=input]]:focus-visible:bg-background [&_[data-slot=textarea]]:border-foreground/50 [&_[data-slot=textarea]]:bg-secondary/35 [&_[data-slot=textarea]]:focus-visible:bg-background";
 const selectControl =
-  "min-h-[44px] w-full border border-foreground/45 bg-secondary/35 px-3 font-sans text-sm outline-none transition-[color,box-shadow] focus:border-ring focus:bg-background focus:ring-3 focus:ring-ring/50";
+  "min-h-[44px] w-full border border-foreground/50 bg-secondary/35 px-3 font-sans text-sm outline-none transition-[color,box-shadow] focus:border-ring focus:bg-background focus:ring-3 focus:ring-ring/50";
 
 function TurnstileWidget({
   action,
@@ -277,6 +279,41 @@ function getErrorMessage(error: unknown): string {
     : "Não foi possível receber a submissão. Tente novamente.";
 }
 
+function ImageField({ id, label }: { id: string; label: string }) {
+  return (
+    <div className="md:col-span-2">
+      <label htmlFor={id} className={fieldLabel}>{label}</label>
+      <input
+        id={id}
+        name="image"
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        aria-describedby={`${id}-hint`}
+        className="block min-h-11 min-w-0 w-full border border-foreground/50 bg-secondary/35 p-2 font-sans text-sm text-foreground file:mr-3 file:border-0 file:bg-primary file:px-3 file:py-2 file:font-semibold file:text-primary-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      />
+      <p id={`${id}-hint`} className="mt-1.5 font-sans text-xs leading-5 text-foreground/75">
+        Opcional · JPEG, PNG ou WebP · máximo 2 MB. A imagem será revista, mas o ficheiro poderá ser acessível por link após o envio; não inclua dados confidenciais.
+      </p>
+    </div>
+  );
+}
+
+async function readSubmissionImage(value: FormDataEntryValue | null) {
+  if (!(value instanceof File) || value.size === 0) return undefined;
+  if (
+    value.size > MAX_SUBMISSION_IMAGE_BYTES ||
+    !["image/jpeg", "image/png", "image/webp"].includes(value.type)
+  ) {
+    throw new Error("A imagem deve ser JPEG, PNG ou WebP e ter até 2 MB.");
+  }
+  const bytes = new Uint8Array(await value.arrayBuffer());
+  let binary = "";
+  for (let index = 0; index < bytes.length; index += 8192) {
+    binary += String.fromCharCode(...bytes.subarray(index, index + 8192));
+  }
+  return { mime: value.type, base64: btoa(binary) };
+}
+
 export function UsefulContactSubmissionDialog({
   categories,
 }: {
@@ -319,6 +356,7 @@ export function UsefulContactSubmissionDialog({
     try {
       await submitUsefulContact({
         data: {
+          image: await readSubmissionImage(data.get("image")),
           name: String(data.get("name") ?? ""),
           categoryId,
           categoryName,
@@ -456,6 +494,7 @@ export function UsefulContactSubmissionDialog({
                     rows={4}
                   />
                 </div>
+                <ImageField id="contact-image" label="Logótipo da organização" />
                 <div>
                   <label htmlFor="contact-submitter" className={fieldLabel}>
                     Seu nome *
@@ -524,6 +563,279 @@ export function UsefulContactSubmissionDialog({
   );
 }
 
+export function EventSubmissionDialog() {
+  const [open, setOpen] = useState(false);
+  const [state, setState] = useState<SubmissionState>("idle");
+  const [error, setError] = useState("");
+  const [token, setToken] = useState("");
+  const [resetSignal, setResetSignal] = useState(0);
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen && state === "sending") return;
+    setOpen(nextOpen);
+    if (!nextOpen) {
+      setState("idle");
+      setError("");
+      setToken("");
+      setResetSignal((value) => value + 1);
+    }
+  };
+
+  const focusFeedback = () => {
+    requestAnimationFrame(() => {
+      document.getElementById("event-submission-feedback")?.focus();
+    });
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (state === "sending" || !token) return;
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    setState("sending");
+    setError("");
+    try {
+      await submitEvent({
+        data: {
+          image: await readSubmissionImage(data.get("image")),
+          title: String(data.get("title") ?? ""),
+          description: String(data.get("description") ?? ""),
+          date: String(data.get("date") ?? ""),
+          startTime: String(data.get("startTime") ?? ""),
+          endTime: String(data.get("endTime") ?? ""),
+          location: String(data.get("location") ?? ""),
+          city: String(data.get("city") ?? ""),
+          price: String(data.get("price") ?? ""),
+          organizer: String(data.get("organizer") ?? ""),
+          registrationUrl: String(data.get("registrationUrl") ?? ""),
+          submitterName: String(data.get("submitterName") ?? ""),
+          submitterEmail: String(data.get("submitterEmail") ?? ""),
+          consent: data.get("consent") === "on",
+          turnstileToken: token,
+          fax: String(data.get("fax") ?? ""),
+        },
+      });
+      form.reset();
+      setState("success");
+      focusFeedback();
+    } catch (submissionError) {
+      setError(getErrorMessage(submissionError));
+      setState("error");
+      setToken("");
+      setResetSignal((value) => value + 1);
+      focusFeedback();
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogCta
+        eyebrow="Tem um evento para divulgar?"
+        text="Envie os dados do evento para análise. A nossa equipa irá verificar a informação antes de a publicar na agenda."
+        button="Submeter evento"
+        inverted
+      >
+        <DialogContent className="max-h-[calc(100dvh-2rem)] gap-0 overflow-y-auto rounded-none border-0 p-0 shadow-2xl sm:max-w-2xl">
+          <DialogHeader className="sticky top-0 z-10 border-b border-border bg-background px-5 py-5 pr-14 shadow-sm sm:px-7">
+            <DialogTitle className="font-sans text-2xl font-normal leading-tight tracking-[-0.025em] text-primary sm:text-3xl">
+              Submeter evento
+            </DialogTitle>
+            <DialogDescription className="leading-6">
+              Partilhe os dados essenciais. A submissão ficará pendente até ser
+              revista pela equipa editorial.
+            </DialogDescription>
+          </DialogHeader>
+          {state === "success" ? (
+            <div
+              id="event-submission-feedback"
+              className="p-6 outline-none"
+              tabIndex={-1}
+            >
+              <SubmissionFeedback state={state} error={error} />
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className={submissionForm}>
+              <Honeypot />
+              <div className="grid gap-5 md:grid-cols-2">
+                <div className="md:col-span-2">
+                  <label htmlFor="event-title" className={fieldLabel}>
+                    Nome do evento *
+                  </label>
+                  <Input
+                    id="event-title"
+                    name="title"
+                    required
+                    minLength={3}
+                    maxLength={180}
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label htmlFor="event-description" className={fieldLabel}>
+                    Descrição breve *
+                  </label>
+                  <Textarea
+                    id="event-description"
+                    name="description"
+                    required
+                    minLength={20}
+                    maxLength={2000}
+                    rows={4}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="event-date" className={fieldLabel}>
+                    Data do evento *
+                  </label>
+                  <Input id="event-date" name="date" type="date" required />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label htmlFor="event-start-time" className={fieldLabel}>
+                      Início
+                    </label>
+                    <Input id="event-start-time" name="startTime" type="time" />
+                  </div>
+                  <div>
+                    <label htmlFor="event-end-time" className={fieldLabel}>
+                      Fim
+                    </label>
+                    <Input id="event-end-time" name="endTime" type="time" />
+                  </div>
+                </div>
+                <div className="md:col-span-2">
+                  <label htmlFor="event-location" className={fieldLabel}>
+                    Local *
+                  </label>
+                  <Input
+                    id="event-location"
+                    name="location"
+                    required
+                    minLength={2}
+                    maxLength={220}
+                    placeholder="Nome do espaço e endereço"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="event-city" className={fieldLabel}>
+                    Cidade *
+                  </label>
+                  <Input
+                    id="event-city"
+                    name="city"
+                    required
+                    minLength={2}
+                    maxLength={120}
+                    placeholder="Beira, Moçambique"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="event-price" className={fieldLabel}>
+                    Acesso ou preço
+                  </label>
+                  <Input
+                    id="event-price"
+                    name="price"
+                    maxLength={100}
+                    placeholder="Entrada livre, convite ou valor"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label htmlFor="event-organizer" className={fieldLabel}>
+                    Organização *
+                  </label>
+                  <Input
+                    id="event-organizer"
+                    name="organizer"
+                    required
+                    minLength={2}
+                    maxLength={150}
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label htmlFor="event-registration-url" className={fieldLabel}>
+                    Link de inscrição ou informação
+                  </label>
+                  <Input
+                    id="event-registration-url"
+                    name="registrationUrl"
+                    type="url"
+                    maxLength={2000}
+                    placeholder="https://"
+                  />
+                </div>
+                <ImageField id="event-image" label="Cartaz ou imagem do evento" />
+                <div>
+                  <label htmlFor="event-submitter" className={fieldLabel}>
+                    Seu nome *
+                  </label>
+                  <Input
+                    id="event-submitter"
+                    name="submitterName"
+                    required
+                    minLength={2}
+                    maxLength={100}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="event-submitter-email" className={fieldLabel}>
+                    Seu email *
+                  </label>
+                  <Input
+                    id="event-submitter-email"
+                    name="submitterEmail"
+                    type="email"
+                    required
+                    maxLength={254}
+                  />
+                </div>
+              </div>
+              <ConsentField id="event-consent" />
+              <TurnstileWidget
+                action="submit_event"
+                resetSignal={resetSignal}
+                onToken={setToken}
+                onError={() => {
+                  if (state === "sending") return;
+                  setError(
+                    "A verificação anti-spam expirou ou falhou. Tente novamente.",
+                  );
+                  setState("error");
+                  focusFeedback();
+                }}
+              />
+              <div
+                id="event-submission-feedback"
+                className="outline-none"
+                tabIndex={-1}
+              >
+                <SubmissionFeedback state={state} error={error} />
+              </div>
+              {state === "error" && (
+                <VerificationRetry
+                  onRetry={() => {
+                    setState("idle");
+                    setError("");
+                    setResetSignal((value) => value + 1);
+                  }}
+                />
+              )}
+              <Button
+                type="submit"
+                size="lg"
+                disabled={state === "sending" || !token}
+                className="w-full sm:w-auto"
+              >
+                <FaPaperPlane />
+                {state === "sending" ? "A enviar..." : "Enviar para aprovação"}
+              </Button>
+            </form>
+          )}
+        </DialogContent>
+      </DialogCta>
+    </Dialog>
+  );
+}
+
 export function TenderSubmissionDialog() {
   const [open, setOpen] = useState(false);
   const [state, setState] = useState<SubmissionState>("idle");
@@ -554,6 +866,7 @@ export function TenderSubmissionDialog() {
     try {
       await submitTender({
         data: {
+          image: await readSubmissionImage(data.get("image")),
           title: String(data.get("title") ?? ""),
           institution: String(data.get("institution") ?? ""),
           deadline: String(data.get("deadline") ?? ""),
@@ -681,6 +994,7 @@ export function TenderSubmissionDialog() {
                     maxLength={2000}
                   />
                 </div>
+                <ImageField id="tender-image" label="Imagem do concurso" />
                 <div>
                   <label htmlFor="tender-submitter" className={fieldLabel}>
                     Seu nome *
