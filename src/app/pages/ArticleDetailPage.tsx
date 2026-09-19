@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { motion } from "motion/react";
 import {
   FaFacebookF,
@@ -30,7 +30,6 @@ export default function ArticleDetailPage() {
   const { article, related, maisLidos, articlePreviewEnd, articleWhatsAppCtaEnd } = Route.useLoaderData();
   const [copied, setCopied] = useState(false);
   const [isReadingExpanded, setIsReadingExpanded] = useState(false);
-  const showLessRef = useRef<HTMLButtonElement>(null);
   const continueReadingRef = useRef<HTMLButtonElement>(null);
   const articleUrl = `https://www.revistachiveve.com/artigos/${article.category}/${article.slug}`;
   const shareText = `${article.title} | Revista Chiveve`;
@@ -44,15 +43,6 @@ export default function ArticleDetailPage() {
       setCopied(false);
     }
   }
-
-  useEffect(() => {
-    if (!isReadingExpanded) return;
-    const frame = window.requestAnimationFrame(() => {
-      showLessRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-      showLessRef.current?.focus({ preventScroll: true });
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, [isReadingExpanded]);
 
   function showFullArticle() {
     setIsReadingExpanded(true);
@@ -179,7 +169,6 @@ export default function ArticleDetailPage() {
                     )}
                     <div className="mt-8 flex max-w-[760px] justify-center pb-8">
                       <button
-                        ref={showLessRef}
                         type="button"
                         onClick={showPreview}
                         className="inline-flex min-h-11 items-center border border-primary bg-background px-5 py-2 font-sans text-sm font-semibold text-primary transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
