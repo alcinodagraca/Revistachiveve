@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import {
   FaFacebookF,
@@ -28,6 +28,9 @@ function formatDateLong(iso: string): string {
 export default function ArticleDetailPage() {
   const { article, related, maisLidos, articlePreviewEnd } = Route.useLoaderData();
   const [copied, setCopied] = useState(false);
+  const [isReadingExpanded, setIsReadingExpanded] = useState(false);
+  const showLessRef = useRef<HTMLButtonElement>(null);
+  const continueReadingRef = useRef<HTMLButtonElement>(null);
   const articleUrl = `https://www.revistachiveve.com/artigos/${article.category}/${article.slug}`;
   const shareText = `${article.title} | Revista Chiveve`;
 
@@ -39,6 +42,27 @@ export default function ArticleDetailPage() {
     } catch {
       setCopied(false);
     }
+  }
+
+  useEffect(() => {
+    if (!isReadingExpanded) return;
+    const frame = window.requestAnimationFrame(() => {
+      showLessRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      showLessRef.current?.focus({ preventScroll: true });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [isReadingExpanded]);
+
+  function showFullArticle() {
+    setIsReadingExpanded(true);
+  }
+
+  function showPreview() {
+    setIsReadingExpanded(false);
+    window.requestAnimationFrame(() => {
+      continueReadingRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      continueReadingRef.current?.focus({ preventScroll: true });
+    });
   }
 
   return (
@@ -58,7 +82,7 @@ export default function ArticleDetailPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10">
-          <article>
+          <article id="article-reading-content">
             <Eyebrow className="mb-3 inline-block">{article.categoryName}</Eyebrow>
 
             <Heading
@@ -112,17 +136,36 @@ export default function ArticleDetailPage() {
             </Prose>
 
             {articlePreviewEnd !== null && (
-              <details className="group mt-6 max-w-[760px]">
-                <summary className="inline-flex min-h-11 cursor-pointer list-none items-center border border-primary bg-primary px-5 py-2 font-sans text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary [&::-webkit-details-marker]:hidden">
-                  <span className="group-open:hidden">Continuar a ler</span>
-                  <span className="hidden group-open:inline">Mostrar menos</span>
-                </summary>
-                <div className="mt-6">
-                  <Prose>
-                    <div dangerouslySetInnerHTML={{ __html: article.bodyHtml.slice(articlePreviewEnd) }} />
-                  </Prose>
-                </div>
-              </details>
+              <>
+                {!isReadingExpanded ? (
+                  <div className="mt-7 flex max-w-[760px] justify-center">
+                    <button
+                      ref={continueReadingRef}
+                      type="button"
+                      onClick={showFullArticle}
+                      className="inline-flex min-h-11 items-center border border-primary bg-primary px-5 py-2 font-sans text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                    >
+                      Continuar a ler
+                    </button>
+                  </div>
+                ) : (
+                  <div id="article-remaining-content" className="mt-6">
+                    <Prose>
+                      <div dangerouslySetInnerHTML={{ __html: article.bodyHtml.slice(articlePreviewEnd) }} />
+                    </Prose>
+                    <div className="mt-8 flex max-w-[760px] justify-center border-b border-border pb-8">
+                      <button
+                        ref={showLessRef}
+                        type="button"
+                        onClick={showPreview}
+                        className="inline-flex min-h-11 items-center border border-primary bg-background px-5 py-2 font-sans text-sm font-semibold text-primary transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                      >
+                        Mostrar menos
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
 
             <div className="mt-10 max-w-[760px] border-t border-border pt-5">

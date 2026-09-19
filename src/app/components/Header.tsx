@@ -74,6 +74,47 @@ const socials = [
 
 type HeaderCategory = { name: string; slug: string };
 
+function isArticleDetailPath(pathname: string): boolean {
+  return /^\/artigos\/[^/]+\/[^/]+\/?$/.test(pathname);
+}
+
+function useArticleReadingProgress(enabled: boolean): number {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (!enabled) {
+      setProgress(0);
+      return;
+    }
+
+    let frame = 0;
+    const updateProgress = () => {
+      frame = 0;
+      const article = document.getElementById("article-reading-content");
+      if (!article) return;
+      const articleTop = article.getBoundingClientRect().top + window.scrollY;
+      const readingRange = Math.max(article.offsetHeight - window.innerHeight * 0.45, 1);
+      const viewed = window.scrollY + window.innerHeight * 0.45 - articleTop;
+      const nextProgress = Math.min(100, Math.max(0, (viewed / readingRange) * 100));
+      setProgress((current) => Math.abs(current - nextProgress) < 0.25 ? current : nextProgress);
+    };
+    const requestUpdate = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateProgress);
+    };
+
+    requestUpdate();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+    return () => {
+      window.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, [enabled]);
+
+  return progress;
+}
+
 export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
   const artigosCategories = categories ?? [];
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -84,6 +125,8 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
   const mobileCloseRef = useRef<HTMLButtonElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const isArticleReadingPage = isArticleDetailPath(location.pathname);
+  const readingProgress = useArticleReadingProgress(isArticleReadingPage);
 
   function handleSearchSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -190,7 +233,7 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
         </div>
       </div>
 
-      <nav className="sticky top-0 z-[80] relative hidden border-b border-border/90 bg-background/96 shadow-[0_1px_0_rgba(15,23,42,0.05)] backdrop-blur-sm lg:block">
+      <nav className="sticky top-0 z-[80] hidden border-b border-border/90 bg-background/96 shadow-[0_1px_0_rgba(15,23,42,0.05)] backdrop-blur-sm lg:block">
         <div className="site-shell flex items-center justify-between">
           <ul className="flex items-center -ml-3">
             {navItems.map((item) => (
@@ -296,7 +339,24 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
             </motion.div>
           )}
         </AnimatePresence>
+        {isArticleReadingPage && (
+          <div aria-hidden className="absolute inset-x-0 bottom-0 h-[3px] bg-primary/15">
+            <div
+              className="h-full origin-left bg-primary transition-transform duration-100 motion-reduce:transition-none"
+              style={{ transform: `scaleX(${readingProgress / 100})` }}
+            />
+          </div>
+        )}
       </nav>
+
+      {isArticleReadingPage && (
+        <div aria-hidden className="fixed inset-x-0 top-0 z-[81] h-[3px] bg-primary/15 lg:hidden">
+          <div
+            className="h-full origin-left bg-primary transition-transform duration-100 motion-reduce:transition-none"
+            style={{ transform: `scaleX(${readingProgress / 100})` }}
+          />
+        </div>
+      )}
 
       {/* Slide-in Sidebar Overlay */}
       <AnimatePresence>
