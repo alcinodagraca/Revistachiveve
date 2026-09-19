@@ -191,7 +191,8 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
   };
 
   return (
-    <header className="bg-background">
+    <>
+      <header className="bg-background">
       <div className="bg-primary py-2">
         <div className="site-shell relative flex items-center justify-between gap-4">
           <button
@@ -232,8 +233,9 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
           </div>
         </div>
       </div>
+      </header>
 
-      <nav className="sticky top-0 z-[80] hidden border-b border-border/90 bg-background/96 shadow-[0_1px_0_rgba(15,23,42,0.05)] backdrop-blur-sm lg:block">
+      <nav aria-label="Navegação principal" className="sticky top-0 z-[80] hidden border-b border-border/90 bg-background/96 shadow-[0_1px_0_rgba(15,23,42,0.05)] backdrop-blur-sm lg:block">
         <div className="site-shell flex items-center justify-between">
           <ul className="flex items-center -ml-3">
             {navItems.map((item) => (
@@ -472,6 +474,6 @@ export function Header({ categories }: { categories?: HeaderCategory[] } = {}) {
           </>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }
