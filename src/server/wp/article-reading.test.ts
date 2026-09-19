@@ -3,6 +3,7 @@ import test from "node:test";
 import {
   ARTICLE_PREVIEW_CHARACTERS,
   LONG_ARTICLE_CHARACTERS,
+  findArticleInlineCtaEnd,
   findArticlePreviewEnd,
 } from "./article-reading";
 
@@ -28,4 +29,16 @@ test("long articles split after a complete paragraph without changing HTML", () 
 test("unsafe split points leave the complete article visible", () => {
   const html = `<div><p>${"a".repeat(LONG_ARTICLE_CHARACTERS)}</p></div>`;
   assert.equal(findArticlePreviewEnd(html), null);
+});
+
+test("places an inline CTA between complete paragraphs", () => {
+  const html = Array.from(
+    { length: 12 },
+    (_, index) => `<p>Paragraph ${index + 1}: ${"x".repeat(650)}</p>`,
+  ).join("");
+  const splitAt = findArticleInlineCtaEnd(html);
+
+  assert.notEqual(splitAt, null);
+  assert.match(html.slice(0, splitAt ?? 0), /<\/p>$/);
+  assert.match(html.slice(splitAt ?? html.length), /^<p>/);
 });

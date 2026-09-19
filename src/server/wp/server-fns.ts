@@ -11,7 +11,7 @@ import { listEditions } from "./editions";
 import { listTenders } from "./tenders";
 import { listContactCategories, listContacts } from "./contacts";
 import { listTeam } from "./team";
-import { findArticlePreviewEnd } from "./article-reading";
+import { findArticleInlineCtaEnd, findArticlePreviewEnd } from "./article-reading";
 
 export const fnListArticles = createServerFn({ method: "GET" })
   .inputValidator(
@@ -75,6 +75,9 @@ export const fnGetArticleBundle = createServerFn({ method: "GET" })
       related,
       maisLidos,
       articlePreviewEnd: findArticlePreviewEnd(article.bodyHtml),
+      articleWhatsAppCtaEnd: article.whatsappCta
+        ? findArticleInlineCtaEnd(article.bodyHtml)
+        : null,
     };
   });
 

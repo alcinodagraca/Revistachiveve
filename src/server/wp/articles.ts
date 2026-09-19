@@ -28,6 +28,10 @@ export type Article = {
   readTime: number;
   tags: string[];
   link: string;
+  /** Editorially controlled WhatsApp channel invitation. */
+  whatsappCta?: {
+    url: string;
+  };
 };
 
 const EMBED = { _embed: 1 } as const;
@@ -61,6 +65,20 @@ export function normalizeArticle(post: WPPost): Article {
   const author = post._embedded?.author?.[0];
   const category = pickPrimaryCategory(post);
   const bodyHtml = sanitizeWordPressHtml(post.content.rendered);
+  const whatsappCtaEnabled = [
+    post.meta?.article_whatsapp_cta_enabled,
+    post.acf?.article_whatsapp_cta_enabled,
+    post.meta?.mostrar_cta_whatsapp,
+    post.acf?.mostrar_cta_whatsapp,
+  ].some((value) => value === true || value === 1 || value === "1" || value === "true");
+  const whatsappCtaUrl = [
+    post.meta?.article_whatsapp_cta_url,
+    post.acf?.article_whatsapp_cta_url,
+    post.meta?.link_whatsapp,
+    post.acf?.link_whatsapp,
+  ].find((value): value is string =>
+    typeof value === "string" && /^https:\/\/(?:chat|whatsapp)\.com\//i.test(value),
+  );
   return {
     id: post.id,
     slug: post.slug,
@@ -81,6 +99,9 @@ export function normalizeArticle(post: WPPost): Article {
     readTime: readTimeFromHtml(bodyHtml),
     tags: pickTags(post).map(decodeEntities),
     link: post.link,
+    ...(whatsappCtaEnabled && whatsappCtaUrl
+      ? { whatsappCta: { url: whatsappCtaUrl } }
+      : {}),
   };
 }
 
@@ -108,6 +129,7 @@ export async function listArticles(
 ): Promise<ArticleList> {
   const params: Record<string, unknown> = {
     _embed: 1,
+    acf_format: "standard",
     page: args.page ?? 1,
     per_page: args.perPage ?? 12,
     orderby: "date",
@@ -152,7 +174,7 @@ export async function listArticles(
 
 export async function getArticleBySlug(slug: string): Promise<Article | null> {
   const res = await wpList<WPPost>("/posts", {
-    params: { slug, _embed: 1, per_page: 1 },
+    params: { slug, _embed: 1, acf_format: "standard", per_page: 1 },
     ttlMs: DETAIL_TTL_MS,
   });
   if (res.items.length === 0) return null;

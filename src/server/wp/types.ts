@@ -65,6 +65,9 @@ export type WPPost = {
   featured_media: number;
   categories: number[];
   tags: number[];
+  /** Optional WordPress custom fields, exposed by ACF or Secure Custom Fields. */
+  meta?: Record<string, unknown>;
+  acf?: Record<string, unknown>;
   _embedded?: WPEmbedded;
 };
 

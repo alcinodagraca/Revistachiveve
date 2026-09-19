@@ -49,3 +49,37 @@ test("sanitizes WordPress article content during normalization", () => {
   assert.match(article.bodyHtml, /<p>Body<\/p>/);
   assert.doesNotMatch(article.bodyHtml, /onerror/);
 });
+
+test("shows the WhatsApp invitation only when editorial fields are complete", () => {
+  const basePost = {
+    id: 2,
+    slug: "whatsapp-article",
+    title: { rendered: "WhatsApp article" },
+    excerpt: { rendered: "<p>Summary</p>" },
+    content: { rendered: "<p>Body</p>" },
+    date: "2026-09-11T00:00:00",
+    date_gmt: "2026-09-11T00:00:00",
+    modified: "2026-09-11T00:00:00",
+    status: "publish",
+    link: "https://example.com/whatsapp-article",
+    author: 1,
+    featured_media: 0,
+    categories: [],
+    tags: [],
+  } satisfies WPPost;
+
+  const configured = normalizeArticle({
+    ...basePost,
+    acf: {
+      article_whatsapp_cta_enabled: true,
+      article_whatsapp_cta_url: "https://whatsapp.com/channel/example",
+    },
+  });
+  const incomplete = normalizeArticle({
+    ...basePost,
+    acf: { article_whatsapp_cta_enabled: true },
+  });
+
+  assert.equal(configured.whatsappCta?.url, "https://whatsapp.com/channel/example");
+  assert.equal(incomplete.whatsappCta, undefined);
+});

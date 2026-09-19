@@ -13,6 +13,7 @@ import { Breadcrumb } from "../components/Breadcrumb";
 import { NewsletterCTA } from "../components/NewsletterCTA";
 import { Prose } from "../components/Prose";
 import { SidebarAdvertisement } from "../components/SidebarAdvertisement";
+import { WhatsAppFollowCta } from "../components/WhatsAppFollowCta";
 import { Eyebrow, Heading, SectionHeader } from "../components/typography";
 import { Route } from "../../routes/artigos.$category.$slug";
 
@@ -26,7 +27,7 @@ function formatDateLong(iso: string): string {
 }
 
 export default function ArticleDetailPage() {
-  const { article, related, maisLidos, articlePreviewEnd } = Route.useLoaderData();
+  const { article, related, maisLidos, articlePreviewEnd, articleWhatsAppCtaEnd } = Route.useLoaderData();
   const [copied, setCopied] = useState(false);
   const [isReadingExpanded, setIsReadingExpanded] = useState(false);
   const showLessRef = useRef<HTMLButtonElement>(null);
@@ -159,9 +160,24 @@ export default function ArticleDetailPage() {
                 ) : (
                   <div id="article-remaining-content" className="mt-6">
                     <Prose>
-                      <div dangerouslySetInnerHTML={{ __html: article.bodyHtml.slice(articlePreviewEnd) }} />
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: article.bodyHtml.slice(
+                            articlePreviewEnd,
+                            articleWhatsAppCtaEnd ?? article.bodyHtml.length,
+                          ),
+                        }}
+                      />
                     </Prose>
-                    <div className="mt-8 flex max-w-[760px] justify-center border-b border-border pb-8">
+                    {article.whatsappCta && articleWhatsAppCtaEnd !== null && (
+                      <WhatsAppFollowCta url={article.whatsappCta.url} />
+                    )}
+                    {articleWhatsAppCtaEnd !== null && (
+                      <Prose>
+                        <div dangerouslySetInnerHTML={{ __html: article.bodyHtml.slice(articleWhatsAppCtaEnd) }} />
+                      </Prose>
+                    )}
+                    <div className="mt-8 flex max-w-[760px] justify-center pb-8">
                       <button
                         ref={showLessRef}
                         type="button"

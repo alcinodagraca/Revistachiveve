@@ -40,3 +40,33 @@ export function findArticlePreviewEnd(html: string): number | null {
 
   return null;
 }
+
+/**
+ * Finds a safe paragraph boundary close to the article midpoint so an
+ * editorial CTA can sit between complete paragraphs rather than inside HTML.
+ */
+export function findArticleInlineCtaEnd(html: string): number | null {
+  const document = parseDocument(html, { withEndIndices: true });
+  const totalCharacters = readableLength(DomUtils.textContent(document));
+  if (totalCharacters < LONG_ARTICLE_CHARACTERS) return null;
+
+  const target = Math.max(ARTICLE_PREVIEW_CHARACTERS + 800, Math.floor(totalCharacters / 2));
+  let characters = 0;
+  for (const node of document.children) {
+    characters += readableLength(DomUtils.textContent(node));
+    if (
+      node.type !== "tag" ||
+      node.name !== "p" ||
+      node.endIndex === null ||
+      characters < target
+    ) {
+      continue;
+    }
+
+    const splitAt = node.endIndex + 1;
+    const remaining = readableLength(DomUtils.textContent(parseDocument(html.slice(splitAt))));
+    return remaining >= 500 ? splitAt : null;
+  }
+
+  return null;
+}
