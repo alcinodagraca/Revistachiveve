@@ -125,25 +125,33 @@ export default function ArticleDetailPage() {
               </p>
             )}
 
-            <Prose>
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: articlePreviewEnd === null
-                    ? article.bodyHtml
-                    : article.bodyHtml.slice(0, articlePreviewEnd),
-                }}
-              />
-            </Prose>
+            <div className={articlePreviewEnd !== null && !isReadingExpanded ? "relative" : undefined}>
+              <Prose>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: articlePreviewEnd === null
+                      ? article.bodyHtml
+                      : article.bodyHtml.slice(0, articlePreviewEnd),
+                  }}
+                />
+              </Prose>
+              {articlePreviewEnd !== null && !isReadingExpanded && (
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-b from-transparent via-background/90 to-background"
+                />
+              )}
+            </div>
 
             {articlePreviewEnd !== null && (
               <>
                 {!isReadingExpanded ? (
-                  <div className="mt-7 flex max-w-[760px] justify-center">
+                  <div className="relative z-10 -mt-10 flex max-w-[760px] justify-center pb-2">
                     <button
                       ref={continueReadingRef}
                       type="button"
                       onClick={showFullArticle}
-                      className="inline-flex min-h-11 items-center border border-primary bg-primary px-5 py-2 font-sans text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                      className="inline-flex min-h-11 items-center border border-primary bg-primary px-6 py-2.5 font-sans text-sm font-semibold text-primary-foreground shadow-[0_12px_28px_rgba(36,83,214,0.28)] transition-[background-color,box-shadow,transform] hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-[0_16px_32px_rgba(36,83,214,0.34)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transform-none"
                     >
                       Continuar a ler
                     </button>
